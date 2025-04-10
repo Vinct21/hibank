@@ -17,18 +17,81 @@ Tile : #176980 -->
 <!-- https://drive.google.com/file/d/1vWROesjizhti9mlBCwDD04mNIX4lJb1c/view?usp=drive_link -->
 <title>Hi Simulasi Pinjaman</title>
 <style>
-
-body {
-font-family: Jost;
-padding: 20px;
-background-color: #f4f4f4;
-display: flex;
-flex-direction: column;
-align-items: center; /* Centers the content horizontally */
+/* Add these new styles for header and footer */
+.site-header {
+    background-color: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0; /* Ensure header starts from the left edge */
+    right: 0; /* Ensure header extends to right edge */
+    z-index: 1000;
 }
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo-container img {
+    height: 50px;
+    width: auto;
+}
+
+.site-footer {
+    background-color: #176980;
+    color: white;
+    padding: 15px 0;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    margin-top: auto;
+    position: relative;
+    left: 0; /* Ensure footer starts from the left edge */
+    right: 0; /* Ensure footer extends to right edge */
+}
+
+/* Update body padding */
+body {
+    font-family: Jost;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 80px;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.site-footer {
+    background-color: #176980;
+    color: white;
+    padding: 15px 0;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    margin-top: 1%;
+    position: relative;
+    bottom: 0;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 label {
 margin-top: 0px;
 }
+
 input, select {
 width: 100%;
 padding: 8px;
@@ -36,6 +99,7 @@ margin: 5px 0;
 border: 1px solid #ccc;
 border-radius: 4px;
 }
+
 button {
 padding: 10px 15px;
 background-color: #4CAF50;
@@ -43,6 +107,7 @@ color: white;
 border: none;
 cursor: pointer;
 }
+
 button:hover {
 background-color: #45a049;
 }
@@ -57,15 +122,53 @@ overflow-x: auto;
 width: 100%;
 }
 .container {
-display: flex;
-flex-wrap: wrap;
-justify-content: space-between;
-width: 100%;
-max-width: 1400px; /* Optional: keep layout readable on large screens */
-margin: 0 auto;
-padding: 0 10px;
-box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1800px; /* Increased from 1400px */
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
 }
+
+.form-container {
+    position: sticky;
+    top: 20px;
+    width: 100%;
+    max-width: 800px; /* Increased from 600px */
+    margin: 0 auto;
+    padding: 40px; /* Increased padding */
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Update responsive breakpoints */
+@media (max-width: 1920px) {
+    .container {
+        max-width: 1600px;
+    }
+}
+
+@media (max-width: 1440px) {
+    .container {
+        max-width: 1200px;
+    }
+    .form-container {
+        max-width: 700px;
+    }
+}
+
+@media (max-width: 992px) {
+    .form-container, .result-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 30px;
+    }
+}
+
 .form-container, .result-container {
 width: 100%;
 max-width: 48%;
@@ -74,12 +177,62 @@ box-sizing: border-box;
 }
 .form-container {
 position: sticky;
-top: 20px; /* Keep the form sticky at the top */
-width: 80%;
-max-width: 48%;
-margin-bottom: 20px;
-box-sizing: border-box;
+top: 20px;
+width: 100%;
+max-width: 600px; /* Adjusted width for better readability */
+margin: 0 auto; /* Center the form */
+padding: 30px;
+background-color: white; /* Add background color */
+border-radius: 10px; /* Rounded corners */
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
+
+.form-container form {
+display: grid;
+gap: 20px; /* Consistent spacing between form elements */
+}
+
+.form-container .row {
+margin-bottom: 20px; /* Add space between row elements */
+}
+
+.form-container label {
+font-weight: 500;
+margin-bottom: 8px;
+color: #176980; /* Using your theme color */
+}
+
+.form-container input,
+.form-container select {
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 6px;
+width: 100%;
+transition: border-color 0.3s;
+}
+
+.form-container input:focus,
+.form-container select:focus {
+border-color: #176980;
+outline: none;
+box-shadow: 0 0 0 2px rgba(23, 105, 128, 0.1);
+}
+
+.form-container button {
+background-color: #176980;
+color: white;
+padding: 12px 24px;
+border-radius: 6px;
+border: none;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+background-color: #145d70;
+}
+
+
 .result-container {
 padding-left: 20px;
 border-left: 2px solid #ccc;
@@ -87,10 +240,19 @@ height: auto; /* Allow height to grow depending on content */
 overflow-y: auto;
 font-size:x-small;
 }
+
 h1 {
-text-align: center;
-margin: 0 auto;
-padding-bottom: 50px;
+    text-align: center;
+    margin: 0 auto;
+    padding: 30px 0;
+    color: #176980;
+    font-weight: 600;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 3px solid #D15B28;
+    width: fit-content;
+    margin-bottom: 40px;
 }
 /* Modal styling */
 .modal {
@@ -215,12 +377,6 @@ background-color: #f2f2f2; /* Or any background you prefer */
 z-index: 2;
 }
 
-@media (max-width: 768px) {
-.responsive-text table {
-font-size: 0.85rem;
-}
-}
-
 /* Tooltip styling */
 .tooltip {
 position: relative;
@@ -273,27 +429,39 @@ align-items: center;
 </head>
 
 <body>
+    <!-- Add header section right after body tag -->
+<header class="site-header">
+    <div class="header-content">
+        <div class="logo-container">
+            <img src="https://drive.google.com/uc?export=view&id=15J0WlhkmiJ0B1jO1y7B0ksM14gMYP1NR" alt="HiBank Logo">
+        </div>
+    </div>
+</header>
+
 <h1>Simulasi Pinjaman</h1>
 <div class="container">
 <div class="form-container">
 
 <form id="loanForm" novalidate>
-<img src="https://drive.google.com/uc?export=view&id=15J0WlhkmiJ0B1jO1y7B0ksM14gMYP1NR" alt="My Image" style="width:100px;" />
 
-<div class="row g-3">
-<div class="col-md-6">
-<label for="nik" class="form-label">Nomor Induk Karyawan (NIK)</label>
-<input type="text" class="form-control" id="nik" required 
-       aria-describedby="nikHelp" pattern="[0-9]+" minlength="6" maxlength="6">
-<div id="nikHelp" class="invalid-feedback">Please enter a valid NIK</div>
-</div>
-<div class="col-md-6">
-<button id= "chckbtn" class="btn btn-primary" type="button" onclick="getData()">Button</button>
-</div>
-<div class="col-md-6">
-<label for="name" class="form-label">Namee</label>
-<input type="text" class="form-control" id="name" disabled>
-</div>
+<div class="row g-3 align-items-end">
+    <div class="col-md-5 col-sm-12">
+        <label for="nik" class="form-label">Nomor Induk Karyawan (NIK)</label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="nik" required 
+                   aria-describedby="nikHelp" pattern="[0-9]+" minlength="6" maxlength="6"
+                   placeholder="Masukkan NIK">
+            <button id="chckbtn" class="btn btn-primary rounded-pill px-4" type="button" onclick="getData()">
+                <i class="fas fa-search"></i> <span class="d-none d-sm-inline">Check</span>
+            </button>
+            <div class="invalid-feedback">Please enter a valid NIK</div>
+        </div>
+    </div>
+    <div class="col-md-7 col-sm-12">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" disabled
+               placeholder="Name will appear here">
+    </div>
 </div>
 
 <label for="tipePinjamann">Tipe Pinjaman</label>
@@ -321,8 +489,7 @@ align-items: center;
 
 <label for="gajiPokok" class="form-label">
 Gaji Pokok
-<i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika Joint Income dengan penghasilan pasangan (suami/istri),
-maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
+<i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika Joint Income dengan penghasilan pasangan (suami/istri), maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
 </label>
 
 <div class="mb-3">
@@ -332,15 +499,18 @@ maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
 
 <label for="dbr">DBR</label>
 <input type="text" id="dbr" disabled>
-<label for="cicilanBerjalan">Cicilan Berjalan</label>
+<label for="cicilanBerjalan">Cicilan Berjalan
+    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika memiliki cicilan pinjaman yang masih aktif di Hibank dan di luar Hibank, maka harap dicantumkan total cicilan tersebut."></i>
+</label>
+</label>
 <input type="text" id="cicilanBerjalan" onchange="formatCicil()">
 
-<button type="button" onclick="genHitung()">Hitung</button>
-<button type="button" onclick="resetForm()">Reset</button>
-<button type="button" id="downloadPdfButton" class="btn btn-danger">Download PDF</button>
+<button type="button" class="btn btn-success" onclick="genHitung()">Hitung</button>
+<button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+<button type="button" id="downloadPdfButton" class="btn btn-primary">Download PDF</button>
 
 </form>
-<h3 id="error" >error handling</h3>
+<!-- <h3 id="error" >error handling</h3> -->
 
 <!-- Floating Box Section -->
 <div id="floatingBox" class="card">
@@ -370,6 +540,12 @@ maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
 </div>
 </div>
 
+<footer class="site-footer">
+    <div class="footer-content">
+        <p>&copy; 2025 Human Capital Management System. All rights reserved.</p>
+    </div>
+</footer>
+
 <!-- Script Untuk Formating Rupiah -->
 <script>
 
@@ -385,12 +561,12 @@ maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
 //     var formattedValue2 = value2.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add "." as thousands separator
 //     gajiField.value = "Rp " + formattedValue2;
 // }
-function formatCicil() {
-var cicilField = document.getElementById("cicilanBerjalan");
-var value3 = cicilField.value.replace(/\D/g, ''); // Remove non-numeric characters
-var formattedValue3 = value3.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add "." as thousands separator
-cicilField.value = "Rp " + formattedValue3;
-}
+// function formatCicil() {
+// var cicilField = document.getElementById("cicilanBerjalan");
+// var value3 = cicilField.value.replace(/\D/g, ''); // Remove non-numeric characters
+// var formattedValue3 = value3.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add "." as thousands separator
+// cicilField.value = "Rp " + formattedValue3;
+// }
 </script>
 
 <!-- Script Untuk Vlookup Bunga dari Tipe Kredit -->
@@ -477,7 +653,7 @@ const gajiPokokInput = document.getElementById("gajiPokok").value;
 const gajiPokok = parseFloat(gajiPokokInput.replace(/[^\d]/g, '')); // Remove all non-digits
 
 const cicilanBerjalanInput = document.getElementById("cicilanBerjalan").value;
-const cicilanBerjalan = parseFloat(cicilanBerjalan.replace(/[^\d]/g, '')); // Remove all non-digits
+const cicilanBerjalan = parseFloat(cicilanBerjalanInput.replace(/[^\d]/g, '')); // Remove all non-digits
 
 var tipePinjaman = document.getElementById("tipePinjaman").value;
 
@@ -652,3 +828,4 @@ document.getElementById('cicilanBerjalan').addEventListener('input', function(e)
     formatCurrency(this);
 });
 </script>
+
