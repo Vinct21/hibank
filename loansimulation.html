@@ -476,7 +476,9 @@ const bunga = parseFloat(document.getElementById("bunga").value.replace('%', '')
 const gajiPokokInput = document.getElementById("gajiPokok").value;
 const gajiPokok = parseFloat(gajiPokokInput.replace(/[^\d]/g, '')); // Remove all non-digits
 
-var cicilanBerjalan = parseFloat(document.getElementById("cicilanBerjalan").value.replace(/\D/g, '')) || 0; // Remove "Rp" and format to number ;
+const cicilanBerjalanInput = document.getElementById("cicilanBerjalan").value;
+const cicilanBerjalan = parseFloat(cicilanBerjalan.replace(/[^\d]/g, '')); // Remove all non-digits
+
 var tipePinjaman = document.getElementById("tipePinjaman").value;
 
 // Validate inputs
