@@ -642,10 +642,11 @@ document.getElementById('plafond').addEventListener('input', function(e) {
     formatCurrency(this);
 });
 
-new Cleave('#gajiPokok', {
-    numeral: true,
-    numeralThousandsGroupStyle: 'thousand',
-    prefix: 'Rp ',
-    delimiter: '.'
+document.getElementById('gajiPokok').addEventListener('input', function(e) {
+    formatCurrency(this);
+});
+
+document.getElementById('cicilanBerjalan').addEventListener('input', function(e) {
+    formatCurrency(this);
 });
 </script>
