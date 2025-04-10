@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Orange: #D15B28
+Tile : #176980 -->
+<!-- Add Font Awesome CDN for icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Logo" loading="lazy" style="width: 700px;"> -->
+
+<!-- https://drive.google.com/file/d/1vWROesjizhti9mlBCwDD04mNIX4lJb1c/view?usp=drive_link -->
+<title>Hi Simulasi Pinjaman</title>
+<style>
+
+body {
+font-family: Jost;
+padding: 20px;
+background-color: #f4f4f4;
+display: flex;
+flex-direction: column;
+align-items: center; /* Centers the content horizontally */
+}
+label {
+margin-top: 0px;
+}
+input, select {
+width: 100%;
+padding: 8px;
+margin: 5px 0;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+button {
+padding: 10px 15px;
+background-color: #4CAF50;
+color: white;
+border: none;
+cursor: pointer;
+}
+button:hover {
+background-color: #45a049;
+}
+
+.table {
+width: 100%;
+table-layout: auto;
+}
+
+.table-responsive {
+overflow-x: auto;
+width: 100%;
+}
+.container {
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+width: 100%;
+max-width: 1400px; /* Optional: keep layout readable on large screens */
+margin: 0 auto;
+padding: 0 10px;
+box-sizing: border-box;
+}
+.form-container, .result-container {
+width: 100%;
+max-width: 48%;
+margin-bottom: 20px;
+box-sizing: border-box;
+}
+.form-container {
+position: sticky;
+top: 20px; /* Keep the form sticky at the top */
+width: 80%;
+max-width: 48%;
+margin-bottom: 20px;
+box-sizing: border-box;
+}
+.result-container {
+padding-left: 20px;
+border-left: 2px solid #ccc;
+height: auto; /* Allow height to grow depending on content */
+overflow-y: auto;
+font-size:x-small;
+}
+h1 {
+text-align: center;
+margin: 0 auto;
+padding-bottom: 50px;
+}
+/* Modal styling */
+.modal {
+display: none;
+position: fixed;
+z-index: 1;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.4);
+overflow: auto;
+padding-top: 60px;
+}
+.modal-content {
+background-color: #fefefe;
+margin: 5% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 80%;
+max-width: 400px;
+}
+.modal-header {
+font-size: 18px;
+font-weight: bold;
+margin-bottom: 10px;
+}
+.modal-body {
+font-size: 16px;
+}
+.modal-close {
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+}
+.modal-close:hover,
+.modal-close:focus {
+color: black;
+text-decoration: none;
+cursor: pointer;
+}
+
+/* Floating Info Box Style */
+#floatingBox {
+position: fixed;
+bottom: 70px; /* Adjusted to avoid overlap with the button */
+right: 20px;
+width: 250px;
+padding: 15px;
+background-color: #f9f9f9;
+border: 1px solid #ccc;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+display: none; /* Hidden by default */
+z-index: 100;
+}
+
+#floatingBox p {
+margin: 0;
+font-size: 14px;
+color: #333;
+}
+
+/* Button to toggle floating box */
+#toggleButton {
+position: fixed;
+bottom: 20px; /* Keeps the button above the info box */
+right: 20px;
+padding: 10px;
+background-color: #3498db;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+.form-container, .result-container {
+width: 100%;
+max-width: 100%;
+}
+}
+
+@media (max-width: 768px) {
+.form-container, .result-container {
+width: 100%; /* Stack both containers vertically on smaller screens */
+max-width: 100%;
+}
+.container {
+flex-direction: column; /* Stack the form and result container */
+}
+}
+@media (max-width: 480px) {
+.form-container, .result-container {
+padding-left: 10px; /* Adjust padding on smaller screens */
+}
+}
+
+.table-wrapper {
+max-height: 100%; /* Set this to whatever fits your layout */
+overflow-y: auto;
+border: 1px solid #ccc;
+}
+
+.sticky-table {
+width: 100%;
+border-collapse: collapse;
+}
+
+.sticky-table th, .sticky-table td {
+padding: 8px 12px;
+text-align: left;
+border-bottom: 1px solid #ddd;
+background: white; /* Ensure header doesn't go transparent */
+}
+
+.sticky-table thead th {
+position: sticky;
+top: 0;
+background-color: #f2f2f2; /* Or any background you prefer */
+z-index: 2;
+}
+
+@media (max-width: 768px) {
+.responsive-text table {
+font-size: 0.85rem;
+}
+}
+
+/* Tooltip styling */
+.tooltip {
+position: relative;
+display: inline-block;
+cursor: pointer
+}
+
+.tooltip .tooltiptext {
+visibility: hidden; /* Hidden by default */
+width: 300%;
+background-color: rgb(23, 105, 128);
+color: #fdfdfd;
+text-align: center;
+padding: 5px 10px;
+border-radius: 6px;
+/* Position the tooltip text */
+position: absolute;
+z-index: 1;
+top: -60%; /* Position above the icon */
+left: 190%;
+margin-left: -80px; /* Center the tooltip */
+opacity: 0; /* Make it fully transparent */
+transition: opacity 0.3s, visibility 0s 0.3s; /* Transition for opacity */
+white-space: normal; /* Allow text wrapping */
+word-wrap: break-word; /* Ensures long words wrap to the next line */
+}
+
+/* Show the tooltip when hovering over the icon */
+.tooltip:hover .tooltiptext {
+visibility: visible; /* Make it visible when hovered */
+opacity: 1; /* Fade in the tooltip */
+transition: opacity 0.3s; /* Smooth transition */
+}
+
+/* Icon styling */
+#gajiTooltipIcon {
+color: #007bff;
+cursor: pointer;
+margin-left: 5px;
+font-size: 16px;
+}
+
+/* Ensure the icon is aligned with the label */
+label[for="gajiPokok"] {
+display: flex;
+align-items: center;
+}
+
+</style>
+</head>
+
+<body>
+<h1>Simulasi Pinjaman</h1>
+<div class="container">
+<div class="form-container">
+
+<form id="loanForm" novalidate>
+<img src="https://drive.google.com/uc?export=view&id=15J0WlhkmiJ0B1jO1y7B0ksM14gMYP1NR" alt="My Image" style="width:100px;" />
+
+<div class="row g-3">
+<div class="col-md-6">
+<label for="nik" class="form-label">Nomor Induk Karyawan (NIK)</label>
+<input type="text" class="form-control" id="nik" required 
+       aria-describedby="nikHelp" pattern="[0-9]+" minlength="6" maxlength="6">
+<div id="nikHelp" class="invalid-feedback">Please enter a valid NIK</div>
+</div>
+<div class="col-md-6">
+<button id= "chckbtn" class="btn btn-primary" type="button" onclick="getData()">Button</button>
+</div>
+<div class="col-md-6">
+<label for="name" class="form-label">Name</label>
+<input type="text" class="form-control" id="name" disabled>
+</div>
+</div>
+
+<label for="tipePinjamann">Tipe Pinjaman</label>
+<select id="tipePinjaman" class="form-select" aria-label="Default select example" required onchange="updateBunga()">
+<option selected>--Pilih Tipe Pinjaman--</option>
+<option value="Kredit Pemilikan Rumah (KPR)">Kredit Pemilikan Rumah (KPR)</option>
+<option value="Kredit Pemilikan Ruko">Kredit Pemilikan Ruko</option>
+<option value="Kredit Multi Guna (KMG)">Kredit Multi Guna (KMG)</option>
+<option value="Kredit Kendaraan Bermotor (KKB)">Kredit Kendaraan Bermotor (KKB)</option>
+<option value="Kredit Kendaraan Bermotor - Electronic Vehicle">Kredit Kendaraan Bermotor - Electronic Vehicle</option>
+<option value="Emergency Loan">Emergency Loan</option>
+</select>
+
+<div class="mb-3">
+<label for="plafond" class="form-label">Plafond Pinjaman</label>
+<input type="text" class="form-control" id="plafond" required>
+</div>
+
+<div class="mb-3">
+<label for="jangkaWaktu" class="form-label">Jangka Waktu (Bulan) </label>
+<input type="number" class="form-control" id="jangkaWaktu" required>
+</div>
+<label for="bunga">Bunga Pinjaman</label>
+<input type="text" id="bunga" disabled>
+
+<label for="gajiPokok" class="form-label">
+Gaji Pokok
+<i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika Joint Income dengan penghasilan pasangan (suami/istri),
+maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
+</label>
+
+<div class="mb-3">
+<!-- <label for="gajiPokok" class="form-label">Gaji Pokok</label> -->
+<input type="text" class="form-control" id="gajiPokok" required onchange="updateDBR()">
+</div>
+
+<label for="dbr">DBR</label>
+<input type="text" id="dbr" disabled>
+<label for="cicilanBerjalan">Cicilan Berjalan</label>
+<input type="text" id="cicilanBerjalan" onchange="formatCicil()">
+
+<button type="button" onclick="genHitung()">Hitung</button>
+<button type="button" onclick="resetForm()">Reset</button>
+<button type="button" id="downloadPdfButton" class="btn btn-danger">Download PDF</button>
+
+</form>
+<h3 id="error" >error handling</h3>
+
+<!-- Floating Box Section -->
+<div id="floatingBox" class="card">
+<div class="card-body">
+<h6>Syarat & Ketentuan:</h6>
+<p>Here you can put additional information for the user, such as login tips or general instructions.</p>
+</div>
+</div>
+
+<!-- Button to toggle visibility of floating box -->
+<button id="toggleButton" class="btn btn-info" onclick="toggleInfoBox()">Show Info</button>
+
+</div>
+
+<!-- Result Container -->
+<div class="result-container">
+<div id="result"></div>
+</div>
+</div>
+
+<!-- Custom Modal -->
+<div id="alertModal" class="modal">
+<div class="modal-content">
+<span class="modal-close" onclick="closeModal()">&times;</span>
+<div class="modal-header" id="modalTitle"></div>
+<div class="modal-body" id="modalMessage"></div>
+</div>
+</div>
+
+<!-- Script Untuk Formating Rupiah -->
+<script>
+
+// function formatPlafond() {
+//     var plafondField = document.getElementById("plafond");
+//     var value1 = plafondField.value.replace(/\D/g, ''); // Remove non-numeric characters
+//     var formattedValue1 = value1.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add "." as thousands separator
+//     plafondField.value = "Rp " + formattedValue1;
+// }
+// function formatGaji() {
+//     var gajiField = document.getElementById("gajiPokok");
+//     var value2 = gajiField.value.replace(/\D/g, ''); // Remove non-numeric characters
+//     var formattedValue2 = value2.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add "." as thousands separator
+//     gajiField.value = "Rp " + formattedValue2;
+// }
+function formatCicil() {
+var cicilField = document.getElementById("cicilanBerjalan");
+var value3 = cicilField.value.replace(/\D/g, ''); // Remove non-numeric characters
+var formattedValue3 = value3.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add "." as thousands separator
+cicilField.value = "Rp " + formattedValue3;
+}
+</script>
+
+<!-- Script Untuk Vlookup Bunga dari Tipe Kredit -->
+<script>
+// Function to update Bunga field based on selected loan type
+function updateBunga() {
+var tipePinjaman = document.getElementById("tipePinjaman").value;
+var bunga;
+switch(tipePinjaman) {
+case "Kredit Pemilikan Rumah (KPR)": bunga = "5%"; break;
+case "Kredit Pemilikan Ruko": bunga = "5%"; break;
+case "Kredit Multi Guna (KMG)": bunga = "7%"; break;
+case "Kredit Kendaraan Bermotor (KKB)": bunga = "4%"; break;
+case "Kredit Kendaraan Bermotor - Electronic Vehicle": bunga = "3.5%"; break;
+case "Emergency Loan": bunga = "0%"; break;
+default: bunga = ""; break;
+}
+// Set the Bunga field value
+document.getElementById("bunga").value = bunga;
+}
+</script>
+
+<!-- Script Untuk Vlookup DBR dari Gaji Pokok -->
+<script>
+// Function to update DBR field based on Gaji Pokok
+function updateDBR() {
+var gajiPokok = parseFloat(document.getElementById("gajiPokok").value.replace(/\D/g, ''));
+var dbr;
+// Check the ranges for Gaji Pokok and set the corresponding DBR
+if (gajiPokok <= 10000000) {
+dbr = "30%";
+} else if (gajiPokok <= 50000000) {
+dbr = "35%";
+} else if (gajiPokok > 50000000) {
+dbr = "40%";
+} else {
+dbr = ""; // Default if no condition is met
+}
+// Set the DBR field value
+document.getElementById("dbr").value = dbr;
+}
+</script>
+
+<!-- Script Untuk Alert Error -->
+<script>
+// Custom Modal Show
+function showAlert(title, message) {
+document.getElementById("modalTitle").innerText = title;
+document.getElementById("modalMessage").innerText = message;
+document.getElementById("alertModal").style.display = "block";
+}
+// Close the custom modal
+function closeModal() {
+document.getElementById("alertModal").style.display = "none";
+}
+</script>
+
+<!-- Toggle visibility of the floating info box -->
+<script>
+function toggleInfoBox() {
+var box = document.getElementById("floatingBox");
+var button = document.getElementById("toggleButton");
+if (box.style.display === "none" || box.style.display === "") {
+box.style.display = "block";
+button.innerText = "Hide Info";
+} else {
+box.style.display = "none";
+button.innerText = "Show Info";
+}
+}
+</script>
+
+<!-- Script Generate & Reset Table -->
+<script>
+function genHitung(){
+const plafondInput = document.getElementById("plafond").value;
+const plafond = parseFloat(plafondInput.replace(/[^\d]/g, '')); // Remove all non-digits
+
+const jangkaWaktu = parseInt(document.getElementById("jangkaWaktu").value);
+
+const bunga = parseFloat(document.getElementById("bunga").value.replace('%', ''));
+
+const gajiPokokInput = document.getElementById("gajiPokok").value;
+const gajiPokok = parseFloat(gajiPokokInput.replace(/[^\d]/g, '')); // Remove all non-digits
+
+var cicilanBerjalan = parseFloat(document.getElementById("cicilanBerjalan").value.replace(/\D/g, '')) || 0; // Remove "Rp" and format to number ;
+var tipePinjaman = document.getElementById("tipePinjaman").value;
+
+// Validate inputs
+if (isNaN(plafond) || plafond <= 0) {
+        showAlert("Error", "Please enter a valid plafond amount");
+        return;
+    }
+    if (isNaN(jangkaWaktu) || jangkaWaktu <= 0) {
+        showAlert("Error", "Please enter a valid loan period");
+        return;
+    }
+
+// Check if 'Kredit Multi Guna (KMG)' is selected and plafond exceeds the max limit
+if (tipePinjaman == "Kredit Multi Guna (KMG)" && plafond > 500000000) {
+showAlert("Error: Plafond Terlalu Besar", "Plafond Pinjaman untuk Kredit Multi Guna (KMG) tidak boleh lebih dari Rp 500,000,000");
+return; // Exit the function and prevent further calculations
+}
+// Perhitungan dengan Tabel
+var sisaPinjaman = plafond; // Initialize with Plafond
+// Calculate Monthly Installment based on the interest rate and plafond
+var angsuran = calculatePMT(bunga,jangkaWaktu,plafond); // Monthly installment calculation
+var resultHtml = `
+<h3>Hasil Simulasi:</h3>
+<div class="table-wrapper">
+<table class="table table-striped table-hover sticky-table" border="1" cellpadding="10" width= "100%">
+<tr>
+<th>Angsuran Ke-</th>
+<th>Sisa Pinjaman</th>
+<th>Pokok</th>
+<th>Angsuran Bunga</th>
+<th>Angsuran</th>
+</tr>
+<tr>
+<td>0</td>
+<td>Rp ${plafond.toLocaleString()}</td>
+<td>Rp -</td>
+<td>Rp -</td>
+<td>Rp -</td>
+</tr>
+</div>
+`;
+// Loop for each month of the loan period
+for (var i = 1; i <= jangkaWaktu; i++) {
+// Calculate interest for the current remaining loan balance
+var bungaAmount = sisaPinjaman * (bunga / 100) / 12;
+// bungaAmount = Math.round(bungaAmount);
+console.log(bungaAmount)
+// Calculate the principal part of the installment
+var pokok = angsuran - bungaAmount;
+// pokok = Math.round(pokok);
+// Calculate total installment (pokok + bunga)
+var angsuranTotal = pokok + bungaAmount;
+// angsuranTotal = Math.round(angsuranTotal);
+// Decrease the remaining balance (sisa pinjaman) by the principal portion
+sisaPinjaman -= pokok;
+resultHtml += `
+<tr>
+<td>${i}</td>
+<td>Rp ${sisaPinjaman.toLocaleString()}</td>
+<td>Rp ${pokok.toLocaleString()}</td>
+<td>Rp ${bungaAmount.toLocaleString()}</td>
+<td>Rp ${angsuranTotal.toLocaleString()}</td>
+</tr>
+`;
+}
+resultHtml += `</table>`;
+document.getElementById("result").innerHTML = resultHtml;
+}
+function resetForm() {
+document.getElementById("loanForm").reset();
+document.getElementById("result").innerHTML = "";
+}
+</script>
+
+<!-- Script Rumus PMT -->
+<script>
+function calculatePMT(interestRate, numberOfPeriods, loanAmount) {
+if (interestRate == 0) {
+return loanAmount / numberOfPeriods;
+} else {
+// Monthly interest rate
+const monthlyRate = interestRate / 12 / 100;
+// PMT formula
+const pmt = (monthlyRate * loanAmount) / (1 - Math.pow(1 + monthlyRate, -numberOfPeriods));
+return pmt;
+}
+}
+</script>
+
+
+<!-- Script get data Employee -->
+<script>
+function getData() {
+const nikk = document.getElementById("nik").value.trim();
+const checkBtn = document.getElementById("chckbtn");
+// const password = document.getElementById("password").value;
+console.log(nikk);
+checkBtn.disabled = true;
+google.script.run.withSuccessHandler(function(response) {
+checkBtn.disabled = false;
+console.log(response);
+if (response) {
+document.getElementById("name").value = response;
+} else if (nikk == "") {
+// document.getElementById("status").innerText = "LENGKAPI NIK ";
+showAlert("Miss field", "Lengkapi NIK terlebih dahulu");
+} else {
+// document.getElementById("status").innerHTML = "<b style='color:red;'>NIK not found</b>";
+showAlert("NIK Tidak Ditemukan", "Coba Lagi");
+}
+}).checkNIK(nikk);
+}
+</script>
+
+<!-- Script Function to generate and download the PDF -->
+
+
+
+</body>
+
+</html>
+
+
+<!-- Add form validation script -->
+<script>
+const form = document.getElementById('loanForm');
+const inputs = form.querySelectorAll('input, select');
+
+// Add real-time validation
+inputs.forEach(input => {
+    input.addEventListener('input', () => {
+        validateInput(input);
+    });
+});
+
+function validateInput(input) {
+    if (!input.checkValidity()) {
+        input.classList.add('is-invalid');
+        input.setAttribute('aria-invalid', 'true');
+    } else {
+        input.classList.remove('is-invalid');
+        input.removeAttribute('aria-invalid');
+    }
+}
+
+// Initialize Cleave.js for currency formatting
+// Remove the existing Cleave.js initialization and replace with these functions
+function formatCurrency(input) {
+    // Remove all non-digits and convert to number
+    let value = input.value.replace(/[^\d]/g, '');
+    
+    // Format the number with thousand separator and prefix
+    if (value) {
+        value = parseInt(value, 10).toLocaleString('id-ID');
+        input.value = 'Rp ' + value;
+    } else {
+        input.value = '';
+    }
+}
+
+// Add event listeners to the input fields
+document.getElementById('plafond').addEventListener('input', function(e) {
+    formatCurrency(this);
+});
+
+new Cleave('#gajiPokok', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    prefix: 'Rp ',
+    delimiter: '.'
+});
+</script>
