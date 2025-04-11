@@ -15,7 +15,7 @@ Tile : #176980 -->
 <!-- <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Logo" loading="lazy" style="width: 700px;"> -->
 
 <!-- https://drive.google.com/file/d/1vWROesjizhti9mlBCwDD04mNIX4lJb1c/view?usp=drive_link -->
-<title>Hi Simulasi Pinjaman</title>
+<title>Hi Simulasi Pinjaman Karyawan</title>
 <style>
 /* Add these new styles for header and footer */
 .site-header {
@@ -235,7 +235,7 @@ background-color: #145d70;
 
 .result-container {
 padding-left: 20px;
-border-left: 2px solid #ccc;
+/* border-left: 2px solid #ccc; */
 height: auto; /* Allow height to grow depending on content */
 overflow-y: auto;
 font-size:x-small;
@@ -438,7 +438,7 @@ align-items: center;
     </div>
 </header>
 
-<h1>Simulasi Pinjaman</h1>
+<h1>Simulasi Pinjaman  Karyawan</h1>
 <div class="container">
 <div class="form-container">
 
@@ -829,3 +829,110 @@ document.getElementById('cicilanBerjalan').addEventListener('input', function(e)
 });
 </script>
 
+
+// Function to check Kredit Multi Guna (KMG) conditions
+function validateKMG(tipePinjaman, plafond, jangkaWaktu) {
+  if (tipePinjaman === "Kredit Multi Guna (KMG)") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 500000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Kredit Multi Guna (KMG) tidak boleh lebih dari Rp 500,000,000"
+      );
+      return; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 60) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Kredit Multi Guna (KMG) tidak boleh lebih dari 5 tahun/60 bulan"
+      );
+      return;  // Exit the function and prevent further calculations
+    }
+  }
+
+  if (tipePinjaman === "Kredit Pemilikan Rumah (KPR)") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 5000000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Kredit Pemilikan Rumah (KPR) tidak boleh lebih dari Rp 5,000,000,000"
+      );
+      return; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 240) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Kredit Pemilikan Rumah (KPR) tidak boleh lebih dari 20 tahun/240 bulan"
+      );
+      return;  // Exit the function and prevent further calculations
+    }
+  }
+
+  if (tipePinjaman === "Kredit Kendaraan Bermotor (KKB)") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 700000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Kredit Kendaraan Bermotor (KKB) tidak boleh lebih dari Rp 700,000,000"
+      );
+      return; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 240) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Kredit Kendaraan Bermotor (KKB) tidak boleh lebih dari 5 tahun/60 bulan"
+      );
+      return;  // Exit the function and prevent further calculations
+    }
+  }
+  
+  if (tipePinjaman === "Kredit Kendaraan Bermotor - Electronic Vehicle") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 700000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Kredit Kendaraan Bermotor - Electronic Vehicle tidak boleh lebih dari Rp 700,000,000"
+      );
+      return; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 36) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Kredit Kendaraan Bermotor - Electronic Vehicle tidak boleh lebih dari 3 tahun/36 bulan"
+      );
+      return;  // Exit the function and prevent further calculations
+    }
+  }
+
+  if (tipePinjaman === "Emergency Loan") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 100000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Emergency Loan tidak boleh lebih dari Rp 700,000,000"
+      );
+      return; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 12) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Emergency Loan tidak boleh lebih dari 1 tahun/12 bulan"
+      );
+      return;  // Exit the function and prevent further calculations
+    }
+  }
+  
+}
+
+// Example usage:
+validateKMG(tipePinjaman, plafond, jangkaWaktu);
