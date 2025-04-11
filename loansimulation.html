@@ -16,6 +16,7 @@ Tile : #176980 -->
 
 <!-- https://drive.google.com/file/d/1vWROesjizhti9mlBCwDD04mNIX4lJb1c/view?usp=drive_link -->
 <title>Hi Simulasi Pinjaman Karyawan</title>
+
 <style>
 /* Add these new styles for header and footer */
 .site-header {
@@ -112,6 +113,21 @@ button:hover {
 background-color: #45a049;
 }
 
+#chckbtn {
+    transition: all 0.2s ease-in-out;
+    border: none;
+    background: linear-gradient(45deg, #176980, #1a7b96);
+}
+
+#chckbtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(23, 105, 128, 0.2);
+}
+
+#chckbtn:active {
+    transform: translateY(0);
+}
+
 .table {
 width: 100%;
 table-layout: auto;
@@ -127,10 +143,25 @@ width: 100%;
     flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
-    max-width: 1800px; /* Increased from 1400px */
+    max-width: 1800px;
     margin: 0 auto;
     padding: 20px;
+    gap: 0px; /* Added gap property to control space between containers */
     box-sizing: border-box;
+}
+
+.form-container, .result-container {
+    width: 100%;
+    max-width: calc(50% - 10px); /* Adjusted to account for gap */
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.result-container {
+    padding-left: 0; /* Remove left padding */
+    height: auto;
+    overflow-y: auto;
+    font-size: x-small;
 }
 
 .form-container {
@@ -197,9 +228,21 @@ margin-bottom: 20px; /* Add space between row elements */
 }
 
 .form-container label {
-font-weight: 500;
-margin-bottom: 8px;
-color: #176980; /* Using your theme color */
+    font-weight: 500;
+    margin-bottom: 0px; /* Reduced from 1px */
+    color: #176980;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin: 0px 0; /* Reduced from 1px */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.mb-3 {
+    margin-bottom: 12px; /* Reduced from default bootstrap's 1rem (16px) */
 }
 
 .form-container input,
@@ -256,25 +299,43 @@ h1 {
 }
 /* Modal styling */
 .modal {
-display: none;
-position: fixed;
-z-index: 1;
-left: 0;
-top: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.4);
-overflow: auto;
-padding-top: 60px;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+    backdrop-filter: blur(5px); /* Add blur effect */
+    -webkit-backdrop-filter: blur(5px); /* For Safari support */
+    overflow: auto;
+    padding-top: 60px;
 }
+
 .modal-content {
-background-color: #fefefe;
-margin: 5% auto;
-padding: 20px;
-border: 1px solid #888;
-width: 80%;
-max-width: 400px;
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: none;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    animation: modalFadeIn 0.3s ease-out;
 }
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .modal-header {
 font-size: 18px;
 font-weight: bold;
@@ -296,37 +357,81 @@ text-decoration: none;
 cursor: pointer;
 }
 
+/* Add to your existing modal styling */
+#initialInfoBoard .modal-content {
+    padding: 30px;
+    border-radius: 12px;
+    border: none;
+    /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); */
+}
+
+#initialInfoBoard ul li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #555;
+}
+
+#initialInfoBoard .modal-header h4 {
+    margin: 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #D15B28;
+}
+
 /* Floating Info Box Style */
 #floatingBox {
-position: fixed;
-bottom: 70px; /* Adjusted to avoid overlap with the button */
-right: 20px;
-width: 250px;
-padding: 15px;
-background-color: #f9f9f9;
-border: 1px solid #ccc;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-display: none; /* Hidden by default */
-z-index: 100;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: none;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+#floatingBox .card-body {
+    padding: 0;
+}
+
+#floatingBox h6 {
+    color: #176980;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #D15B28;
 }
 
 #floatingBox p {
-margin: 0;
-font-size: 14px;
-color: #333;
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
 }
 
 /* Button to toggle floating box */
 #toggleButton {
-position: fixed;
-bottom: 20px; /* Keeps the button above the info box */
-right: 20px;
-padding: 10px;
-background-color: #3498db;
-color: white;
-border: none;
-border-radius: 5px;
-cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background-color: #176980;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(23, 105, 128, 0.2);
+}
+
+#toggleButton:hover {
+    background-color: #145d70;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(23, 105, 128, 0.3);
 }
 
 /* Responsive Adjustments */
@@ -353,28 +458,47 @@ padding-left: 10px; /* Adjust padding on smaller screens */
 }
 
 .table-wrapper {
-max-height: 100%; /* Set this to whatever fits your layout */
-overflow-y: auto;
-border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    background: white;
 }
 
 .sticky-table {
-width: 100%;
-border-collapse: collapse;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
-.sticky-table th, .sticky-table td {
-padding: 8px 12px;
-text-align: left;
-border-bottom: 1px solid #ddd;
-background: white; /* Ensure header doesn't go transparent */
+.sticky-table th {
+    background-color: #176980;
+    color: white;
+    font-weight: 500;
+    padding: 12px 15px;
+    text-align: center;
+    white-space: nowrap;
 }
 
-.sticky-table thead th {
-position: sticky;
-top: 0;
-background-color: #f2f2f2; /* Or any background you prefer */
-z-index: 2;
+.sticky-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    text-align: right;
+    font-size: 14px;
+}
+
+.sticky-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.sticky-table tr:last-child {
+    font-weight: bold;
+    background-color: #f2f2f2;
+}
+
+/* Column specific styles */
+.sticky-table td:first-child {
+    text-align: center;
+    font-weight: 500;
 }
 
 /* Tooltip styling */
@@ -429,11 +553,99 @@ align-items: center;
 </head>
 
 <body>
-    <!-- Add header section right after body tag -->
+
+<!-- Initial Information Board Section -->
+<div id="initialInfoBoard" class="modal" style="display: block;">
+    <div class="modal-content" style="max-width: 800px;"> <!-- Increased width -->
+        <span class="modal-close" onclick="closeInitialInfo()">&times;</span>
+        <div class="modal-header" style="color: #176980;">
+            <h4>Selamat Datang di Simulasi Pinjaman Karyawan</h4>
+        </div>
+        <div class="modal-body">
+            <h6 style="color: #176980; margin-top: 20px;">Syarat & Ketentuan Umum:</h6>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li>✓ Status karyawan tetap</li>
+                    <li>✓ Minimal masa kerja 2 tahun</li>
+                    <li>✓ Usia minimal 21 tahun</li>
+                    <li>✓ Memiliki rekening HiBank</li>
+                    <li>✓ Melampirkan slip gaji terakhir</li>
+                    <li>✓ Memiliki kinerja yang baik dengan penilaian minimum Met atau setara</li>
+                    <li>✓ Tidak sedang dalam masa sanksi atau pembinaan kinerja (SP/PIP)</li>
+                    <li>✓ IDEB SLIK dalam 12 bulan terakhir menunjukkan kolektibilitas Lancar</li>
+                    <li>✓ Jaminan Tanah/Bangunan atas nama Hak Milik pribadi</li>
+                    <li>✓ Melengkapi formulir pengajuan dan dokumen yang dibutuhkan</li>
+                    <li>✓ DBR (Debt Burden Ratio) maksimal sesuai ketentuan</li>
+                </ul>
+            <div class="loan-info">
+
+                <h5 style="color: #176980; margin-top: 20px;">Informasi Produk Pinjaman:</h5>
+                
+                <div class="loan-type">
+                    <h6 style="color: #D15B28;">1. Kredit Pemilikan Rumah (KPR)</h6>
+                    <ul>
+                        <li>Penggunaan: Pembelian rumah, apartemen, atau ruko</li>
+                        <li>Plafon: Maksimum Rp5 miliar</li>
+                        <li>Tenor: Maksimal 20 tahun atau hingga usia 55 tahun saat jatuh tempo</li>
+                        <li>Uang Muka: 10% untuk rumah, 30% untuk ruko</li>
+                        <li>Suku Bunga: 5% (fixed rate)</li>
+                    </ul>
+                </div>
+
+                <div class="loan-type">
+                    <h6 style="color: #D15B28;">2. Kredit Multi Guna (KMG)</h6>
+                    <ul>
+                        <li>Penggunaan: Renovasi rumah dan kebutuhan lainnya</li>
+                        <li>Plafon: Maksimum Rp500 juta</li>
+                        <li>Tenor: 5 tahun</li>
+                        <li>Suku Bunga: 7% (fixed rate)</li>
+                    </ul>
+                </div>
+
+                <div class="loan-type">
+                    <h6 style="color: #D15B28;">3. Kredit Kendaraan Bermotor (KKB)</h6>
+                    <ul>
+                        <li>Penggunaan: Pembelian mobil dan motor</li>
+                        <li>Plafon: Maksimum Rp700 juta</li>
+                        <li>Tenor: 5 tahun (3 tahun untuk kendaraan full listrik)</li>
+                        <li>Suku Bunga: 4% (umum), 3.5% (kendaraan full listrik)</li>
+                    </ul>
+                </div>
+
+                <div class="loan-type">
+                    <h6 style="color: #D15B28;">4. Emergency Loan</h6>
+                    <ul>
+                        <li>Penggunaan: Medis, bantuan finansial, atau pendidikan anak kandung</li>
+                        <li>Plafon: Maksimum Rp100 juta</li>
+                        <li>Tenor: 1 tahun</li>
+                        <li>Suku Bunga: 0%</li>
+                    </ul>
+                </div>
+
+                <div class="loan-type">
+                    <h6 style="color: #D15B28;">5. Debt Burden Ratio (DBR)</h6>
+                    <ul>
+                        <li>Penghasilan ≤ Rp10 juta: 30%</li>
+                        <li>Penghasilan Rp10–50 juta: 35%</li>
+                        <li>Penghasilan > Rp50 juta: 40%</li>
+                    </ul>
+                </div>
+
+               
+                
+                <button onclick="closeInitialInfo()" class="btn btn-primary" style="background-color: #176980; margin-top: 20px;">
+                    Mulai Simulasi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Header Section -->
 <header class="site-header">
     <div class="header-content">
         <div class="logo-container">
-            <img src="https://drive.google.com/uc?export=view&id=15J0WlhkmiJ0B1jO1y7B0ksM14gMYP1NR" alt="HiBank Logo">
+            <img src="https://script.google.com/macros/s/1LIvASx0b3Fe0KcLSsOc0lYo-LVRhuVkB/exec" alt=" hibank Bubble" width="200">
+            <script> getImagehibank(); </script>
         </div>
     </div>
 </header>
@@ -451,12 +663,12 @@ align-items: center;
             <input type="text" class="form-control" id="nik" required 
                    aria-describedby="nikHelp" pattern="[0-9]+" minlength="6" maxlength="6"
                    placeholder="Masukkan NIK">
-            <button id="chckbtn" class="btn btn-primary rounded-pill px-4" type="button" onclick="getData()">
-                <i class="fas fa-search"></i> <span class="d-none d-sm-inline">Check</span>
-            </button>
+                <button id="chckbtn" class="btn btn-primary rounded-pill d-flex align-items-center justify-content-center shadow-sm hover-lift" type="button" onclick="getData()" style="width: 38px; height: 38px; margin: auto 0;">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
             <div class="invalid-feedback">Please enter a valid NIK</div>
         </div>
-    </div>
+</div>
     <div class="col-md-7 col-sm-12">
         <label for="name" class="form-label">Name</label>
         <input type="text" class="form-control" id="name" disabled
@@ -464,16 +676,18 @@ align-items: center;
     </div>
 </div>
 
-<label for="tipePinjamann">Tipe Pinjaman</label>
-<select id="tipePinjaman" class="form-select" aria-label="Default select example" required onchange="updateBunga()">
-<option selected>--Pilih Tipe Pinjaman--</option>
-<option value="Kredit Pemilikan Rumah (KPR)">Kredit Pemilikan Rumah (KPR)</option>
-<option value="Kredit Pemilikan Ruko">Kredit Pemilikan Ruko</option>
-<option value="Kredit Multi Guna (KMG)">Kredit Multi Guna (KMG)</option>
-<option value="Kredit Kendaraan Bermotor (KKB)">Kredit Kendaraan Bermotor (KKB)</option>
-<option value="Kredit Kendaraan Bermotor - Electronic Vehicle">Kredit Kendaraan Bermotor - Electronic Vehicle</option>
-<option value="Emergency Loan">Emergency Loan</option>
-</select>
+<div class="form-group" style="margin-bottom: 12px;">
+    <label for="tipePinjaman" style="margin-bottom: 0;">Tipe Pinjaman</label>
+    <select id="tipePinjaman" class="form-select" aria-label="Default select example" required onchange="updateBunga()" style="margin-top: 2px;">
+        <option selected>--Pilih Tipe Pinjaman--</option>
+        <option value="Kredit Pemilikan Rumah (KPR)">Kredit Pemilikan Rumah (KPR)</option>
+        <option value="Kredit Pemilikan Ruko">Kredit Pemilikan Ruko</option>
+        <option value="Kredit Multi Guna (KMG)">Kredit Multi Guna (KMG)</option>
+        <option value="Kredit Kendaraan Bermotor (KKB)">Kredit Kendaraan Bermotor (KKB)</option>
+        <option value="Kredit Kendaraan Bermotor - Electronic Vehicle">Kredit Kendaraan Bermotor - Electronic Vehicle</option>
+        <option value="Emergency Loan">Emergency Loan</option>
+    </select>
+</div>
 
 <div class="mb-3">
 <label for="plafond" class="form-label">Plafond Pinjaman</label>
@@ -484,45 +698,59 @@ align-items: center;
 <label for="jangkaWaktu" class="form-label">Jangka Waktu (Bulan) </label>
 <input type="number" class="form-control" id="jangkaWaktu" required>
 </div>
+
+<div class="mb-3">
 <label for="bunga">Bunga Pinjaman</label>
 <input type="text" id="bunga" disabled>
+</div>
 
+<div class="mb-3">
 <label for="gajiPokok" class="form-label">
 Gaji Pokok
 <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika Joint Income dengan penghasilan pasangan (suami/istri), maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
 </label>
 
-<div class="mb-3">
-<!-- <label for="gajiPokok" class="form-label">Gaji Pokok</label> -->
 <input type="text" class="form-control" id="gajiPokok" required onchange="updateDBR()">
 </div>
 
+<div class="mb-3">
 <label for="dbr">DBR</label>
 <input type="text" id="dbr" disabled>
+</div>
+
+<div class="mb-3">
 <label for="cicilanBerjalan">Cicilan Berjalan
     <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika memiliki cicilan pinjaman yang masih aktif di Hibank dan di luar Hibank, maka harap dicantumkan total cicilan tersebut."></i>
 </label>
-</label>
 <input type="text" id="cicilanBerjalan" onchange="formatCicil()">
+</div>
 
-<button type="button" class="btn btn-success" onclick="genHitung()">Hitung</button>
-<button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
-<button type="button" id="downloadPdfButton" class="btn btn-primary">Download PDF</button>
+<div class="d-flex gap-2">
+    <button type="button" class="btn btn-success btn-sm px-3" onclick="genHitung()">Hitung</button>
+    <button type="button" class="btn btn-secondary btn-sm px-3" onclick="resetForm()">Reset</button>
+    <button type="button" id="downloadPdfButton" class="btn btn-primary btn-sm px-3">Download PDF</button>
+</div>
 
 </form>
 <!-- <h3 id="error" >error handling</h3> -->
 
 <!-- Floating Box Section -->
 <div id="floatingBox" class="card">
-<div class="card-body">
-<h6>Syarat & Ketentuan:</h6>
-<p>Here you can put additional information for the user, such as login tips or general instructions.</p>
-</div>
+    <div class="card-body">
+        <h6>Syarat & Ketentuan:</h6>
+        <p>• Minimal masa kerja 1 tahun</p>
+        <p>• Status karyawan tetap</p>
+        <p>• Usia minimal 21 tahun</p>
+        <p>• Memiliki rekening HiBank</p>
+        <p>• Melampirkan slip gaji terakhir</p>
+        <p>• DBR (Debt Burden Ratio) maksimal sesuai ketentuan</p>
+    </div>
 </div>
 
 <!-- Button to toggle visibility of floating box -->
-<button id="toggleButton" class="btn btn-info" onclick="toggleInfoBox()">Show Info</button>
-
+<button id="toggleButton" class="btn">
+    <i class="fas fa-info-circle"></i> Info
+</button>
 </div>
 
 <!-- Result Container -->
@@ -545,29 +773,6 @@ Gaji Pokok
         <p>&copy; 2025 Human Capital Management System. All rights reserved.</p>
     </div>
 </footer>
-
-<!-- Script Untuk Formating Rupiah -->
-<script>
-
-// function formatPlafond() {
-//     var plafondField = document.getElementById("plafond");
-//     var value1 = plafondField.value.replace(/\D/g, ''); // Remove non-numeric characters
-//     var formattedValue1 = value1.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add "." as thousands separator
-//     plafondField.value = "Rp " + formattedValue1;
-// }
-// function formatGaji() {
-//     var gajiField = document.getElementById("gajiPokok");
-//     var value2 = gajiField.value.replace(/\D/g, ''); // Remove non-numeric characters
-//     var formattedValue2 = value2.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add "." as thousands separator
-//     gajiField.value = "Rp " + formattedValue2;
-// }
-// function formatCicil() {
-// var cicilField = document.getElementById("cicilanBerjalan");
-// var value3 = cicilField.value.replace(/\D/g, ''); // Remove non-numeric characters
-// var formattedValue3 = value3.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add "." as thousands separator
-// cicilField.value = "Rp " + formattedValue3;
-// }
-</script>
 
 <!-- Script Untuk Vlookup Bunga dari Tipe Kredit -->
 <script>
@@ -626,16 +831,38 @@ document.getElementById("alertModal").style.display = "none";
 
 <!-- Toggle visibility of the floating info box -->
 <script>
+
+// Initialize floating box state
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize floating box and button
+    const box = document.getElementById("floatingBox");
+    const button = document.getElementById("toggleButton");
+    
+    // Set initial state
+    box.style.display = "none";
+    
+    // Add click event listener to button
+    button.addEventListener('click', function() {
+        if (box.style.display === "none") {
+            box.style.display = "block";
+            this.innerHTML = '<i class="fas fa-info-circle"></i> Hide Info';
+        } else {
+            box.style.display = "none";
+            this.innerHTML = '<i class="fas fa-info-circle"></i> Info';
+        }
+    });
+});
+
 function toggleInfoBox() {
-var box = document.getElementById("floatingBox");
-var button = document.getElementById("toggleButton");
-if (box.style.display === "none" || box.style.display === "") {
-box.style.display = "block";
-button.innerText = "Hide Info";
-} else {
-box.style.display = "none";
-button.innerText = "Show Info";
-}
+    var box = document.getElementById("floatingBox");
+    var button = document.getElementById("toggleButton");
+    if (box.style.display === "none") {
+        box.style.display = "block";
+        button.innerHTML = '<i class="fas fa-info-circle"></i> Hide Info';
+    } else {
+        box.style.display = "none";
+        button.innerHTML = '<i class="fas fa-info-circle"></i> Show Info';
+    }
 }
 </script>
 
@@ -667,11 +894,10 @@ if (isNaN(plafond) || plafond <= 0) {
         return;
     }
 
-// Check if 'Kredit Multi Guna (KMG)' is selected and plafond exceeds the max limit
-if (tipePinjaman == "Kredit Multi Guna (KMG)" && plafond > 500000000) {
-showAlert("Error: Plafond Terlalu Besar", "Plafond Pinjaman untuk Kredit Multi Guna (KMG) tidak boleh lebih dari Rp 500,000,000");
-return; // Exit the function and prevent further calculations
+if (!validateKMG(tipePinjaman, plafond, jangkaWaktu)) {
+    return; // Stop execution if validation fails
 }
+
 // Perhitungan dengan Tabel
 var sisaPinjaman = plafond; // Initialize with Plafond
 // Calculate Monthly Installment based on the interest rate and plafond
@@ -679,22 +905,24 @@ var angsuran = calculatePMT(bunga,jangkaWaktu,plafond); // Monthly installment c
 var resultHtml = `
 <h3>Hasil Simulasi:</h3>
 <div class="table-wrapper">
-<table class="table table-striped table-hover sticky-table" border="1" cellpadding="10" width= "100%">
-<tr>
-<th>Angsuran Ke-</th>
-<th>Sisa Pinjaman</th>
-<th>Pokok</th>
-<th>Angsuran Bunga</th>
-<th>Angsuran</th>
-</tr>
-<tr>
-<td>0</td>
-<td>Rp ${plafond.toLocaleString()}</td>
-<td>Rp -</td>
-<td>Rp -</td>
-<td>Rp -</td>
-</tr>
-</div>
+    <table class="table table-hover sticky-table">
+        <thead>
+            <tr>
+                <th>Angsuran Ke-</th>
+                <th>Sisa Pinjaman</th>
+                <th>Pokok</th>
+                <th>Angsuran Bunga</th>
+                <th>Total Angsuran</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>Rp ${plafond.toLocaleString('id-ID')}</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
 `;
 // Loop for each month of the loan period
 for (var i = 1; i <= jangkaWaktu; i++) {
@@ -769,14 +997,16 @@ showAlert("NIK Tidak Ditemukan", "Coba Lagi");
 }
 </script>
 
-<!-- Script Function to generate and download the PDF -->
-
-
 
 </body>
-
 </html>
 
+<!-- Closing Initial Info Section -->
+<script>
+    function closeInitialInfo() {
+        document.getElementById('initialInfoBoard').style.display = 'none';
+    }
+</script>
 
 <!-- Add form validation script -->
 <script>
@@ -800,7 +1030,110 @@ function validateInput(input) {
     }
 }
 
-// Initialize Cleave.js for currency formatting
+function validateKMG(tipePinjaman, plafond, jangkaWaktu) {
+  if (tipePinjaman === "Kredit Multi Guna (KMG)") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 500000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Kredit Multi Guna (KMG) tidak boleh lebih dari Rp 500,000,000"
+      );
+      return false; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 60) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Kredit Multi Guna (KMG) tidak boleh lebih dari 5 tahun/60 bulan"
+      );
+      return false;  // Exit the function and prevent further calculations
+    }
+  }
+
+  if (tipePinjaman === "Kredit Pemilikan Rumah (KPR)") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 5000000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Kredit Pemilikan Rumah (KPR) tidak boleh lebih dari Rp 5,000,000,000"
+      );
+      return false; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 240) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Kredit Pemilikan Rumah (KPR) tidak boleh lebih dari 20 tahun/240 bulan"
+      );
+      return false;  // Exit the function and prevent further calculations
+    }
+  }
+
+  if (tipePinjaman === "Kredit Kendaraan Bermotor (KKB)") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 700000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Kredit Kendaraan Bermotor (KKB) tidak boleh lebih dari Rp 700,000,000"
+      );
+      return false; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 240) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Kredit Kendaraan Bermotor (KKB) tidak boleh lebih dari 5 tahun/60 bulan"
+      );
+      return false;  // Exit the function and prevent further calculations
+    }
+  }
+  
+  if (tipePinjaman === "Kredit Kendaraan Bermotor - Electronic Vehicle") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 700000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Kredit Kendaraan Bermotor - Electronic Vehicle tidak boleh lebih dari Rp 700,000,000"
+      );
+      return false; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 36) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Kredit Kendaraan Bermotor - Electronic Vehicle tidak boleh lebih dari 3 tahun/36 bulan"
+      );
+      return false;  // Exit the function and prevent further calculations
+    }
+  }
+
+  if (tipePinjaman === "Emergency Loan") {
+    // Check if plafond exceeds the maximum allowed value
+    if (plafond > 100000000) {
+      showAlert(
+        "Error: Plafond Terlalu Besar",
+        "Plafond Pinjaman untuk Emergency Loan tidak boleh lebih dari Rp 700,000,000"
+      );
+      return false; 
+    }
+
+    // Check if jangkaWaktu exceeds the maximum allowed value
+    if (jangkaWaktu > 12) {
+      showAlert(
+        "Error: Jangka Waktu Terlalu Panjang",
+        "Jangka Waktu untuk Emergency Loan tidak boleh lebih dari 1 tahun/12 bulan"
+      );
+      return false;  // Exit the function and prevent further calculations
+    }
+}
+return true;
+  
+}
+
 // Remove the existing Cleave.js initialization and replace with these functions
 function formatCurrency(input) {
     // Remove all non-digits and convert to number
@@ -829,110 +1162,3 @@ document.getElementById('cicilanBerjalan').addEventListener('input', function(e)
 });
 </script>
 
-
-// Function to check Kredit Multi Guna (KMG) conditions
-function validateKMG(tipePinjaman, plafond, jangkaWaktu) {
-  if (tipePinjaman === "Kredit Multi Guna (KMG)") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 500000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Kredit Multi Guna (KMG) tidak boleh lebih dari Rp 500,000,000"
-      );
-      return; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 60) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Kredit Multi Guna (KMG) tidak boleh lebih dari 5 tahun/60 bulan"
-      );
-      return;  // Exit the function and prevent further calculations
-    }
-  }
-
-  if (tipePinjaman === "Kredit Pemilikan Rumah (KPR)") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 5000000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Kredit Pemilikan Rumah (KPR) tidak boleh lebih dari Rp 5,000,000,000"
-      );
-      return; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 240) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Kredit Pemilikan Rumah (KPR) tidak boleh lebih dari 20 tahun/240 bulan"
-      );
-      return;  // Exit the function and prevent further calculations
-    }
-  }
-
-  if (tipePinjaman === "Kredit Kendaraan Bermotor (KKB)") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 700000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Kredit Kendaraan Bermotor (KKB) tidak boleh lebih dari Rp 700,000,000"
-      );
-      return; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 240) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Kredit Kendaraan Bermotor (KKB) tidak boleh lebih dari 5 tahun/60 bulan"
-      );
-      return;  // Exit the function and prevent further calculations
-    }
-  }
-  
-  if (tipePinjaman === "Kredit Kendaraan Bermotor - Electronic Vehicle") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 700000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Kredit Kendaraan Bermotor - Electronic Vehicle tidak boleh lebih dari Rp 700,000,000"
-      );
-      return; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 36) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Kredit Kendaraan Bermotor - Electronic Vehicle tidak boleh lebih dari 3 tahun/36 bulan"
-      );
-      return;  // Exit the function and prevent further calculations
-    }
-  }
-
-  if (tipePinjaman === "Emergency Loan") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 100000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Emergency Loan tidak boleh lebih dari Rp 700,000,000"
-      );
-      return; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 12) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Emergency Loan tidak boleh lebih dari 1 tahun/12 bulan"
-      );
-      return;  // Exit the function and prevent further calculations
-    }
-  }
-  
-}
-
-// Example usage:
-validateKMG(tipePinjaman, plafond, jangkaWaktu);
