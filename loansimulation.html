@@ -17,9 +17,9 @@ Tile : #176980 -->
 <!-- https://drive.google.com/file/d/1vWROesjizhti9mlBCwDD04mNIX4lJb1c/view?usp=drive_link -->
 <title>Hi Simulasi Pinjaman Karyawan</title>
 
+<!-- Style for Header & Footer Section -->
 <style>
-/* Add these new styles for header and footer */
-.site-header {
+    .site-header {
     background-color: white;
     padding: 15px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -88,468 +88,620 @@ body {
     margin: 0 auto;
     padding: 0 20px;
 }
+</style>
 
-label {
-margin-top: 0px;
-}
-
-input, select {
-width: 100%;
-padding: 8px;
-margin: 5px 0;
-border: 1px solid #ccc;
-border-radius: 4px;
-}
-
-button {
-padding: 10px 15px;
-background-color: #4CAF50;
-color: white;
-border: none;
-cursor: pointer;
-}
-
-button:hover {
-background-color: #45a049;
-}
-
-#chckbtn {
-    transition: all 0.2s ease-in-out;
-    border: none;
-    background: linear-gradient(45deg, #176980, #1a7b96);
-}
-
-#chckbtn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(23, 105, 128, 0.2);
-}
-
-#chckbtn:active {
-    transform: translateY(0);
-}
-
-.table {
-width: 100%;
-table-layout: auto;
-}
-
-.table-responsive {
-overflow-x: auto;
-width: 100%;
-}
-.container {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 1800px;
-    margin: 0 auto;
-    padding: 20px;
-    gap: 0px; /* Added gap property to control space between containers */
-    box-sizing: border-box;
-}
-
-.form-container, .result-container {
-    width: 100%;
-    max-width: calc(50% - 10px); /* Adjusted to account for gap */
-    margin-bottom: 20px;
-    box-sizing: border-box;
-}
-
-.result-container {
-    padding-left: 0; /* Remove left padding */
-    height: auto;
-    overflow-y: auto;
-    font-size: x-small;
-}
-
-.form-container {
-    position: sticky;
-    top: 20px;
-    width: 100%;
-    max-width: 800px; /* Increased from 600px */
-    margin: 0 auto;
-    padding: 40px; /* Increased padding */
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Update responsive breakpoints */
-@media (max-width: 1920px) {
-    .container {
-        max-width: 1600px;
+<!-- Style for Component -->
+<style>
+    label {
+    margin-top: 0px;
     }
-}
 
-@media (max-width: 1440px) {
-    .container {
-        max-width: 1200px;
-    }
-    .form-container {
-        max-width: 700px;
-    }
-}
-
-@media (max-width: 992px) {
-    .form-container, .result-container {
-        width: 100%;
-        max-width: 100%;
-        padding: 30px;
-    }
-}
-
-.form-container, .result-container {
-width: 100%;
-max-width: 48%;
-margin-bottom: 20px;
-box-sizing: border-box;
-}
-.form-container {
-position: sticky;
-top: 20px;
-width: 100%;
-max-width: 600px; /* Adjusted width for better readability */
-margin: 0 auto; /* Center the form */
-padding: 30px;
-background-color: white; /* Add background color */
-border-radius: 10px; /* Rounded corners */
-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
-
-.form-container form {
-display: grid;
-gap: 20px; /* Consistent spacing between form elements */
-}
-
-.form-container .row {
-margin-bottom: 20px; /* Add space between row elements */
-}
-
-.form-container label {
-    font-weight: 500;
-    margin-bottom: 0px; /* Reduced from 1px */
-    color: #176980;
-}
-
-input, select {
+    input, select {
     width: 100%;
     padding: 8px;
-    margin: 0px 0; /* Reduced from 1px */
+    margin: 5px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
-
-.mb-3 {
-    margin-bottom: 12px; /* Reduced from default bootstrap's 1rem (16px) */
-}
-
-.form-container input,
-.form-container select {
-padding: 10px;
-border: 1px solid #ddd;
-border-radius: 6px;
-width: 100%;
-transition: border-color 0.3s;
-}
-
-.form-container input:focus,
-.form-container select:focus {
-border-color: #176980;
-outline: none;
-box-shadow: 0 0 0 2px rgba(23, 105, 128, 0.1);
-}
-
-.form-container button {
-background-color: #176980;
-color: white;
-padding: 12px 24px;
-border-radius: 6px;
-border: none;
-cursor: pointer;
-transition: background-color 0.3s;
-}
-
-.form-container button:hover {
-background-color: #145d70;
-}
-
-
-.result-container {
-padding-left: 20px;
-/* border-left: 2px solid #ccc; */
-height: auto; /* Allow height to grow depending on content */
-overflow-y: auto;
-font-size:x-small;
-}
-
-h1 {
-    text-align: center;
-    margin: 0 auto;
-    padding: 30px 0;
-    color: #176980;
-    font-weight: 600;
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 3px solid #D15B28;
-    width: fit-content;
-    margin-bottom: 40px;
-}
-/* Modal styling */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
-    backdrop-filter: blur(5px); /* Add blur effect */
-    -webkit-backdrop-filter: blur(5px); /* For Safari support */
-    overflow: auto;
-    padding-top: 60px;
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: none;
-    border-radius: 12px;
-    width: 80%;
-    max-width: 600px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    animation: modalFadeIn 0.3s ease-out;
-}
-
-@keyframes modalFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
     }
-    to {
-        opacity: 1;
+
+    button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    }
+
+    button:hover {
+    background-color: #45a049;
+    }
+
+    #chckbtn {
+        transition: all 0.2s ease-in-out;
+        border: none;
+        background: linear-gradient(45deg, #176980, #1a7b96);
+    }
+
+    #chckbtn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(23, 105, 128, 0.2);
+    }
+
+    #chckbtn:active {
         transform: translateY(0);
     }
-}
 
-.modal-header {
-font-size: 18px;
-font-weight: bold;
-margin-bottom: 10px;
-}
-.modal-body {
-font-size: 16px;
-}
-.modal-close {
-color: #aaa;
-float: right;
-font-size: 28px;
-font-weight: bold;
-}
-.modal-close:hover,
-.modal-close:focus {
-color: black;
-text-decoration: none;
-cursor: pointer;
-}
+    input, select {
+        width: 100%;
+        padding: 8px;
+        margin: 0px 0; /* Reduced from 1px */
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-/* Add to your existing modal styling */
-#initialInfoBoard .modal-content {
-    padding: 30px;
-    border-radius: 12px;
-    border: none;
-    /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); */
-}
+    .mb-3 {
+        margin-bottom: 12px; /* Reduced from default bootstrap's 1rem (16px) */
+    }
 
-#initialInfoBoard ul li {
-    margin-bottom: 10px;
-    font-size: 16px;
-    color: #555;
-}
+    h1 {
+        text-align: center;
+        margin: 0 auto;
+        padding: 30px 0;
+        color: #176980;
+        font-weight: 600;
+        font-size: 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 3px solid #D15B28;
+        width: fit-content;
+        margin-bottom: 40px;
+    }
+</style>
 
-#initialInfoBoard .modal-header h4 {
-    margin: 0;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #D15B28;
-}
+<!-- Style for Table -->
+<style>
+    .simulation-header {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 25px;
+    }
 
-/* Floating Info Box Style */
-#floatingBox {
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    width: 300px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    display: none;
-    z-index: 100;
-    transition: all 0.3s ease;
-}
+    .simulation-header h3 {
+        color: #176980;
+        font-weight: 600;
+        margin: 0;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
-#floatingBox .card-body {
-    padding: 0;
-}
+    .header-line {
+        margin-top: 10px;
+        height: 3px;
+        background: linear-gradient(to right, #D15B28, rgba(209, 91, 40, 0.2));
+        border-radius: 2px;
+    }
 
-#floatingBox h6 {
-    color: #176980;
-    font-weight: 600;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #D15B28;
-}
+    .table {
+        width: 100%;
+        table-layout: auto;
+    }
 
-#floatingBox p {
-    margin: 0;
-    font-size: 14px;
-    color: #555;
-    line-height: 1.6;
-}
+    .table-responsive {
+        overflow-x: auto;
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
 
-/* Button to toggle floating box */
-#toggleButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 12px 20px;
-    background-color: #176980;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(23, 105, 128, 0.2);
-}
+    .table-wrapper {
+        border-radius: 12px;
+        background: white;
+        padding: 1px;
+        margin-top: 20px;
+        overflow: hidden;
+        width: 100%;
+    }
 
-#toggleButton:hover {
-    background-color: #145d70;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(23, 105, 128, 0.3);
-}
+    .sticky-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
 
-/* Responsive Adjustments */
-@media (max-width: 992px) {
-.form-container, .result-container {
-width: 100%;
-max-width: 100%;
-}
-}
+    .sticky-table th {
+        background-color: #176980;
+        color: white;
+        font-weight: 500;
+        padding: 15px;
+        text-align: center;
+        white-space: nowrap;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
 
-@media (max-width: 768px) {
-.form-container, .result-container {
-width: 100%; /* Stack both containers vertically on smaller screens */
-max-width: 100%;
-}
-.container {
-flex-direction: column; /* Stack the form and result container */
-}
-}
-@media (max-width: 480px) {
-.form-container, .result-container {
-padding-left: 10px; /* Adjust padding on smaller screens */
-}
-}
+    .sticky-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+        text-align: right;
+        font-size: 14px;
+    }
 
-.table-wrapper {
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    background: white;
-}
+    .sticky-table tr:hover {
+        background-color: #f8f9fa;
+        transition: background-color 0.2s ease;
+    }
 
-.sticky-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-}
+    .sticky-table tr:last-child {
+        font-weight: bold;
+        border-top-right-radius: 12px;
+    }
 
-.sticky-table th {
-    background-color: #176980;
-    color: white;
-    font-weight: 500;
-    padding: 12px 15px;
-    text-align: center;
-    white-space: nowrap;
-}
+    .sticky-table tr:last-child td {
+        border-bottom: none;
+    }   
 
-.sticky-table td {
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
-    text-align: right;
-    font-size: 14px;
-}
+    /* Column specific styles */
+    .sticky-table td:first-child {
+        text-align: center;
+        font-weight: 500;
+        border-top-left-radius: 12px;
+    }
 
-.sticky-table tr:hover {
-    background-color: #f8f9fa;
-}
+    .sticky-table td:not(:first-child) {
+        text-align: right;
+        white-space: nowrap;
+        color: #444;
+    }
 
-.sticky-table tr:last-child {
-    font-weight: bold;
-    background-color: #f2f2f2;
-}
+    .sticky-table td span {
+        display: inline-block;
+    }
+</style>
 
-/* Column specific styles */
-.sticky-table td:first-child {
-    text-align: center;
-    font-weight: 500;
-}
+<!-- Style for Container -->
+<style>
+    .container {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1800px;
+        margin: 0 auto;
+        padding: 20px;
+        gap: 0px; /* Added gap property to control space between containers */
+        box-sizing: border-box;
+    }
 
-/* Tooltip styling */
-.tooltip {
-position: relative;
-display: inline-block;
-cursor: pointer
-}
+    .result-container {
+        width: 100%;
+        max-width: calc(50% - 10px);
+        padding: 20px; /* Changed from padding-left only */
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        height: auto;
+        overflow-y: auto;
+        overflow-x: auto;
+        font-size: x-small;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-.tooltip .tooltiptext {
-visibility: hidden; /* Hidden by default */
-width: 300%;
-background-color: rgb(23, 105, 128);
-color: #fdfdfd;
-text-align: center;
-padding: 5px 10px;
-border-radius: 6px;
-/* Position the tooltip text */
-position: absolute;
-z-index: 1;
-top: -60%; /* Position above the icon */
-left: 190%;
-margin-left: -80px; /* Center the tooltip */
-opacity: 0; /* Make it fully transparent */
-transition: opacity 0.3s, visibility 0s 0.3s; /* Transition for opacity */
-white-space: normal; /* Allow text wrapping */
-word-wrap: break-word; /* Ensures long words wrap to the next line */
-}
+    .form-container {
+        position: sticky;
+        top: 20px;
+        width: 100%;
+        max-width: 800px; /* Increased from 600px */
+        margin: 0 auto;
+        padding: 40px; /* Increased padding */
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-/* Show the tooltip when hovering over the icon */
-.tooltip:hover .tooltiptext {
-visibility: visible; /* Make it visible when hovered */
-opacity: 1; /* Fade in the tooltip */
-transition: opacity 0.3s; /* Smooth transition */
-}
+    .form-container, .result-container {
+        width: 100%;
+        max-width: calc(50% - 10px); /* Adjusted to account for gap */
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
 
-/* Icon styling */
-#gajiTooltipIcon {
-color: #007bff;
-cursor: pointer;
-margin-left: 5px;
-font-size: 16px;
-}
+    .form-container form {
+        display: grid;
+        gap: 20px; /* Consistent spacing between form elements */
+     }
 
-/* Ensure the icon is aligned with the label */
-label[for="gajiPokok"] {
-display: flex;
-align-items: center;
-}
+    .form-container .row {
+        margin-bottom: 20px; /* Add space between row elements */
+    }
+
+    .form-container label {
+        font-weight: 500;
+        margin-bottom: 0px; /* Reduced from 1px */
+        color: #176980;
+    }
+
+    .form-container input,
+    .form-container select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        width: 100%;
+        transition: border-color 0.3s;
+    }
+
+    .form-container input:focus,
+    .form-container select:focus {
+        border-color: #176980;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(23, 105, 128, 0.1);
+    }
+
+    .form-container button {
+        background-color: #176980;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .form-container button:hover {
+        background-color: #145d70;
+    }
 
 </style>
+
+<!-- Style for Responsize Size -->
+<style>
+    @media (max-width: 1920px) {
+        .container {
+            max-width: 1600px;
+        }
+    }
+
+    @media (max-width: 1440px) {
+        .container {
+            max-width: 1200px;
+        }
+        .form-container {
+            max-width: 700px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .form-container, .result-container {
+            width: 100%;
+            max-width: 100%;
+            padding: 30px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.8rem;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .simulation-header h3 {
+            font-size: 1.3rem;
+        }
+
+        .form-container label {
+            font-size: 0.95rem;
+        }
+
+        .sticky-table {
+            font-size: 0.75rem; /* Smaller font for table on mobile */
+        }
+
+        .form-container {
+            padding: 20px 15px;
+            margin: 10px 0;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-container input,
+        .form-container select {
+            padding: 12px; /* Larger touch targets */
+            margin: 4px 0;
+            font-size: 16px; /* Prevent zoom on iOS */
+        }
+
+        .form-container .row {
+            margin-bottom: 15px;
+        }
+
+        /* Better button layout for mobile */
+        .d-flex.gap-2 {
+            flex-direction: column;
+            gap: 10px !important;
+        }
+
+        .d-flex.gap-2 button {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+        }
+
+        .result-container {
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .table-wrapper {
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -15px;
+            padding: 0 15px;
+        }
+
+        .sticky-table td, 
+        .sticky-table th {
+            padding: 10px 8px;
+            white-space: nowrap;
+        }
+
+        .modal-content {
+            width: 95%;
+            margin: 10px auto;
+            padding: 15px;
+        }
+
+        .modal {
+            padding-top: 30px;
+        }
+
+        .modal-close {
+            padding: 10px;
+        }
+
+        #initialInfoBoard .modal-content {
+            padding: 20px;
+        }
+
+        #initialInfoBoard ul li {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        #floatingBox {
+            width: 85%;
+            bottom: 70px;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        #toggleButton {
+            width: auto;
+            right: 50%;
+            transform: translateX(50%);
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            padding: 5px;
+        }
+
+        .form-container, .result-container {
+            padding: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            padding: 20px 0;
+        }
+    }
+</style>
+
+<!-- Style for Modal -->
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+        backdrop-filter: blur(5px); /* Add blur effect */
+        -webkit-backdrop-filter: blur(5px); /* For Safari support */
+        overflow: auto;
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: none;
+        border-radius: 12px;
+        width: 80%;
+        max-width: 600px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .modal-body {
+        font-size: 16px;
+    }
+
+    .modal-close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .modal-close:hover,
+    .modal-close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<!-- Style for Iniatial Board -->
+<style>
+    #initialInfoBoard .modal-content {
+        padding: 30px;
+        border-radius: 12px;
+        border: none;
+        /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); */
+    }
+
+    #initialInfoBoard ul li {
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #555;
+    }
+
+    #initialInfoBoard .modal-header h4 {
+        margin: 0;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #D15B28;
+    }
+</style>
+
+<!-- Style Floating Box & Button-->
+<style>
+    #floatingBox {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 300px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: none;
+        z-index: 100;
+        transition: all 0.3s ease;
+    }
+
+    #floatingBox .card-body {
+        padding: 0;
+    }
+
+    #floatingBox h6 {
+        color: #176980;
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #D15B28;
+    }
+
+    #floatingBox p {
+        margin: 0;
+        font-size: 14px;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    /* Button to toggle floating box */
+    #toggleButton {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        background-color: #176980;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(23, 105, 128, 0.2);
+    }
+
+    #toggleButton:hover {
+        background-color: #145d70;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(23, 105, 128, 0.3);
+    }
+</style>
+
+<!-- Style Tooltip-->
+<style>
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden; /* Hidden by default */
+        width: 300%;
+        background-color: rgb(23, 105, 128);
+        color: #fdfdfd;
+        text-align: center;
+        padding: 5px 10px;
+        border-radius: 6px;
+        /* Position the tooltip text */
+        position: absolute;
+        z-index: 1;
+        top: -60%; /* Position above the icon */
+        left: 190%;
+        margin-left: -80px; /* Center the tooltip */
+        opacity: 0; /* Make it fully transparent */
+        transition: opacity 0.3s, visibility 0s 0.3s; /* Transition for opacity */
+        white-space: normal; /* Allow text wrapping */
+        word-wrap: break-word; /* Ensures long words wrap to the next line */
+    }
+
+    /* Show the tooltip when hovering over the icon */
+    .tooltip:hover .tooltiptext {
+        visibility: visible; /* Make it visible when hovered */
+        opacity: 1; /* Fade in the tooltip */
+        transition: opacity 0.3s; /* Smooth transition */
+    }
+
+    /* Icon styling */
+    #gajiTooltipIcon {
+        color: #007bff;
+        cursor: pointer;
+        margin-left: 5px;
+        font-size: 16px;
+    }
+
+    /* Ensure the icon is aligned with the label */
+    label[for="gajiPokok"] {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
 </head>
 
 <body>
@@ -649,7 +801,7 @@ align-items: center;
     </div>
 </header>
 
-<h1>Simulasi Pinjaman  Karyawan</h1>
+<h1>Simulasi Pinjaman Karyawan</h1>
 <div class="container">
 <div class="form-container">
 
@@ -904,7 +1056,10 @@ var sisaPinjaman = plafond; // Initialize with Plafond
 // Calculate Monthly Installment based on the interest rate and plafond
 var angsuran = calculatePMT(bunga,jangkaWaktu,plafond); // Monthly installment calculation
 var resultHtml = `
-<h3>Hasil Simulasi:</h3>
+<div class="simulation-header">
+    <h3>Hasil Simulasi</h3>
+    <div class="header-line"></div>
+</div>
 <div class="table-wrapper">
     <table class="table table-hover sticky-table">
         <thead>
