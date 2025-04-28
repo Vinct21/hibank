@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HiBank Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+    <style>
+        body {
+            font-family: 'Jost', sans-serif;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            min-height: 100vh;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-control:focus {
+            border-color: #D15B28;
+            box-shadow: 0 0 0 0.25rem rgba(209, 91, 40, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #D15B28;
+            border-color: #D15B28;
+        }
+
+        .btn-primary:hover {
+            background-color: #b94f23;
+            border-color: #b94f23;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(209, 91, 40, 0.3);
+        }
+
+        /* Update text colors */
+        .text-primary {
+            color: #176980 !important;
+        }
+
+        a.text-primary:hover {
+            color: #145d70 !important;
+        }
+
+        .form-check-input:checked {
+            background-color: #D15B28;
+            border-color: #D15B28;
+        }
+
+        .input-group-text {
+            background: transparent;
+            border-left: none;
+            cursor: pointer;
+        }
+
+        .form-control {
+            border-right: none;
+        }
+
+        .password-toggle {
+            color: #666;
+        }
+
+        .logo img {
+            max-width: 150px;
+            height: auto;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-5">
+                <div class="login-container p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <!-- <img src="path/to/your/logo.png" alt="HiBank Logo" class="mb-4"> -->
+                        <h2 class="text-primary fw-bold">Welcome hiro</h2>
+                    </div>
+
+                    <form id="loginForm" onsubmit="handleLogin(event)">
+                        <div class="mb-4">
+                            <label for="username" class="form-label text-primary fw-medium">Username</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label text-primary fw-medium">Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                                <span class="input-group-text" onclick="togglePassword()">
+                                    <i class="fas fa-eye password-toggle"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="remember">
+                                <label class="form-check-label" for="remember">Remember me</label>
+                            </div>
+                            <a href="#" class="text-primary text-decoration-none">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 position-relative" id="loginBtn">
+                            <span>Login</span>
+                            <span class="spinner-border spinner-border-sm position-absolute d-none" role="status"></span>
+                        </button>
+                    </form>
+
+                    <div class="alert alert-danger mt-3 d-none" id="errorMessage" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span>Invalid username or password</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.querySelector('.password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            const spinner = loginBtn.querySelector('.spinner-border');
+            const btnText = loginBtn.querySelector('span:not(.spinner-border)');
+            const remember = document.getElementById('remember').checked;
+
+            // Show loading state
+            loginBtn.disabled = true;
+            btnText.classList.add('invisible');
+            spinner.classList.remove('d-none');
+            errorMessage.classList.add('d-none');
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                if (username === 'admin' && password === 'password') {
+                    if (remember) {
+                        localStorage.setItem('rememberedUser', username);
+                    } else {
+                        localStorage.removeItem('rememberedUser');
+                    }
+                    
+                    window.location.href = "dashboard.html";
+                } else {
+                    throw new Error('Invalid credentials');
+                }
+            } catch (error) {
+                errorMessage.classList.remove('d-none');
+            } finally {
+                loginBtn.disabled = false;
+                btnText.classList.remove('invisible');
+                spinner.classList.add('d-none');
+            }
+        }
+
+        window.onload = function() {
+            const rememberedUser = localStorage.getItem('rememberedUser');
+            if (rememberedUser) {
+                document.getElementById('username').value = rememberedUser;
+                document.getElementById('remember').checked = true;
+            }
+        };
+    </script>
+
+    <!-- Encrypt Password -->
+    <script>
+      // Add this variable to store hashed password
+      const STORED_HASH = '$2a$10$YourHashedPasswordHere'; // Replace with actual hashed password
+  
+      async function handleLogin(event) {
+          event.preventDefault();
+          
+          const username = document.getElementById('username').value.trim();
+          const password = document.getElementById('password').value;
+          const errorMessage = document.getElementById('errorMessage');
+          const loginBtn = document.getElementById('loginBtn');
+          const spinner = loginBtn.querySelector('.spinner-border');
+          const btnText = loginBtn.querySelector('span:not(.spinner-border)');
+          const remember = document.getElementById('remember').checked;
+  
+          // Show loading state
+          loginBtn.disabled = true;
+          btnText.classList.add('invisible');
+          spinner.classList.remove('d-none');
+          errorMessage.classList.add('d-none');
+  
+          try {
+              // Simulate API call with delay
+              await new Promise(resolve => setTimeout(resolve, 1500));
+  
+              // Check username and compare hashed password
+              if (username === 'admin' && bcrypt.compareSync(password, STORED_HASH)) {
+                  if (remember) {
+                      localStorage.setItem('rememberedUser', username);
+                  } else {
+                      localStorage.removeItem('rememberedUser');
+                  }
+                  
+                  window.location.href = "dashboard.html";
+              } else {
+                  throw new Error('Invalid credentials');
+              }
+          } catch (error) {
+              errorMessage.classList.remove('d-none');
+          } finally {
+              loginBtn.disabled = false;
+              btnText.classList.remove('invisible');
+              spinner.classList.add('d-none');
+          }
+      }
+  
+      // Add this function to generate hash for new passwords
+      function generateHash(password) {
+          const salt = bcrypt.genSaltSync(10);
+          const hash = bcrypt.hashSync(password, salt);
+          console.log('Generated hash:', hash);
+          return hash;
+      }
+  
+      // Example of how to generate a hash for 'password'
+      // Run this in console to get the hash for your desired password
+      // generateHash('password');
+  </script>
+</body>
+</html>
