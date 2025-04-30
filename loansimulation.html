@@ -365,14 +365,49 @@ body {
 
     @media (max-width: 1440px) {
         .container {
-            max-width: 1200px;
+            flex-direction: column;
+            gap: 15px;
         }
+        
         .form-container {
-            max-width: 700px;
+        order: 1;
+        width: 100%;
+        min-width: 100%;
+        margin-bottom: 15px;
+        }
+
+        .result-container {
+        order: 0; 
+        width: 100%;
+        min-width: 100%;
+        }
+
+        .form-container, .result-container {
+            width: 100%;
+            max-width: 100%;
+            padding: 30px;
         }
     }
 
     @media (max-width: 992px) {
+        .container {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-container {
+        order: 1;
+        width: 100%;
+        min-width: 100%;
+        margin-bottom: 15px;
+        }
+
+        .result-container {
+        order: 0; 
+        width: 100%;
+        min-width: 100%;
+        }
+
         .form-container, .result-container {
             width: 100%;
             max-width: 100%;
@@ -827,55 +862,62 @@ body {
     </div>
 </div>
 
-<input type="hidden" id="status" />
+<div class="row g-3 align-items-end">
+    <div class="col-md-8">
+        <div class="form-group">
+            <label for="tipePinjaman" style="margin-bottom: 0;">Tipe Pinjaman</label>
+            <select id="tipePinjaman" class="form-select" aria-label="Default select example" required onchange="updateBunga(),updateDP()" style="margin-top: 2px;">
+                <option selected>--Pilih Tipe Pinjaman--</option>
+                <option value="Kredit Pemilikan Rumah (KPR)">Kredit Pemilikan Rumah (KPR)</option>
+                <option value="Kredit Pemilikan Ruko">Kredit Pemilikan Ruko</option>
+                <option value="Kredit Multi Guna (KMG)">Kredit Multi Guna (KMG)</option>
+                <option value="Kredit Kendaraan Bermotor (KKB)">Kredit Kendaraan Bermotor (KKB)</option>
+                <option value="Kredit Kendaraan Bermotor - Electronic Vehicle">Kredit Kendaraan Bermotor - Electronic Vehicle</option>
+                <option value="Emergency Loan">Emergency Loan</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <label for="dp" class="form-label">Down Payment (DP)</label>
+        <input type="text" id="dp" class="form-control" disabled>
+    </div>
+</div>  
 
-<div class="form-group" style="margin-bottom: 12px;">
-    <label for="tipePinjaman" style="margin-bottom: 0;">Tipe Pinjaman</label>
-    <select id="tipePinjaman" class="form-select" aria-label="Default select example" required onchange="updateBunga()" style="margin-top: 2px;">
-        <option selected>--Pilih Tipe Pinjaman--</option>
-        <option value="Kredit Pemilikan Rumah (KPR)">Kredit Pemilikan Rumah (KPR)</option>
-        <option value="Kredit Pemilikan Ruko">Kredit Pemilikan Ruko</option>
-        <option value="Kredit Multi Guna (KMG)">Kredit Multi Guna (KMG)</option>
-        <option value="Kredit Kendaraan Bermotor (KKB)">Kredit Kendaraan Bermotor (KKB)</option>
-        <option value="Kredit Kendaraan Bermotor - Electronic Vehicle">Kredit Kendaraan Bermotor - Electronic Vehicle</option>
-        <option value="Emergency Loan">Emergency Loan</option>
-    </select>
+<div class="mb-3">
+    <label for="plafond" class="form-label">Plafond Pinjaman</label>
+    <input type="text" class="form-control" id="plafond" required>
 </div>
 
 <div class="mb-3">
-<label for="plafond" class="form-label">Plafond Pinjaman</label>
-<input type="text" class="form-control" id="plafond" required>
+    <label for="jangkaWaktu" class="form-label">Jangka Waktu (Bulan) </label>
+    <input type="number" class="form-control" id="jangkaWaktu" required>
 </div>
 
 <div class="mb-3">
-<label for="jangkaWaktu" class="form-label">Jangka Waktu (Bulan) </label>
-<input type="number" class="form-control" id="jangkaWaktu" required>
+    <label for="bunga">Bunga Pinjaman</label>
+    <input type="text" id="bunga" disabled>
 </div>
 
 <div class="mb-3">
-<label for="bunga">Bunga Pinjaman</label>
-<input type="text" id="bunga" disabled>
+    <label for="gajiPokok" class="form-label">
+        Gaji Pokok
+        <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika Joint Income dengan penghasilan pasangan (suami/istri), maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
+    </label>
+
+    <input type="text" class="form-control" id="gajiPokok" required onchange="updateDBR()">
 </div>
 
 <div class="mb-3">
-<label for="gajiPokok" class="form-label">
-Gaji Pokok
-<i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika Joint Income dengan penghasilan pasangan (suami/istri), maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
-</label>
-
-<input type="text" class="form-control" id="gajiPokok" required onchange="updateDBR()">
+    <label for="dbr">DBR</label>
+    <input type="text" id="dbr" disabled>
 </div>
 
 <div class="mb-3">
-<label for="dbr">DBR</label>
-<input type="text" id="dbr" disabled>
-</div>
-
-<div class="mb-3">
-<label for="cicilanBerjalan">Cicilan Berjalan
-    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika memiliki cicilan pinjaman yang masih aktif di Hibank dan di luar Hibank, maka harap dicantumkan total cicilan tersebut."></i>
-</label>
-<input type="text" id="cicilanBerjalan" onchange="formatCicil()">
+    <label for="cicilanBerjalan">Cicilan Berjalan
+        <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika memiliki cicilan pinjaman yang masih aktif di Hibank dan di luar Hibank, maka harap dicantumkan total cicilan tersebut."></i>
+    </label>
+    <input type="text" id="cicilanBerjalan" onchange="formatCicil()">
 </div>
 
 <div class="d-flex gap-2">
@@ -908,17 +950,17 @@ Gaji Pokok
 
 <!-- Result Container -->
 <div class="result-container">
-<div id="result"></div>
-</div>
+    <div id="result"></div>
+    </div>
 </div>
 
 <!-- Custom Modal -->
 <div id="alertModal" class="modal">
-<div class="modal-content">
-<span class="modal-close" onclick="closeModal()">&times;</span>
-<div class="modal-header" id="modalTitle"></div>
-<div class="modal-body" id="modalMessage"></div>
-</div>
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div class="modal-header" id="modalTitle"></div>
+        <div class="modal-body" id="modalMessage"></div>
+    </div>
 </div>
 
 <footer class="site-footer">
@@ -931,40 +973,58 @@ Gaji Pokok
 <script>
 // Function to update Bunga field based on selected loan type
 function updateBunga() {
-var tipePinjaman = document.getElementById("tipePinjaman").value;
-var bunga;
-switch(tipePinjaman) {
-case "Kredit Pemilikan Rumah (KPR)": bunga = "5%"; break;
-case "Kredit Pemilikan Ruko": bunga = "5%"; break;
-case "Kredit Multi Guna (KMG)": bunga = "7%"; break;
-case "Kredit Kendaraan Bermotor (KKB)": bunga = "4%"; break;
-case "Kredit Kendaraan Bermotor - Electronic Vehicle": bunga = "3.5%"; break;
-case "Emergency Loan": bunga = "0%"; break;
-default: bunga = ""; break;
-}
-// Set the Bunga field value
-document.getElementById("bunga").value = bunga;
+    var tipePinjaman = document.getElementById("tipePinjaman").value;
+    var bunga;
+    switch(tipePinjaman) {
+        case "Kredit Pemilikan Rumah (KPR)": bunga = "5%"; break;
+        case "Kredit Pemilikan Ruko": bunga = "5%"; break;
+        case "Kredit Multi Guna (KMG)": bunga = "7%"; break;
+        case "Kredit Kendaraan Bermotor (KKB)": bunga = "4%"; break;
+        case "Kredit Kendaraan Bermotor - Electronic Vehicle": bunga = "3.5%"; break;
+        case "Emergency Loan": bunga = "0%"; break;
+        default: bunga = ""; break;
+    }
+
+    // Set the Bunga field value
+    document.getElementById("bunga").value = bunga;
 }
 </script>
+
+<!-- Script Untuk Vlookup DP dari Tipe Kredit -->
+<script>
+    // Function to update Bunga field based on selected loan type
+    function updateDP() {
+        var tipePinjaman = document.getElementById("tipePinjaman").value;
+        var dp;
+        switch(tipePinjaman) {
+            case "Kredit Pemilikan Rumah (KPR)": dp = "10%"; break;
+            case "Kredit Pemilikan Ruko": dp = "30%"; break;
+            default: dp = ""; break;
+        }
+    
+        // Set the Bunga field value
+        document.getElementById("dp").value = dp;
+    }
+    </script>
 
 <!-- Script Untuk Vlookup DBR dari Gaji Pokok -->
 <script>
 // Function to update DBR field based on Gaji Pokok
 function updateDBR() {
-var gajiPokok = parseFloat(document.getElementById("gajiPokok").value.replace(/\D/g, ''));
-var dbr;
-// Check the ranges for Gaji Pokok and set the corresponding DBR
-if (gajiPokok <= 10000000) {
-dbr = "30%";
-} else if (gajiPokok <= 50000000) {
-dbr = "35%";
-} else if (gajiPokok > 50000000) {
-dbr = "40%";
-} else {
-dbr = ""; // Default if no condition is met
-}
+    var gajiPokok = parseFloat(document.getElementById("gajiPokok").value.replace(/\D/g, ''));
+    var dbr;
+    // Check the ranges for Gaji Pokok and set the corresponding DBR
+    if (gajiPokok <= 10000000) {
+        dbr = "30%";
+        } else if (gajiPokok <= 50000000) {
+        dbr = "35%";
+        } else if (gajiPokok > 50000000) {
+        dbr = "40%";
+        } else {
+        dbr = ""; // Default if no condition is met
+    }
 // Set the DBR field value
-document.getElementById("dbr").value = dbr;
+    document.getElementById("dbr").value = dbr;
 }
 </script>
 
@@ -972,13 +1032,13 @@ document.getElementById("dbr").value = dbr;
 <script>
 // Custom Modal Show
 function showAlert(title, message) {
-document.getElementById("modalTitle").innerText = title;
-document.getElementById("modalMessage").innerText = message;
-document.getElementById("alertModal").style.display = "block";
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalMessage").innerText = message;
+    document.getElementById("alertModal").style.display = "block";
 }
 // Close the custom modal
 function closeModal() {
-document.getElementById("alertModal").style.display = "none";
+    document.getElementById("alertModal").style.display = "none";
 }
 </script>
 
