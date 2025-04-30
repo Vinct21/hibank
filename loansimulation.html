@@ -1035,7 +1035,15 @@ const gajiPokok = parseFloat(gajiPokokInput.replace(/[^\d]/g, '')); // Remove al
 const cicilanBerjalanInput = document.getElementById("cicilanBerjalan").value;
 const cicilanBerjalan = parseFloat(cicilanBerjalanInput.replace(/[^\d]/g, '')); // Remove all non-digits
 
+const maksimalCicilan = gajiPokok * (bunga/100) - cicilanBerjalan;
+console.log(maksimalCicilan);
+
 var tipePinjaman = document.getElementById("tipePinjaman").value;
+
+// Perhitungan dengan Tabel
+var sisaPinjaman = plafond; // Initialize with Plafond
+// Calculate Monthly Installment based on the interest rate and plafond
+var angsuran = calculatePMT(bunga,jangkaWaktu,plafond); // Monthly installment calculation
 
 // Validate inputs
 if (isNaN(plafond) || plafond <= 0) {
@@ -1051,10 +1059,12 @@ if (!validateKMG(tipePinjaman, plafond, jangkaWaktu)) {
     return; // Stop execution if validation fails
 }
 
-// Perhitungan dengan Tabel
-var sisaPinjaman = plafond; // Initialize with Plafond
-// Calculate Monthly Installment based on the interest rate and plafond
-var angsuran = calculatePMT(bunga,jangkaWaktu,plafond); // Monthly installment calculation
+
+if (angsuran > maksimalCicilan) {
+    showAlert("Error", "Angsuran melebihi batas maksimal.");
+    return;
+}
+
 var resultHtml = `
 <div class="simulation-header">
     <h3>Hasil Simulasi</h3>
@@ -1085,7 +1095,7 @@ for (var i = 1; i <= jangkaWaktu; i++) {
 // Calculate interest for the current remaining loan balance
 var bungaAmount = sisaPinjaman * (bunga / 100) / 12;
 // bungaAmount = Math.round(bungaAmount);
-console.log(bungaAmount)
+// console.log(bungaAmount)
 // Calculate the principal part of the installment
 var pokok = angsuran - bungaAmount;
 // pokok = Math.round(pokok);
