@@ -3,61 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Transfer</title> <script src="https://cdn.tailwindcss.com"></script>
+    <title>Employee Transfer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <base target="_top">
     <script>
         // Optional: Tailwind Customization
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'], // Set Inter as the default font
                     },
                     colors: {
-                        'header-bg': '#ffffff', 'sidebar-bg': '#f8f9fa',
-                        'primary-blue': '#0d6efd', 'secondary-gray': '#6c757d',
-                        'light-gray': '#f1f3f5', 'border-gray': '#dee2e6',
-                        'text-dark': '#212529', 'text-muted': '#6c757d',
-                        'status-approved': '#198754', 'status-pending': '#ffc107',
-                        'status-rejected': '#dc3545', 'modal-overlay': 'rgba(0, 0, 0, 0.5)',
+                        // Custom colors matching the screenshot
+                        'header-bg': '#ffffff',
+                        'sidebar-bg': '#f8f9fa',
+                        'primary-blue': '#0d6efd', // Example primary blue
+                        'secondary-gray': '#6c757d',
+                        'light-gray': '#f1f3f5',
+                        'border-gray': '#dee2e6',
+                        'text-dark': '#212529',
+                        'text-muted': '#6c757d',
+                        'status-approved': '#198754', // Green for approved
+                        'status-pending': '#ffc107', // Yellow for pending
+                        'status-rejected': '#dc3545', // Red for rejected
+                        'modal-overlay': 'rgba(0, 0, 0, 0.5)', // Semi-transparent black overlay
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Custom styles (same as before) */
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
-        .nav-link-active { color: #0d6efd; border-bottom: 2px solid #0d6efd; }
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .nav-link-active {
+            color: #0d6efd;
+            border-bottom: 2px solid #0d6efd;
+        }
         .table-container::-webkit-scrollbar { height: 8px; }
         .table-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
         .table-container::-webkit-scrollbar-track { background-color: #f1f3f5; }
+
+        /* Ensure dropdowns appear above table content */
         .actions-dropdown-menu { z-index: 50; }
+
+        /* Status Badges */
         .status-badge { padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; border-radius: 9999px; display: inline-block; }
         .status-approved { background-color: #d1e7dd; color: #0f5132; }
         .status-pending { background-color: #fff3cd; color: #664d03; }
         .status-rejected { background-color: #f8d7da; color: #842029; }
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
-        .modal-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 550px; background-color: white; z-index: 999; transform: translateX(100%); transition: transform 0.3s ease-in-out; display: flex; flex-direction: column; box-shadow: -2px 0 8px rgba(0,0,0,0.1); }
+
+        /* Modal Styles (Shared) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-panel {
+            position: fixed; top: 0; right: 0; bottom: 0;
+            width: 100%; max-width: 550px; /* Slightly wider for create form */
+            background-color: white; z-index: 999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex; flex-direction: column;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+        }
         .modal-panel.open { transform: translateX(0); }
         .modal-overlay.open { opacity: 1; visibility: visible; }
         .modal-header { padding: 1rem; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; }
         .modal-body { overflow-y: auto; flex-grow: 1; padding: 1.5rem; }
         .modal-footer { padding: 1rem; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; background-color: #f8f9fa; }
+
+        /* Detail Modal Table */
         .detail-table th, .detail-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #dee2e6; vertical-align: top; }
         .detail-table th { font-weight: 500; color: #6c757d; width: 150px; text-align: left; }
         .detail-table td { color: #212529; }
         .detail-table tr:last-child th, .detail-table tr:last-child td { border-bottom: none; }
+
+        /* Create Form Styles */
         .form-label { display: block; margin-bottom: 0.25rem; font-size: 0.875rem; font-weight: 500; color: #495057; }
         .form-label .required { color: #dc3545; margin-left: 2px; }
-        .form-input, .form-select { display: block; width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem; line-height: 1.5; color: #495057; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; border-radius: 0.375rem; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out; }
-        .form-input:focus, .form-select:focus { border-color: #86b7fe; outline: 0; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25); }
+        .form-input, .form-select {
+            display: block; width: 100%; padding: 0.5rem 0.75rem;
+            font-size: 0.875rem; line-height: 1.5; color: #495057;
+            background-color: #fff; background-clip: padding-box;
+            border: 1px solid #ced4da; border-radius: 0.375rem; /* rounded-md */
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+        .form-input:focus, .form-select:focus {
+            border-color: #86b7fe; outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+        }
+        /* Add icon to date input */
         .date-input-container { position: relative; }
         .date-input-icon { position: absolute; top: 50%; right: 0.75rem; transform: translateY(-50%); pointer-events: none; color: #6c757d; }
-        /* Loading indicator style */
-        .loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0d6efd; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body class="bg-light-gray">
@@ -77,7 +121,9 @@
                 </ul>
             </div>
             <div class="flex items-center space-x-4">
-                <button class="bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center space-x-1"><i class="fas fa-chart-pie text-xs"></i> <span>Summarize data</span></button>
+                <button class="bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center space-x-1">
+                    <i class="fas fa-chart-pie text-xs"></i> <span>Summarize data</span>
+                </button>
                 <button class="text-text-muted hover:text-primary-blue"><i class="fas fa-bell"></i></button>
                 <button class="text-text-muted hover:text-primary-blue"><i class="fas fa-question-circle"></i></button>
                 <button class="text-text-muted hover:text-primary-blue"><i class="fas fa-user-circle text-xl"></i></button>
@@ -94,9 +140,9 @@
                     <label for="status-filter" class="block text-sm font-medium text-text-muted mb-1">Status</label>
                     <select id="status-filter" class="w-full border border-border-gray rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-blue focus:border-primary-blue">
                         <option value="">All status</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Rejected">Rejected</option>
+                        <option value="approved">Approved</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
                     </select>
                 </div>
                 <div>
@@ -121,9 +167,15 @@
             <div class="mt-4 flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0 md:space-x-3">
                 <div class="flex-grow"></div>
                 <div class="flex space-x-3">
-                    <button class="border border-border-gray rounded-lg px-4 py-2 text-sm text-text-muted hover:bg-gray-50 flex items-center space-x-1"><i class="fas fa-upload text-xs"></i> <span>Export</span></button>
-                    <button class="border border-border-gray rounded-lg px-4 py-2 text-sm text-text-muted hover:bg-gray-50 flex items-center space-x-1"><i class="fas fa-download text-xs"></i> <span>Import</span></button>
-                    <button id="create-transfer-button" class="bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center space-x-1"><i class="fas fa-plus text-xs"></i> <span>Create transfer</span></button>
+                    <button class="border border-border-gray rounded-lg px-4 py-2 text-sm text-text-muted hover:bg-gray-50 flex items-center space-x-1">
+                        <i class="fas fa-upload text-xs"></i> <span>Export</span>
+                    </button>
+                    <button class="border border-border-gray rounded-lg px-4 py-2 text-sm text-text-muted hover:bg-gray-50 flex items-center space-x-1">
+                        <i class="fas fa-download text-xs"></i> <span>Import</span>
+                    </button>
+                    <button id="create-transfer-button" class="bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center space-x-1">
+                        <i class="fas fa-plus text-xs"></i> <span>Create transfer</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -145,7 +197,39 @@
                         </tr>
                     </thead>
                     <tbody id="transfer-table-body">
-                        <tr><td colspan="9" class="text-center py-4"><div class="loading-spinner"></div>Loading data...</td></tr>
+                        <tr class="bg-white border-b border-border-gray hover:bg-gray-50"
+                            data-transaction-id="2025050200001"
+                            data-employee-name="Aevi Yuanita"
+                            data-employee-id="130942"
+                            data-transfer-type="Mutation"
+                            data-created-date="02 May 2025"
+                            data-effective-date="01 Mar 2025"
+                            data-status="Approved"
+                            data-attachment="false">
+                            <td class="px-6 py-4 text-primary-blue font-medium">2025050200001</td>
+                            <td class="px-6 py-4">Aevi Yuanita</td> <td class="px-6 py-4">130942</td>
+                            <td class="px-6 py-4">Mutation</td> <td class="px-6 py-4">02 May 2025</td>
+                            <td class="px-6 py-4">01 Mar 2025</td>
+                            <td class="px-6 py-4"><span class="status-badge status-approved">Approved</span></td>
+                            <td class="px-6 py-4 text-center">-</td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="relative inline-block text-left">
+                                    <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false">
+                                        Actions <i class="fas fa-chevron-down text-xs ml-1"></i>
+                                    </button>
+                                    <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div class="py-1" role="menu">
+                                            <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a>
+                                            <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                         <tr class="bg-white border-b border-border-gray hover:bg-gray-50" data-transaction-id="2025042600074" data-employee-name="Hendy Darmawan" data-employee-id="242390" data-transfer-type="Other" data-created-date="29 Apr 2025" data-effective-date="13 May 2025" data-status="Approved" data-attachment="false"> <td class="px-6 py-4 text-primary-blue font-medium">2025042600074</td> <td class="px-6 py-4">Hendy Darmawan</td> <td class="px-6 py-4">242390</td> <td class="px-6 py-4">Other</td> <td class="px-6 py-4">29 Apr 2025</td> <td class="px-6 py-4">13 May 2025</td> <td class="px-6 py-4"><span class="status-badge status-approved">Approved</span></td> <td class="px-6 py-4 text-center">-</td> <td class="px-6 py-4 text-center"> <div class="relative inline-block text-left"> <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false"> Actions <i class="fas fa-chevron-down text-xs ml-1"></i> </button> <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"> <div class="py-1" role="menu"> <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a> <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a> </div> </div> </div> </td> </tr>
+                         <tr class="bg-white border-b border-border-gray hover:bg-gray-50" data-transaction-id="2025042800073" data-employee-name="Alexander Ekanayake" data-employee-id="252505" data-transfer-type="Other" data-created-date="29 Apr 2025" data-effective-date="14 Apr 2025" data-status="Approved" data-attachment="false"> <td class="px-6 py-4 text-primary-blue font-medium">2025042800073</td> <td class="px-6 py-4">Alexander Ekanayake</td> <td class="px-6 py-4">252505</td> <td class="px-6 py-4">Other</td> <td class="px-6 py-4">29 Apr 2025</td> <td class="px-6 py-4">14 Apr 2025</td> <td class="px-6 py-4"><span class="status-badge status-approved">Approved</span></td> <td class="px-6 py-4 text-center">-</td> <td class="px-6 py-4 text-center"> <div class="relative inline-block text-left"> <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false"> Actions <i class="fas fa-chevron-down text-xs ml-1"></i> </button> <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"> <div class="py-1" role="menu"> <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a> <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a> </div> </div> </div> </td> </tr>
+                         <tr class="bg-white border-b border-border-gray hover:bg-gray-50" data-transaction-id="2025012800065" data-employee-name="Astri Rahayu" data-employee-id="173880" data-transfer-type="Mutation" data-created-date="28 Apr 2025" data-effective-date="01 Dec 2024" data-status="Approved" data-attachment="true"> <td class="px-6 py-4 text-primary-blue font-medium">2025012800065</td> <td class="px-6 py-4">Astri Rahayu</td> <td class="px-6 py-4">173880</td> <td class="px-6 py-4">Mutation</td> <td class="px-6 py-4">28 Apr 2025</td> <td class="px-6 py-4">01 Dec 2024</td> <td class="px-6 py-4"><span class="status-badge status-approved">Approved</span></td> <td class="px-6 py-4 text-center"><a href="#" class="text-primary-blue hover:underline" title="View Attachment"><i class="fas fa-paperclip"></i></a></td> <td class="px-6 py-4 text-center"> <div class="relative inline-block text-left"> <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false"> Actions <i class="fas fa-chevron-down text-xs ml-1"></i> </button> <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"> <div class="py-1" role="menu"> <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a> <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a> </div> </div> </div> </td> </tr>
+                         <tr class="bg-white border-b border-border-gray hover:bg-gray-50" data-transaction-id="2025050100010" data-employee-name="Budi Santoso" data-employee-id="198765" data-transfer-type="Promotion" data-created-date="01 May 2025" data-effective-date="01 Jun 2025" data-status="Pending" data-attachment="false"> <td class="px-6 py-4 text-primary-blue font-medium">2025050100010</td> <td class="px-6 py-4">Budi Santoso</td> <td class="px-6 py-4">198765</td> <td class="px-6 py-4">Promotion</td> <td class="px-6 py-4">01 May 2025</td> <td class="px-6 py-4">01 Jun 2025</td> <td class="px-6 py-4"><span class="status-badge status-pending">Pending</span></td> <td class="px-6 py-4 text-center">-</td> <td class="px-6 py-4 text-center"> <div class="relative inline-block text-left"> <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false"> Actions <i class="fas fa-chevron-down text-xs ml-1"></i> </button> <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"> <div class="py-1" role="menu"> <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a> <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a> </div> </div> </div> </td> </tr>
                     </tbody>
                 </table>
             </div>
@@ -155,12 +239,11 @@
                     <select id="rows-per-page" class="border border-border-gray rounded px-2 py-1 text-xs focus:outline-none">
                         <option value="10">10</option> <option value="25">25</option> <option value="50">50</option>
                     </select>
-                    <span id="pagination-info">Showing 0-0 of 0</span> </div>
+                    <span id="pagination-info">Showing 1-5 of 5</span> </div>
                 <div class="flex items-center space-x-2">
                     <button id="prev-page" class="border border-border-gray rounded px-2 py-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled> <i class="fas fa-chevron-left text-xs"></i> </button>
                     <span>Page</span>
-                    <input type="number" id="current-page" value="1" min="1" class="border border-border-gray rounded w-12 px-2 py-1 text-center text-xs focus:outline-none">
-                    <span id="total-pages">of 1</span> <button id="next-page" class="border border-border-gray rounded px-2 py-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled> <i class="fas fa-chevron-right text-xs"></i> </button>
+                    <input type="number" id="current-page" value="1" min="1" max="1" class="border border-border-gray rounded w-12 px-2 py-1 text-center text-xs focus:outline-none"> <span id="total-pages">of 1</span> <button id="next-page" class="border border-border-gray rounded px-2 py-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled> <i class="fas fa-chevron-right text-xs"></i> </button>
                 </div>
             </div>
         </div>
@@ -209,8 +292,13 @@
                  <div class="md:col-span-3">
                     <label for="create-employee" class="form-label">Employees <span class="required">*</span></label>
                     <select id="create-employee" name="employee" class="form-select" required>
-                        <option value="" disabled selected>Loading employees...</option>
-                        </select>
+                        <option value="" disabled selected>Select employee</option>
+                        <option value="130942">Aevi Yuanita (130942)</option>
+                        <option value="242390">Hendy Darmawan (242390)</option>
+                        <option value="252505">Alexander Ekanayake (252505)</option>
+                         <option value="173880">Astri Rahayu (173880)</option>
+                         <option value="198765">Budi Santoso (198765)</option>
+                    </select>
                 </div>
                 <div>
                     <label for="create-effective-date" class="form-label">Effective date <span class="required">*</span></label>
@@ -254,17 +342,9 @@
         </div>
     </div>
     <script>
-        // Wait for the DOM to be fully loaded before executing script
         document.addEventListener('DOMContentLoaded', () => {
-
             // --- Element References ---
             const tableBody = document.getElementById('transfer-table-body');
-            const employeeSelect = document.getElementById('create-employee');
-            const paginationInfo = document.getElementById('pagination-info');
-            const currentPageInput = document.getElementById('current-page');
-            const totalPagesSpan = document.getElementById('total-pages');
-            const prevPageButton = document.getElementById('prev-page');
-            const nextPageButton = document.getElementById('next-page');
             // Detail Modal Elements
             const detailModalOverlay = document.getElementById('detail-modal-overlay');
             const detailModalPanel = document.getElementById('transfer-detail-modal');
@@ -277,242 +357,38 @@
             const cancelCreateButton = document.getElementById('cancel-create-button');
             const createTransferForm = document.getElementById('create-transfer-form');
 
-            // --- State ---
-            let allTransfers = []; // To store all fetched transfer data
-            let currentTransfers = []; // To store filtered/sorted data for display
-            let employees = []; // To store fetched employee list
-            let currentPage = 1;
-            let rowsPerPage = 10; // Or get from #rows-per-page select
-
-            // --- Data Fetching & Handling ---
-
-            // Success handler for getting transfer data
-            function handleTransferDataSuccess(data) {
-                console.log("Fetched Transfers:", data);
-                allTransfers = data || []; // Use empty array if data is null/undefined
-                currentTransfers = [...allTransfers];
-                renderTable(); // Render transfers first
-                // Fetch employees after transfers are loaded (or do concurrently, see below)
-                fetchEmployeeList();
-            }
-
-            // Success handler for getting employee data
-            function handleEmployeeDataSuccess(data) {
-                console.log("Fetched Employees:", data);
-                employees = data || [];
-                populateEmployeeDropdown(employees);
-                hideLoading(); // Hide loading indicator after both data sets potentially loaded
-            }
-
-            // Failure handler for any google.script.run call
-            function handleScriptError(error) {
-                console.error("Apps Script Error:", error);
-                showError(`Error communicating with script: ${error.message || error}`);
-                hideLoading(); // Ensure loading indicator is hidden on error
-            }
-
-            // Function to initiate data fetching
-            function fetchData() {
-                showLoading();
-                // Fetch transfers first, then employees in its success handler
-                google.script.run
-                    .withSuccessHandler(handleTransferDataSuccess)
-                    .withFailureHandler(handleScriptError)
-                    .getTransferData();
-
-                // --- Alternative: Fetch Concurrently (might be slightly faster) ---
-                // google.script.run.withSuccessHandler(handleTransferDataSuccess).withFailureHandler(handleScriptError).getTransferData();
-                // google.script.run.withSuccessHandler(handleEmployeeDataSuccess).withFailureHandler(handleScriptError).getEmployeeList();
-                // Note: If fetching concurrently, adjust hideLoading() logic if needed
-            }
-
-            // Function to fetch only the employee list (e.g., if needed separately)
-            function fetchEmployeeList() {
-                 google.script.run
-                    .withSuccessHandler(handleEmployeeDataSuccess)
-                    .withFailureHandler(handleScriptError)
-                    .getEmployeeList();
-            }
-
-
-            // --- Table Rendering & Pagination (Using DOM Manipulation) ---
-            function renderTable() {
-                if (!tableBody) { console.error("Table body element not found!"); return; }
-                tableBody.innerHTML = '';
-
-                if (currentTransfers.length === 0) {
-                    const emptyRow = tableBody.insertRow();
-                    const emptyCell = emptyRow.insertCell();
-                    emptyCell.colSpan = 9;
-                    emptyCell.className = 'text-center text-gray-500 py-4';
-                    emptyCell.textContent = 'No transfer data found.';
-                    updatePaginationControls(0);
-                    return;
-                }
-
-                const totalItems = currentTransfers.length;
-                const startIndex = (currentPage - 1) * rowsPerPage;
-                const endIndex = startIndex + rowsPerPage;
-                const paginatedTransfers = currentTransfers.slice(startIndex, endIndex);
-
-                paginatedTransfers.forEach(transfer => {
-                    const row = tableBody.insertRow();
-                    row.className = 'bg-white border-b border-border-gray hover:bg-gray-50';
-                    Object.keys(transfer).forEach(key => { row.dataset[key] = transfer[key]; }); // Set all data attributes
-
-                    const createCell = (content, classes = []) => { /* ... (same as previous version) ... */
-                        const cell = row.insertCell();
-                        cell.className = 'px-6 py-4';
-                        classes.forEach(cls => cell.classList.add(cls));
-                        if (typeof content === 'object' && content instanceof Node) {
-                            cell.appendChild(content);
-                        } else {
-                            cell.textContent = content || 'N/A';
-                        }
-                        return cell;
-                    };
-
-                    createCell(transfer.transactionId, ['text-primary-blue', 'font-medium']);
-                    createCell(transfer.employeeName);
-                    createCell(transfer.employeeId);
-                    createCell(transfer.transferType);
-                    createCell(transfer.createdDate);
-                    createCell(transfer.effectiveDate);
-
-                    const statusSpan = document.createElement('span');
-                    const statusClass = `status-${(transfer.status || '').toLowerCase()}`;
-                    statusSpan.className = `status-badge ${statusClass}`;
-                    statusSpan.textContent = transfer.status || 'N/A';
-                    createCell(statusSpan);
-
-                    const attachmentCell = createCell('', ['text-center']);
-                    if (transfer.attachment) {
-                        const attachmentLink = document.createElement('a');
-                        attachmentLink.href = '#';
-                        attachmentLink.className = 'text-primary-blue hover:underline';
-                        attachmentLink.title = 'View Attachment';
-                        attachmentLink.innerHTML = '<i class="fas fa-paperclip"></i>';
-                        attachmentCell.appendChild(attachmentLink);
-                    } else { attachmentCell.textContent = '-'; }
-
-                    const actionsCell = createCell('', ['text-center']);
-                    const relativeDiv = document.createElement('div');
-                    relativeDiv.className = 'relative inline-block text-left';
-                    const actionButton = document.createElement('button');
-                    actionButton.type = 'button';
-                    actionButton.className = 'actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none';
-                    actionButton.setAttribute('aria-haspopup', 'true');
-                    actionButton.setAttribute('aria-expanded', 'false');
-                    actionButton.innerHTML = 'Actions <i class="fas fa-chevron-down text-xs ml-1"></i>';
-                    const dropdownMenu = document.createElement('div');
-                    dropdownMenu.className = 'actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none';
-                    const dropdownInnerDiv = document.createElement('div');
-                    dropdownInnerDiv.className = 'py-1'; dropdownInnerDiv.setAttribute('role', 'menu');
-                    const detailLink = document.createElement('a');
-                    detailLink.href = '#'; detailLink.className = 'detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'; detailLink.setAttribute('role', 'menuitem'); detailLink.textContent = 'Detail';
-                    const cancelLink = document.createElement('a');
-                    cancelLink.href = '#'; cancelLink.className = 'cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'; cancelLink.setAttribute('role', 'menuitem'); cancelLink.textContent = 'Cancel Transfer';
-                    dropdownInnerDiv.appendChild(detailLink); dropdownInnerDiv.appendChild(cancelLink);
-                    dropdownMenu.appendChild(dropdownInnerDiv); relativeDiv.appendChild(actionButton); relativeDiv.appendChild(dropdownMenu); actionsCell.appendChild(relativeDiv);
-                });
-
-                updatePaginationControls(totalItems);
-            }
-
-
-            function updatePaginationControls(totalItems) {
-                if (!totalPagesSpan || !currentPageInput || !paginationInfo || !prevPageButton || !nextPageButton) return;
-                const totalPages = Math.ceil(totalItems / rowsPerPage);
-                totalPagesSpan.textContent = `of ${totalPages || 1}`;
-                currentPageInput.max = totalPages || 1;
-                currentPageInput.value = currentPage;
-                const startItem = totalItems === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
-                const endItem = Math.min(startItem + rowsPerPage - 1, totalItems);
-                paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${totalItems}`;
-                prevPageButton.disabled = currentPage === 1;
-                nextPageButton.disabled = currentPage === totalPages || totalItems === 0;
-            }
-
-             function changePage(newPage) {
-                const totalPages = Math.ceil(currentTransfers.length / rowsPerPage);
-                const validNewPage = Math.max(1, Math.min(newPage, totalPages || 1));
-                if (validNewPage !== currentPage) {
-                    currentPage = validNewPage;
-                    renderTable();
-                } else if (currentPageInput) {
-                    currentPageInput.value = currentPage;
-                }
-             }
-
-            // --- Employee Dropdown Population ---
-            function populateEmployeeDropdown(employeeList) {
-                 if (!employeeSelect) return;
-                employeeSelect.innerHTML = '<option value="" disabled selected>Select employee</option>';
-                if (employeeList && employeeList.length > 0) {
-                    employeeList.forEach(emp => {
-                        const option = document.createElement('option');
-                        option.value = emp.id;
-                        option.textContent = `${emp.name} (${emp.id})`;
-                        employeeSelect.appendChild(option);
-                    });
-                } else {
-                     employeeSelect.innerHTML = '<option value="" disabled selected>No employees found</option>';
-                }
-            }
-
-            // --- Loading and Error Indicators ---
-            function showLoading() {
-                if (tableBody) {
-                    tableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4"><div class="loading-spinner"></div>Loading data...</td></tr>';
-                }
-            }
-            function hideLoading() {
-                // No explicit action needed if renderTable replaces the loading row
-                // Could add logic here if a separate loading overlay exists
-                 console.log("Hiding loading (implicitly by rendering table/error)");
-            }
-             function showError(message) {
-                 if (tableBody) {
-                    tableBody.innerHTML = `<tr><td colspan="9" class="text-center text-red-600 py-4 font-medium">${message}</td></tr>`;
-                 }
-                 updatePaginationControls(0);
-            }
-
-
             // --- Dropdown Logic (Table Actions) ---
             function setupActionDropdowns() {
-                 if (!tableBody) return;
-                 tableBody.addEventListener('click', (event) => {
+                // Use event delegation on the table body for efficiency
+                tableBody.addEventListener('click', (event) => {
                     const target = event.target;
                     const actionButton = target.closest('.actions-button');
                     const detailLink = target.closest('.detail-link');
                     const cancelLink = target.closest('.cancel-link');
 
-                    if (actionButton) { /* ... (same as previous) ... */
+                    if (actionButton) { // Clicked on Actions button
                         event.stopPropagation();
                         const dropdownMenu = actionButton.nextElementSibling;
-                        if (!dropdownMenu) return;
                         const isExpanded = !dropdownMenu.classList.contains('hidden');
-                        closeAllDropdowns(dropdownMenu);
+                        closeAllDropdowns(dropdownMenu); // Close others before toggling
                         dropdownMenu.classList.toggle('hidden');
                         actionButton.setAttribute('aria-expanded', String(!isExpanded));
-                    } else if (detailLink) { /* ... (same as previous) ... */
+                    } else if (detailLink) { // Clicked on Detail link
                         event.preventDefault();
                         const row = detailLink.closest('tr');
-                        if (row && row.dataset) openDetailModal(row.dataset);
+                        if (row) openDetailModal(row.dataset); // Pass row's dataset
                         closeAllDropdowns();
-                    } else if (cancelLink) { /* ... (same as previous) ... */
+                    } else if (cancelLink) { // Clicked on Cancel link
                          event.preventDefault();
                          const row = cancelLink.closest('tr');
-                         if (row && row.dataset) {
-                             console.log('Cancel Transfer clicked for:', row.dataset.transactionId);
-                             alert(`Simulating Cancel Transfer for ID: ${row.dataset.transactionId}`);
-                         }
+                         console.log('Cancel Transfer clicked for:', row ? row.dataset.transactionId : 'unknown');
+                         alert(`Simulating Cancel Transfer for ID: ${row ? row.dataset.transactionId : 'N/A'}`); // Replace with actual logic
                          closeAllDropdowns();
                     }
                 });
             }
-            function closeAllDropdowns(exceptMenu = null) { /* ... (same as previous) ... */
+
+            function closeAllDropdowns(exceptMenu = null) {
                 document.querySelectorAll('.actions-dropdown-menu').forEach(menu => {
                     if (menu !== exceptMenu && !menu.classList.contains('hidden')) {
                         menu.classList.add('hidden');
@@ -523,12 +399,18 @@
                     }
                 });
             }
-            window.addEventListener('click', (event) => { /* ... (same as previous) ... */
-                 if (!event.target.closest('.actions-dropdown-menu') && !event.target.closest('.actions-button')) { closeAllDropdowns(); }
+
+            // Close dropdowns if clicked outside
+            window.addEventListener('click', (event) => {
+                 if (!event.target.closest('.actions-dropdown-menu') && !event.target.closest('.actions-button')) {
+                    closeAllDropdowns();
+                }
             });
 
+
             // --- Detail Modal Logic ---
-            function openDetailModal(data) { /* ... (same as previous, ensure elements exist) ... */
+            function openDetailModal(data) {
+                // Populate modal fields using data passed from the row's dataset
                 const nameEl = document.getElementById('modal-employee-name');
                 const idEl = document.getElementById('modal-employee-id');
                 const transIdEl = document.getElementById('modal-transaction-id');
@@ -553,10 +435,11 @@
                     imgEl.alt = data.employeeName || 'Employee';
                 }
 
+                // Populate Changes Table (Placeholder)
                 const changesTableBody = document.getElementById('modal-changes-table-body');
                 if (changesTableBody) {
-                    changesTableBody.innerHTML = '';
-                    const changes = getTransferChanges(data.transactionId); // Placeholder
+                    changesTableBody.innerHTML = ''; // Clear previous data
+                    const changes = getTransferChanges(data.transactionId); // Placeholder function
                     if (Object.keys(changes).length > 0) {
                         for (const type in changes) {
                             const row = changesTableBody.insertRow();
@@ -571,117 +454,140 @@
                          cell.textContent = 'No specific changes listed';
                     }
                 }
+
+                // Show the detail modal
                 if (detailModalOverlay) detailModalOverlay.classList.add('open');
                 if (detailModalPanel) detailModalPanel.classList.add('open');
             }
-            function closeDetailModal() { /* ... (same as previous) ... */
+
+            function closeDetailModal() {
                 if (detailModalOverlay) detailModalOverlay.classList.remove('open');
                 if (detailModalPanel) detailModalPanel.classList.remove('open');
             }
-            function getTransferChanges(transactionId) { /* ... (same as previous) ... */
+
+            // Placeholder function to simulate fetching transfer change details
+            function getTransferChanges(transactionId) {
                 console.log("Simulating fetch detail changes for:", transactionId);
+                // Replace with actual logic if needed
                 if (transactionId === '2025050200001') return {'Branch': { from: 'Old Branch A', to: 'New Branch B' },'Job position': { from: 'Junior Dev', to: 'Senior Dev' }};
+                if (transactionId === '2025012800065') return {'Organization': { from: 'Sales', to: 'Marketing' }};
                 return {};
             }
+
+            // Attach listeners for detail modal close actions
             if (closeDetailModalButton) closeDetailModalButton.addEventListener('click', closeDetailModal);
             if (detailModalOverlay) detailModalOverlay.addEventListener('click', closeDetailModal);
 
+
             // --- Create Modal Logic ---
-            function openCreateModal() { /* ... (same as previous) ... */
-                if (!createTransferForm || !createModalOverlay || !createModalPanel) return;
-                createTransferForm.reset();
-                if (employeeSelect && employeeSelect.options.length <= 1 && employees.length > 0) {
-                    populateEmployeeDropdown(employees);
-                } else if (employeeSelect && employeeSelect.options.length <= 1) {
-                     employeeSelect.innerHTML = '<option value="" disabled selected>Could not load employees</option>';
-                }
-                createModalOverlay.classList.add('open');
-                createModalPanel.classList.add('open');
+            function openCreateModal() {
+                if (createTransferForm) createTransferForm.reset(); // Reset form fields when opening
+                if (createModalOverlay) createModalOverlay.classList.add('open');
+                if (createModalPanel) createModalPanel.classList.add('open');
             }
-            function closeCreateModal() { /* ... (same as previous) ... */
+
+            function closeCreateModal() {
                 if (createModalOverlay) createModalOverlay.classList.remove('open');
                 if (createModalPanel) createModalPanel.classList.remove('open');
             }
 
-            // Form submission using google.script.run
+            // Handle form submission (Placeholder)
             if (createTransferForm) {
-                createTransferForm.addEventListener('submit', (event) => { // No async needed here
-                    event.preventDefault();
-                    console.log('Create Transfer form submitted');
+                createTransferForm.addEventListener('submit', (event) => {
+                    event.preventDefault(); // Prevent default form submission
+                    console.log('Create Transfer form submitted (Placeholder)');
 
                     const formData = new FormData(createTransferForm);
-                    const dataObject = Object.fromEntries(formData.entries()); // Create object from form data
-                    console.log('Form Data Object:', dataObject);
+                    const data = Object.fromEntries(formData.entries());
+                    console.log('Form Data:', data);
 
-                    // Disable button during submission
-                    const saveButton = document.querySelector('#create-transfer-modal button[type="submit"]');
-                    if (saveButton) {
-                        saveButton.disabled = true;
-                        saveButton.textContent = 'Saving...';
-                    }
+                    // Placeholder for actual submission logic
+                    alert('Form submitted (Placeholder - No data saved). See console for data.');
 
-                    // Define success handler for createNewTransfer
-                    function handleCreateSuccess(result) {
-                        console.log("Create Result:", result);
-                        if (result && result.success) {
-                            alert(result.message || 'Transfer created successfully!'); // Use message from backend
-                            closeCreateModal();
-                            fetchData(); // Refresh table data
-                        } else {
-                            // Handle cases where backend returns {success: false, error: ...}
-                             handleScriptError(new Error(result.error || 'Unknown error during creation.'));
-                        }
-                         // Re-enable button regardless of success/failure
-                         if (saveButton) {
-                            saveButton.disabled = false;
-                            saveButton.textContent = 'Save';
-                        }
-                    }
-
-                    // Define failure handler (reuse general one, but also re-enable button)
-                    function handleCreateFailure(error) {
-                        handleScriptError(error); // Call general error handler
-                         if (saveButton) { // Re-enable button on failure too
-                            saveButton.disabled = false;
-                            saveButton.textContent = 'Save';
-                        }
-                    }
-
-                    // Call the backend function via google.script.run
-                    google.script.run
-                        .withSuccessHandler(handleCreateSuccess)
-                        .withFailureHandler(handleCreateFailure) // Use specific failure handler if needed
-                        .createNewTransfer(dataObject); // Pass the data object
+                    // Optionally close modal after submission
+                    // closeCreateModal();
+                    // You might want to refresh the main table data here if submission was successful
                 });
             }
-            // Attach listeners only if elements exist
+
+            // Attach listeners for create modal open/close actions
             if (createTransferButton) createTransferButton.addEventListener('click', openCreateModal);
             if (closeCreateModalButton) closeCreateModalButton.addEventListener('click', closeCreateModal);
             if (cancelCreateButton) cancelCreateButton.addEventListener('click', closeCreateModal);
             if (createModalOverlay) createModalOverlay.addEventListener('click', closeCreateModal);
 
-             // --- Event Listeners for Pagination & Filtering ---
-             if (prevPageButton) prevPageButton.addEventListener('click', () => changePage(currentPage - 1));
-             if (nextPageButton) nextPageButton.addEventListener('click', () => changePage(currentPage + 1));
-             if (currentPageInput) currentPageInput.addEventListener('change', (e) => {
+
+             // --- Event Listeners for Pagination (Using Sample Data) ---
+             // Basic pagination logic for the sample data
+             let currentPage = 1;
+             let rowsPerPage = 10; // Default
+
+             function updateSamplePagination() {
+                 const rows = Array.from(tableBody.querySelectorAll('tr'));
+                 const totalItems = rows.length;
+                 const totalPages = Math.ceil(totalItems / rowsPerPage);
+                 const paginationInfo = document.getElementById('pagination-info');
+                 const currentPageInput = document.getElementById('current-page');
+                 const totalPagesSpan = document.getElementById('total-pages');
+                 const prevPageButton = document.getElementById('prev-page');
+                 const nextPageButton = document.getElementById('next-page');
+
+                 if (!totalPagesSpan || !currentPageInput || !paginationInfo || !prevPageButton || !nextPageButton) return;
+
+                 totalPagesSpan.textContent = `of ${totalPages || 1}`;
+                 currentPageInput.max = totalPages || 1;
+                 currentPageInput.value = currentPage;
+
+                 const startItem = totalItems === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+                 const endItem = Math.min(startItem + rowsPerPage - 1, totalItems);
+                 paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${totalItems}`;
+
+                 prevPageButton.disabled = currentPage === 1;
+                 nextPageButton.disabled = currentPage === totalPages || totalItems === 0;
+
+                 // Show/hide rows based on pagination
+                 rows.forEach((row, index) => {
+                     row.style.display = (index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage) ? '' : 'none';
+                 });
+             }
+
+             function changeSamplePage(newPage) {
+                 const rows = Array.from(tableBody.querySelectorAll('tr'));
+                 const totalPages = Math.ceil(rows.length / rowsPerPage);
+                 const validNewPage = Math.max(1, Math.min(newPage, totalPages || 1));
+                 if (validNewPage !== currentPage) {
+                     currentPage = validNewPage;
+                     updateSamplePagination();
+                 } else {
+                     const currentPageInput = document.getElementById('current-page');
+                     if (currentPageInput) currentPageInput.value = currentPage;
+                 }
+             }
+
+             const prevBtn = document.getElementById('prev-page');
+             const nextBtn = document.getElementById('next-page');
+             const pageInput = document.getElementById('current-page');
+             const rowsSelect = document.getElementById('rows-per-page');
+
+             if (prevBtn) prevBtn.addEventListener('click', () => changeSamplePage(currentPage - 1));
+             if (nextBtn) nextBtn.addEventListener('click', () => changeSamplePage(currentPage + 1));
+             if (pageInput) pageInput.addEventListener('change', (e) => {
                  const newPage = parseInt(e.target.value, 10);
-                 changePage(isNaN(newPage) ? currentPage : newPage);
+                 changeSamplePage(isNaN(newPage) ? currentPage : newPage);
              });
-             const rowsPerPageSelect = document.getElementById('rows-per-page');
-             if (rowsPerPageSelect) rowsPerPageSelect.addEventListener('change', (e) => {
+             if (rowsSelect) rowsSelect.addEventListener('change', (e) => {
                  rowsPerPage = parseInt(e.target.value, 10);
                  currentPage = 1;
-                 renderTable();
+                 updateSamplePagination();
              });
-             // Add filter listeners here
 
-
-            // --- Initial Load ---
-            console.log("Employee Transfer page loaded. Fetching data...");
-            setupActionDropdowns(); // Setup listeners
-            fetchData(); // Fetch initial data
+            // --- Initial Setup ---
+            console.log("Employee Transfer page loaded.");
+            setupActionDropdowns(); // Setup listeners for table actions
+            updateSamplePagination(); // Initial pagination setup for sample data
 
         }); // End DOMContentLoaded
     </script>
+
 </body>
 </html>
