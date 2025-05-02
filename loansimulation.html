@@ -917,7 +917,7 @@ body {
     <label for="cicilanBerjalan">Cicilan Berjalan
         <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika memiliki cicilan pinjaman yang masih aktif di Hibank dan di luar Hibank, maka harap dicantumkan total cicilan tersebut."></i>
     </label>
-    <input type="text" id="cicilanBerjalan" onchange="formatCicil()">
+    <input type="text" id="cicilanBerjalan" value=0>
 </div>
 
 <div class="d-flex gap-2">
@@ -1088,6 +1088,7 @@ const plafond = parseFloat(plafondInput.replace(/[^\d]/g, '')); // Remove all no
 const jangkaWaktu = parseInt(document.getElementById("jangkaWaktu").value);
 
 const bunga = parseFloat(document.getElementById("bunga").value.replace('%', ''));
+const dbr = parseFloat(document.getElementById("dbr").value.replace('%', ''));
 
 const gajiPokokInput = document.getElementById("gajiPokok").value;
 const gajiPokok = parseFloat(gajiPokokInput.replace(/[^\d]/g, '')); // Remove all non-digits
@@ -1095,8 +1096,8 @@ const gajiPokok = parseFloat(gajiPokokInput.replace(/[^\d]/g, '')); // Remove al
 const cicilanBerjalanInput = document.getElementById("cicilanBerjalan").value;
 const cicilanBerjalan = parseFloat(cicilanBerjalanInput.replace(/[^\d]/g, '')); // Remove all non-digits
 
-const maksimalCicilan = gajiPokok * (bunga/100) - cicilanBerjalan;
-console.log(maksimalCicilan);
+const maksimalCicilan = gajiPokok * (dbr/100);
+const validasiDBR = maksimalCicilan - cicilanBerjalan;
 
 var tipePinjaman = document.getElementById("tipePinjaman").value;
 
@@ -1110,17 +1111,18 @@ if (isNaN(plafond) || plafond <= 0) {
         showAlert("Error", "Please enter a valid plafond amount");
         return;
     }
-    if (isNaN(jangkaWaktu) || jangkaWaktu <= 0) {
+
+if (isNaN(jangkaWaktu) || jangkaWaktu <= 0) {
         showAlert("Error", "Please enter a valid loan period");
         return;
-    }
+}
 
 if (!validateKMG(tipePinjaman, plafond, jangkaWaktu)) {
     return; // Stop execution if validation fails
 }
 
 
-if (angsuran > maksimalCicilan) {
+if (angsuran > validasiDBR) {
     showAlert("Error", "Angsuran melebihi batas maksimal.");
     return;
 }
