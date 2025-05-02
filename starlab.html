@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hibank Constellation</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #000;  /* Dark background for stars */
+      overflow: hidden;
+      font-family: 'Krona One', sans-serif;
+    }
+
+    /* Container for centering the word */
+    .centered-word {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 80px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    /* Responsive for smaller screens */
+    @media (max-width: 768px) {
+      .centered-word {
+        font-size: 40px;
+      }
+    }
+
+    /* Make sure the canvas stays behind the content */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;  /* Send the canvas to the background */
+    }
+  </style>
+</head>
+<body>
+
+<!-- Centered Word "Hibank" -->
+<div class="centered-word">
+  Hibank
+</div>
+
+<script>
+  let stars = [];
+  let starCount = 100;  // Number of stars (points)
+  let maxDistance = 150;  // Maximum distance to connect points with lines
+
+  function setup() {
+    let canvas = createCanvas(windowWidth, windowHeight);  // Fullscreen canvas
+    canvas.id('background-canvas');  // Assign an ID for easier CSS control
+    for (let i = 0; i < starCount; i++) {
+      stars.push(new Star(random(width), random(height)));  // Create random stars
+    }
+  }
+
+  function draw() {
+    background(0);  // Dark background (night sky)
+    for (let i = 0; i < stars.length; i++) {
+      stars[i].move();  // Update the star's position
+      stars[i].show();  // Display the star
+      stars[i].connect(stars);  // Connect the stars with lines
+    }
+  }
+
+  // Class for each star (point)
+  class Star {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+
+      // Assign 20% stars to be fast and 80% to be normal speed
+      if (random(1) < 0.2) {
+        this.vx = random(-4, 4);  // Fast speed on x-axis
+        this.vy = random(-4, 4);  // Fast speed on y-axis
+      } else {
+        this.vx = random(-2, 2);  // Normal speed on x-axis
+        this.vy = random(-2, 2);  // Normal speed on y-axis
+      }
+    }
+
+    // Update the star's position
+    move() {
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // Make the stars bounce off the edges
+      if (this.x > width || this.x < 0) {
+        this.vx *= -1;  // Reverse direction on x axis
+      }
+      if (this.y > height || this.y < 0) {
+        this.vy *= -1;  // Reverse direction on y axis
+      }
+    }
+
+    // Show the star (draw a white circle)
+    show() {
+      noStroke();
+      fill(255);
+      ellipse(this.x, this.y, 5, 5);  // White point for the star
+    }
+
+    // Connect stars with lines if they are close enough
+    connect(stars) {
+      for (let i = 0; i < stars.length; i++) {
+        let other = stars[i];
+        let d = dist(this.x, this.y, other.x, other.y);
+
+        // Only connect points that are within maxDistance
+        if (d < maxDistance) {
+          let opacity = map(d, 0, maxDistance, 255, 0);  // Map distance to opacity (closer = more opaque)
+          stroke(255, 255, 255, opacity);  // White lines with opacity based on distance
+          line(this.x, this.y, other.x, other.y);
+        }
+
+        // Connect to the cursor if the cursor is near the star, with the same fading effect
+        let dToCursor = dist(this.x, this.y, mouseX, mouseY);
+        if (dToCursor < maxDistance) {
+          let cursorOpacity = map(dToCursor, 0, maxDistance, 255, 0);  // Map cursor distance to opacity
+          stroke(255, 255, 255, cursorOpacity);  // Line to cursor with dynamic opacity
+          line(this.x, this.y, mouseX, mouseY);
+        }
+      }
+    }
+  }
+
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);  // Make canvas responsive
+  }
+</script>
+
+</body>
+</html>

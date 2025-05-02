@@ -103,14 +103,48 @@
         .date-input-icon { position: absolute; top: 50%; right: 0.75rem; transform: translateY(-50%); pointer-events: none; color: #6c757d; }
 
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('flex');
+                mobileMenu.classList.toggle('flex-col');
+                mobileMenu.classList.toggle('absolute');
+                mobileMenu.classList.toggle('top-full');
+                mobileMenu.classList.toggle('left-0');
+                mobileMenu.classList.toggle('right-0');
+                mobileMenu.classList.toggle('bg-white');
+                mobileMenu.classList.toggle('shadow-lg');
+                mobileMenu.classList.toggle('p-4');
+                mobileMenu.classList.toggle('mt-2');
+                mobileMenu.classList.toggle('rounded-lg');
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex', 'flex-col', 'absolute', 'top-full', 'left-0', 'right-0', 'bg-white', 'shadow-lg', 'p-4', 'mt-2', 'rounded-lg');
+                }
+            });
+        });
+    </script>
 </head>
 <body class="bg-light-gray">
 
+    <!-- Nav Bar -->
     <header class="bg-header-bg shadow-sm sticky top-0 z-40">
-        <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <nav class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center space-x-8">
                 <div class="text-xl font-bold text-primary-blue">Logo</div>
-                <ul class="hidden md:flex items-center space-x-6">
+                <button class="md:hidden text-text-muted hover:text-primary-blue" id="mobile-menu-button">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <ul class="hidden md:flex w-full md:w-auto items-center space-x-6" id="mobile-menu">
                     <li><a href="#" class="text-text-muted hover:text-primary-blue py-2">Dashboard</a></li>
                     <li><a href="#" class="text-text-dark hover:text-primary-blue py-2 nav-link-active font-medium">Employees</a></li>
                     <li><a href="#" class="text-text-muted hover:text-primary-blue py-2">Time Management</a></li>
@@ -131,11 +165,12 @@
         </nav>
     </header>
 
+    <!-- Filter and Create Transfer -->
     <main class="container mx-auto px-4 py-6">
         <h1 class="text-2xl font-semibold text-text-dark mb-6">Employee transfer</h1>
 
         <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
                 <div>
                     <label for="status-filter" class="block text-sm font-medium text-text-muted mb-1">Status</label>
                     <select id="status-filter" class="w-full border border-border-gray rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-blue focus:border-primary-blue">
@@ -164,7 +199,7 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-4 flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0 md:space-x-3">
+            <div class="mt-4 flex flex-col sm:flex-row justify-between items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
                 <div class="flex-grow"></div>
                 <div class="flex space-x-3">
                     <button class="border border-border-gray rounded-lg px-4 py-2 text-sm text-text-muted hover:bg-gray-50 flex items-center space-x-1">
@@ -181,8 +216,8 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div class="table-container overflow-x-auto">
-                <table class="w-full min-w-[1000px] text-sm text-left text-text-dark">
+            <div class="table-container overflow-x-auto -mx-4 sm:mx-0">
+                <table class="w-full min-w-[768px] text-sm text-left text-text-dark">
                     <thead class="text-xs text-text-muted uppercase bg-light-gray border-b border-border-gray">
                         <tr>
                             <th scope="col" class="px-6 py-3">Transaction ID</th>
@@ -282,6 +317,7 @@
         </div>
     </div>
     <div id="create-modal-overlay" class="modal-overlay"></div>
+
     <div id="create-transfer-modal" class="modal-panel">
         <div class="modal-header">
             <h2 class="text-lg font-semibold text-text-dark">Employee transfer</h2>
@@ -341,6 +377,7 @@
             <button type="submit" form="create-transfer-form" class="px-4 py-2 text-sm font-medium text-white bg-primary-blue border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Save</button>
         </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- Element References ---
@@ -359,33 +396,54 @@
 
             // --- Dropdown Logic (Table Actions) ---
             function setupActionDropdowns() {
-                // Use event delegation on the table body for efficiency
                 tableBody.addEventListener('click', (event) => {
                     const target = event.target;
-                    const actionButton = target.closest('.actions-button');
-                    const detailLink = target.closest('.detail-link');
-                    const cancelLink = target.closest('.cancel-link');
+                    
+                    // Handle dropdown toggle
+                    if (target.closest('.actions-button')) {
+                        const dropdown = target.closest('.actions-button').nextElementSibling;
+                        hideAllDropdowns();
+                        dropdown.classList.toggle('hidden');
+                        return;
+                    }
 
-                    if (actionButton) { // Clicked on Actions button
-                        event.stopPropagation();
-                        const dropdownMenu = actionButton.nextElementSibling;
-                        const isExpanded = !dropdownMenu.classList.contains('hidden');
-                        closeAllDropdowns(dropdownMenu); // Close others before toggling
-                        dropdownMenu.classList.toggle('hidden');
-                        actionButton.setAttribute('aria-expanded', String(!isExpanded));
-                    } else if (detailLink) { // Clicked on Detail link
+                    // Handle detail view
+                    if (target.closest('.detail-link')) {
                         event.preventDefault();
-                        const row = detailLink.closest('tr');
-                        if (row) openDetailModal(row.dataset); // Pass row's dataset
-                        closeAllDropdowns();
-                    } else if (cancelLink) { // Clicked on Cancel link
-                         event.preventDefault();
-                         const row = cancelLink.closest('tr');
-                         console.log('Cancel Transfer clicked for:', row ? row.dataset.transactionId : 'unknown');
-                         alert(`Simulating Cancel Transfer for ID: ${row ? row.dataset.transactionId : 'N/A'}`); // Replace with actual logic
-                         closeAllDropdowns();
+                        const row = target.closest('tr');
+                        openDetailModal(row.dataset);
+                        return;
+                    }
+
+                    // Handle cancel action
+                    if (target.closest('.cancel-link')) {
+                        event.preventDefault();
+                        const row = target.closest('tr');
+                        const id = row.dataset.transactionId;
+                        handleCancelTransfer(id);
+                        return;
                     }
                 });
+
+                // Hide dropdowns when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.actions-button')) {
+                        hideAllDropdowns();
+                    }
+                });
+            }
+
+            function hideAllDropdowns() {
+                document.querySelectorAll('.actions-dropdown-menu').forEach(menu => {
+                    menu.classList.add('hidden');
+                });
+            }
+
+            function handleCancelTransfer(id) {
+                if (confirm(`Are you sure you want to cancel transfer ${id}?`)) {
+                    console.log(`Cancelling transfer: ${id}`);
+                    // Add your cancel logic here
+                }
             }
 
             function closeAllDropdowns(exceptMenu = null) {

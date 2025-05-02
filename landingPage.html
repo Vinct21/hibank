@@ -1,142 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hibank Constellation</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background-color: #000;  /* Dark background for stars */
-      overflow: hidden;
-      font-family: 'Krona One', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HiBank - Your Modern Banking Partner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #176980;
+            --secondary-color: #D15B28;
+            --bg-gradient: linear-gradient(135deg, #1e293b, #334155);
+        }
 
-    /* Container for centering the word */
-    .centered-word {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 80px;
-      text-align: center;
-      font-weight: bold;
-    }
+        body {
+            font-family: 'Jost', sans-serif;
+            overflow-x: hidden;
+        }
 
-    /* Responsive for smaller screens */
-    @media (max-width: 768px) {
-      .centered-word {
-        font-size: 40px;
-      }
-    }
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
 
-    /* Make sure the canvas stays behind the content */
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;  /* Send the canvas to the background */
-    }
-  </style>
+        .navbar-brand {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--primary-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-color);
+        }
+
+        .hero-section {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-text {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #b94f23;
+            border-color: #b94f23;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(209, 91, 40, 0.3);
+        }
+
+        .features-section {
+            padding: 5rem 0;
+            background: #f8f9fa;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">HiBank</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="loansimulation.html">Loan Simulation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="employeeTransfer.html">Employee Transfer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="loginPage.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="registerPage.html">Register</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<!-- Centered Word "Hibank" -->
-<div class="centered-word">
-  Hibank
-</div>
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <h1 class="hero-title">Welcome to Modern Banking</h1>
+                    <p class="hero-text">Experience seamless financial services with HiBank. We provide innovative solutions for all your banking needs.</p>
+                    <a href="registerPage.html" class="btn btn-primary btn-lg">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<script>
-  let stars = [];
-  let starCount = 100;  // Number of stars (points)
-  let maxDistance = 150;  // Maximum distance to connect points with lines
+    <section class="features-section">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <i class="fas fa-calculator feature-icon"></i>
+                        <h3 class="feature-title">Loan Simulation</h3>
+                        <p>Calculate and plan your loan with our advanced simulation tools.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <i class="fas fa-exchange-alt feature-icon"></i>
+                        <h3 class="feature-title">Easy Transfers</h3>
+                        <p>Quick and secure employee transfers across departments.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <i class="fas fa-file-pdf feature-icon"></i>
+                        <h3 class="feature-title">PDF Tools</h3>
+                        <p>Efficient tools for managing and processing PDF documents.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  function setup() {
-    let canvas = createCanvas(windowWidth, windowHeight);  // Fullscreen canvas
-    canvas.id('background-canvas');  // Assign an ID for easier CSS control
-    for (let i = 0; i < starCount; i++) {
-      stars.push(new Star(random(width), random(height)));  // Create random stars
-    }
-  }
-
-  function draw() {
-    background(0);  // Dark background (night sky)
-    for (let i = 0; i < stars.length; i++) {
-      stars[i].move();  // Update the star's position
-      stars[i].show();  // Display the star
-      stars[i].connect(stars);  // Connect the stars with lines
-    }
-  }
-
-  // Class for each star (point)
-  class Star {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-
-      // Assign 20% stars to be fast and 80% to be normal speed
-      if (random(1) < 0.2) {
-        this.vx = random(-4, 4);  // Fast speed on x-axis
-        this.vy = random(-4, 4);  // Fast speed on y-axis
-      } else {
-        this.vx = random(-2, 2);  // Normal speed on x-axis
-        this.vy = random(-2, 2);  // Normal speed on y-axis
-      }
-    }
-
-    // Update the star's position
-    move() {
-      this.x += this.vx;
-      this.y += this.vy;
-
-      // Make the stars bounce off the edges
-      if (this.x > width || this.x < 0) {
-        this.vx *= -1;  // Reverse direction on x axis
-      }
-      if (this.y > height || this.y < 0) {
-        this.vy *= -1;  // Reverse direction on y axis
-      }
-    }
-
-    // Show the star (draw a white circle)
-    show() {
-      noStroke();
-      fill(255);
-      ellipse(this.x, this.y, 5, 5);  // White point for the star
-    }
-
-    // Connect stars with lines if they are close enough
-    connect(stars) {
-      for (let i = 0; i < stars.length; i++) {
-        let other = stars[i];
-        let d = dist(this.x, this.y, other.x, other.y);
-
-        // Only connect points that are within maxDistance
-        if (d < maxDistance) {
-          let opacity = map(d, 0, maxDistance, 255, 0);  // Map distance to opacity (closer = more opaque)
-          stroke(255, 255, 255, opacity);  // White lines with opacity based on distance
-          line(this.x, this.y, other.x, other.y);
-        }
-
-        // Connect to the cursor if the cursor is near the star, with the same fading effect
-        let dToCursor = dist(this.x, this.y, mouseX, mouseY);
-        if (dToCursor < maxDistance) {
-          let cursorOpacity = map(dToCursor, 0, maxDistance, 255, 0);  // Map cursor distance to opacity
-          stroke(255, 255, 255, cursorOpacity);  // Line to cursor with dynamic opacity
-          line(this.x, this.y, mouseX, mouseY);
-        }
-      }
-    }
-  }
-
-  function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);  // Make canvas responsive
-  }
-</script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
