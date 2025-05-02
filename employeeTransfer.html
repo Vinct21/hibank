@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Transfer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Employee Transfer</title> <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <base target="_top">
     <script>
         // Optional: Tailwind Customization
         tailwind.config = {
@@ -198,7 +198,6 @@
             </div>
         </div>
     </div>
-
     <div id="create-modal-overlay" class="modal-overlay"></div>
     <div id="create-transfer-modal" class="modal-panel">
         <div class="modal-header">
@@ -254,12 +253,9 @@
             <button type="submit" form="create-transfer-form" class="px-4 py-2 text-sm font-medium text-white bg-primary-blue border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Save</button>
         </div>
     </div>
-
     <script>
+        // Wait for the DOM to be fully loaded before executing script
         document.addEventListener('DOMContentLoaded', () => {
-            // --- CONFIGURATION ---
-            // !!! IMPORTANT: Replace this with your Deployed Google Apps Script Web App URL !!!
-            const SCRIPT_URL = "https://script.google.com/a/macros/hibank.co.id/s/AKfycbygUdmJWtu0hT-5F7vRXHrABvtPGVnn8XkBG08qowfP56kcIKPMSZdzzaZvOzPTmk40Nw/exec";
 
             // --- Element References ---
             const tableBody = document.getElementById('transfer-table-body');
@@ -288,149 +284,174 @@
             let currentPage = 1;
             let rowsPerPage = 10; // Or get from #rows-per-page select
 
-            // --- Data Fetching ---
-            async function fetchData() {
-                showLoading();
-                // Check if SCRIPT_URL is set
-                if (SCRIPT_URL === "https://script.google.com/a/macros/hibank.co.id/s/AKfycbygUdmJWtu0hT-5F7vRXHrABvtPGVnn8XkBG08qowfP56kcIKPMSZdzzaZvOzPTmk40Nw/exec" || !SCRIPT_URL) {
-                   showError("Please set the SCRIPT_URL in the JavaScript code.");
-                   console.error("SCRIPT_URL not set.");
-                   return;
-                }
+            // --- Data Fetching & Handling ---
 
-                // Construct the URL with parameters for different actions
-                const transferUrl = `${SCRIPT_URL}?action=getTransfers`;
-                const employeeUrl = `${SCRIPT_URL}?action=getEmployees`;
-
-                try {
-                    // Fetch transfers and employees concurrently
-                    const [transferResponse, employeeResponse] = await Promise.all([
-                        fetch(transferUrl),
-                        fetch(employeeUrl)
-                    ]);
-
-                    if (!transferResponse.ok || !employeeResponse.ok) {
-                        throw new Error(`HTTP error! status: ${transferResponse.status} / ${employeeResponse.status}`);
-                    }
-
-                    const transferData = await transferResponse.json();
-                    const employeeData = await employeeResponse.json();
-
-                    console.log("Fetched Transfers:", transferData);
-                    console.log("Fetched Employees:", employeeData);
-
-                    if (transferData.success && employeeData.success) {
-                        allTransfers = transferData.data;
-                        employees = employeeData.data;
-                        currentTransfers = [...allTransfers]; // Initially display all
-                        populateEmployeeDropdown(employees);
-                        renderTable(); // Initial render
-                    } else {
-                         showError("Failed to fetch data from script.");
-                         console.error("API Error:", transferData.error || employeeData.error);
-                    }
-
-                } catch (error) {
-                    showError(`Error fetching data: ${error.message}`);
-                    console.error("Fetch Error:", error);
-                } finally {
-                    hideLoading();
-                }
+            // Success handler for getting transfer data
+            function handleTransferDataSuccess(data) {
+                console.log("Fetched Transfers:", data);
+                allTransfers = data || []; // Use empty array if data is null/undefined
+                currentTransfers = [...allTransfers];
+                renderTable(); // Render transfers first
+                // Fetch employees after transfers are loaded (or do concurrently, see below)
+                fetchEmployeeList();
             }
 
-            // --- Table Rendering & Pagination ---
-             function renderTable() {
-                tableBody.innerHTML = ''; // Clear previous rows or loading indicator
+            // Success handler for getting employee data
+            function handleEmployeeDataSuccess(data) {
+                console.log("Fetched Employees:", data);
+                employees = data || [];
+                populateEmployeeDropdown(employees);
+                hideLoading(); // Hide loading indicator after both data sets potentially loaded
+            }
+
+            // Failure handler for any google.script.run call
+            function handleScriptError(error) {
+                console.error("Apps Script Error:", error);
+                showError(`Error communicating with script: ${error.message || error}`);
+                hideLoading(); // Ensure loading indicator is hidden on error
+            }
+
+            // Function to initiate data fetching
+            function fetchData() {
+                showLoading();
+                // Fetch transfers first, then employees in its success handler
+                google.script.run
+                    .withSuccessHandler(handleTransferDataSuccess)
+                    .withFailureHandler(handleScriptError)
+                    .getTransferData();
+
+                // --- Alternative: Fetch Concurrently (might be slightly faster) ---
+                // google.script.run.withSuccessHandler(handleTransferDataSuccess).withFailureHandler(handleScriptError).getTransferData();
+                // google.script.run.withSuccessHandler(handleEmployeeDataSuccess).withFailureHandler(handleScriptError).getEmployeeList();
+                // Note: If fetching concurrently, adjust hideLoading() logic if needed
+            }
+
+            // Function to fetch only the employee list (e.g., if needed separately)
+            function fetchEmployeeList() {
+                 google.script.run
+                    .withSuccessHandler(handleEmployeeDataSuccess)
+                    .withFailureHandler(handleScriptError)
+                    .getEmployeeList();
+            }
+
+
+            // --- Table Rendering & Pagination (Using DOM Manipulation) ---
+            function renderTable() {
+                if (!tableBody) { console.error("Table body element not found!"); return; }
+                tableBody.innerHTML = '';
+
                 if (currentTransfers.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="9" class="text-center text-gray-500 py-4">No transfer data found.</td></tr>';
-                    updatePaginationControls(0); // Update pagination for empty state
+                    const emptyRow = tableBody.insertRow();
+                    const emptyCell = emptyRow.insertCell();
+                    emptyCell.colSpan = 9;
+                    emptyCell.className = 'text-center text-gray-500 py-4';
+                    emptyCell.textContent = 'No transfer data found.';
+                    updatePaginationControls(0);
                     return;
                 }
 
-                // Calculate pagination
                 const totalItems = currentTransfers.length;
-                const totalPages = Math.ceil(totalItems / rowsPerPage);
                 const startIndex = (currentPage - 1) * rowsPerPage;
                 const endIndex = startIndex + rowsPerPage;
                 const paginatedTransfers = currentTransfers.slice(startIndex, endIndex);
 
                 paginatedTransfers.forEach(transfer => {
-                    const row = document.createElement('tr');
+                    const row = tableBody.insertRow();
                     row.className = 'bg-white border-b border-border-gray hover:bg-gray-50';
-                    // Add data attributes for the detail modal
-                    row.dataset.transactionId = transfer.transactionId || '';
-                    row.dataset.employeeName = transfer.employeeName || '';
-                    row.dataset.employeeId = transfer.employeeId || '';
-                    row.dataset.transferType = transfer.transferType || '';
-                    row.dataset.createdDate = transfer.createdDate || '';
-                    row.dataset.effectiveDate = transfer.effectiveDate || '';
-                    row.dataset.status = transfer.status || '';
-                    row.dataset.attachment = transfer.attachment || 'false'; // Assuming boolean or link
+                    Object.keys(transfer).forEach(key => { row.dataset[key] = transfer[key]; }); // Set all data attributes
 
-                    // Determine status badge class
+                    const createCell = (content, classes = []) => { /* ... (same as previous version) ... */
+                        const cell = row.insertCell();
+                        cell.className = 'px-6 py-4';
+                        classes.forEach(cls => cell.classList.add(cls));
+                        if (typeof content === 'object' && content instanceof Node) {
+                            cell.appendChild(content);
+                        } else {
+                            cell.textContent = content || 'N/A';
+                        }
+                        return cell;
+                    };
+
+                    createCell(transfer.transactionId, ['text-primary-blue', 'font-medium']);
+                    createCell(transfer.employeeName);
+                    createCell(transfer.employeeId);
+                    createCell(transfer.transferType);
+                    createCell(transfer.createdDate);
+                    createCell(transfer.effectiveDate);
+
+                    const statusSpan = document.createElement('span');
                     const statusClass = `status-${(transfer.status || '').toLowerCase()}`;
+                    statusSpan.className = `status-badge ${statusClass}`;
+                    statusSpan.textContent = transfer.status || 'N/A';
+                    createCell(statusSpan);
 
-                    row.innerHTML = `
-                        <td class="px-6 py-4 text-primary-blue font-medium">${transfer.transactionId || 'N/A'}</td>
-                        <td class="px-6 py-4">${transfer.employeeName || 'N/A'}</td>
-                        <td class="px-6 py-4">${transfer.employeeId || 'N/A'}</td>
-                        <td class="px-6 py-4">${transfer.transferType || 'N/A'}</td>
-                        <td class="px-6 py-4">${transfer.createdDate || 'N/A'}</td>
-                        <td class="px-6 py-4">${transfer.effectiveDate || 'N/A'}</td>
-                        <td class="px-6 py-4"><span class="status-badge ${statusClass}">${transfer.status || 'N/A'}</span></td>
-                        <td class="px-6 py-4 text-center">${transfer.attachment ? '<a href="#" class="text-primary-blue hover:underline" title="View Attachment"><i class="fas fa-paperclip"></i></a>' : '-'}</td>
-                        <td class="px-6 py-4 text-center">
-                            <div class="relative inline-block text-left">
-                                <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false">
-                                    Actions <i class="fas fa-chevron-down text-xs ml-1"></i>
-                                </button>
-                                <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                    <div class="py-1" role="menu">
-                                        <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a>
-                                        <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
+                    const attachmentCell = createCell('', ['text-center']);
+                    if (transfer.attachment) {
+                        const attachmentLink = document.createElement('a');
+                        attachmentLink.href = '#';
+                        attachmentLink.className = 'text-primary-blue hover:underline';
+                        attachmentLink.title = 'View Attachment';
+                        attachmentLink.innerHTML = '<i class="fas fa-paperclip"></i>';
+                        attachmentCell.appendChild(attachmentLink);
+                    } else { attachmentCell.textContent = '-'; }
+
+                    const actionsCell = createCell('', ['text-center']);
+                    const relativeDiv = document.createElement('div');
+                    relativeDiv.className = 'relative inline-block text-left';
+                    const actionButton = document.createElement('button');
+                    actionButton.type = 'button';
+                    actionButton.className = 'actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none';
+                    actionButton.setAttribute('aria-haspopup', 'true');
+                    actionButton.setAttribute('aria-expanded', 'false');
+                    actionButton.innerHTML = 'Actions <i class="fas fa-chevron-down text-xs ml-1"></i>';
+                    const dropdownMenu = document.createElement('div');
+                    dropdownMenu.className = 'actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none';
+                    const dropdownInnerDiv = document.createElement('div');
+                    dropdownInnerDiv.className = 'py-1'; dropdownInnerDiv.setAttribute('role', 'menu');
+                    const detailLink = document.createElement('a');
+                    detailLink.href = '#'; detailLink.className = 'detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'; detailLink.setAttribute('role', 'menuitem'); detailLink.textContent = 'Detail';
+                    const cancelLink = document.createElement('a');
+                    cancelLink.href = '#'; cancelLink.className = 'cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'; cancelLink.setAttribute('role', 'menuitem'); cancelLink.textContent = 'Cancel Transfer';
+                    dropdownInnerDiv.appendChild(detailLink); dropdownInnerDiv.appendChild(cancelLink);
+                    dropdownMenu.appendChild(dropdownInnerDiv); relativeDiv.appendChild(actionButton); relativeDiv.appendChild(dropdownMenu); actionsCell.appendChild(relativeDiv);
                 });
 
                 updatePaginationControls(totalItems);
             }
 
+
             function updatePaginationControls(totalItems) {
+                if (!totalPagesSpan || !currentPageInput || !paginationInfo || !prevPageButton || !nextPageButton) return;
                 const totalPages = Math.ceil(totalItems / rowsPerPage);
                 totalPagesSpan.textContent = `of ${totalPages || 1}`;
                 currentPageInput.max = totalPages || 1;
                 currentPageInput.value = currentPage;
-
-                // Update "Showing x-y of z" text
-                 const startItem = totalItems === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
-                 const endItem = Math.min(startItem + rowsPerPage - 1, totalItems);
-                 paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${totalItems}`;
-
-
-                // Enable/disable buttons
+                const startItem = totalItems === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+                const endItem = Math.min(startItem + rowsPerPage - 1, totalItems);
+                paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${totalItems}`;
                 prevPageButton.disabled = currentPage === 1;
                 nextPageButton.disabled = currentPage === totalPages || totalItems === 0;
             }
 
              function changePage(newPage) {
                 const totalPages = Math.ceil(currentTransfers.length / rowsPerPage);
-                if (newPage >= 1 && newPage <= totalPages) {
-                    currentPage = newPage;
+                const validNewPage = Math.max(1, Math.min(newPage, totalPages || 1));
+                if (validNewPage !== currentPage) {
+                    currentPage = validNewPage;
                     renderTable();
+                } else if (currentPageInput) {
+                    currentPageInput.value = currentPage;
                 }
              }
 
             // --- Employee Dropdown Population ---
             function populateEmployeeDropdown(employeeList) {
-                employeeSelect.innerHTML = '<option value="" disabled selected>Select employee</option>'; // Clear existing and add placeholder
+                 if (!employeeSelect) return;
+                employeeSelect.innerHTML = '<option value="" disabled selected>Select employee</option>';
                 if (employeeList && employeeList.length > 0) {
                     employeeList.forEach(emp => {
                         const option = document.createElement('option');
-                        option.value = emp.id; // Assuming employee object has 'id' and 'name'
+                        option.value = emp.id;
                         option.textContent = `${emp.name} (${emp.id})`;
                         employeeSelect.appendChild(option);
                     });
@@ -441,212 +462,226 @@
 
             // --- Loading and Error Indicators ---
             function showLoading() {
-                 tableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4"><div class="loading-spinner"></div>Loading data...</td></tr>';
+                if (tableBody) {
+                    tableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4"><div class="loading-spinner"></div>Loading data...</td></tr>';
+                }
             }
             function hideLoading() {
-                // Loading is hidden implicitly when renderTable clears the tbody
+                // No explicit action needed if renderTable replaces the loading row
+                // Could add logic here if a separate loading overlay exists
+                 console.log("Hiding loading (implicitly by rendering table/error)");
             }
              function showError(message) {
-                 tableBody.innerHTML = `<tr><td colspan="9" class="text-center text-red-600 py-4 font-medium">${message}</td></tr>`;
-                 updatePaginationControls(0); // Reset pagination on error
+                 if (tableBody) {
+                    tableBody.innerHTML = `<tr><td colspan="9" class="text-center text-red-600 py-4 font-medium">${message}</td></tr>`;
+                 }
+                 updatePaginationControls(0);
             }
 
 
             // --- Dropdown Logic (Table Actions) ---
             function setupActionDropdowns() {
+                 if (!tableBody) return;
                  tableBody.addEventListener('click', (event) => {
                     const target = event.target;
                     const actionButton = target.closest('.actions-button');
                     const detailLink = target.closest('.detail-link');
                     const cancelLink = target.closest('.cancel-link');
 
-                    if (actionButton) {
+                    if (actionButton) { /* ... (same as previous) ... */
                         event.stopPropagation();
                         const dropdownMenu = actionButton.nextElementSibling;
+                        if (!dropdownMenu) return;
                         const isExpanded = !dropdownMenu.classList.contains('hidden');
                         closeAllDropdowns(dropdownMenu);
                         dropdownMenu.classList.toggle('hidden');
                         actionButton.setAttribute('aria-expanded', String(!isExpanded));
-                    } else if (detailLink) {
+                    } else if (detailLink) { /* ... (same as previous) ... */
                         event.preventDefault();
                         const row = detailLink.closest('tr');
-                        if (row) openDetailModal(row.dataset);
+                        if (row && row.dataset) openDetailModal(row.dataset);
                         closeAllDropdowns();
-                    } else if (cancelLink) {
+                    } else if (cancelLink) { /* ... (same as previous) ... */
                          event.preventDefault();
-                         console.log('Cancel Transfer clicked for:', cancelLink.closest('tr').dataset.transactionId);
-                         alert(`Simulating Cancel Transfer for ID: ${cancelLink.closest('tr').dataset.transactionId}`); // Replace with actual logic
+                         const row = cancelLink.closest('tr');
+                         if (row && row.dataset) {
+                             console.log('Cancel Transfer clicked for:', row.dataset.transactionId);
+                             alert(`Simulating Cancel Transfer for ID: ${row.dataset.transactionId}`);
+                         }
                          closeAllDropdowns();
                     }
                 });
             }
-            function closeAllDropdowns(exceptMenu = null) {
+            function closeAllDropdowns(exceptMenu = null) { /* ... (same as previous) ... */
                 document.querySelectorAll('.actions-dropdown-menu').forEach(menu => {
                     if (menu !== exceptMenu && !menu.classList.contains('hidden')) {
                         menu.classList.add('hidden');
                         const button = menu.previousElementSibling;
-                        if (button) button.setAttribute('aria-expanded', 'false');
+                        if (button && button.classList.contains('actions-button')) {
+                           button.setAttribute('aria-expanded', 'false');
+                        }
                     }
                 });
             }
-            window.addEventListener('click', (event) => {
+            window.addEventListener('click', (event) => { /* ... (same as previous) ... */
                  if (!event.target.closest('.actions-dropdown-menu') && !event.target.closest('.actions-button')) { closeAllDropdowns(); }
             });
 
             // --- Detail Modal Logic ---
-            function openDetailModal(data) {
-                // Populate modal fields
-                document.getElementById('modal-employee-name').textContent = data.employeeName || 'N/A';
-                document.getElementById('modal-employee-id').textContent = data.employeeId || 'N/A';
-                document.getElementById('modal-transaction-id').textContent = data.transactionId || 'N/A';
-                document.getElementById('modal-effective-date').textContent = data.effectiveDate || 'N/A';
-                document.getElementById('modal-transfer-type').textContent = data.transferType || 'N/A';
+            function openDetailModal(data) { /* ... (same as previous, ensure elements exist) ... */
+                const nameEl = document.getElementById('modal-employee-name');
+                const idEl = document.getElementById('modal-employee-id');
+                const transIdEl = document.getElementById('modal-transaction-id');
+                const effDateEl = document.getElementById('modal-effective-date');
+                const typeEl = document.getElementById('modal-transfer-type');
                 const statusBadge = document.getElementById('modal-status-badge');
-                statusBadge.textContent = data.status || 'N/A';
-                statusBadge.className = `status-badge status-${(data.status || '').toLowerCase()}`;
-                const initials = (data.employeeName || '??').split(' ').map(n => n[0]).join('').toUpperCase();
-                document.getElementById('modal-employee-img').src = `https://placehold.co/40x40/0d6efd/ffffff?text=${initials}`;
-                document.getElementById('modal-employee-img').alt = data.employeeName || 'Employee';
+                const imgEl = document.getElementById('modal-employee-img');
 
-                // Populate Changes Table (Placeholder - Fetch real data here if needed)
-                const changesTableBody = document.getElementById('modal-changes-table-body');
-                changesTableBody.innerHTML = '';
-                const changes = getTransferChanges(data.transactionId); // Placeholder
-                if (Object.keys(changes).length > 0) {
-                     for (const type in changes) {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `<th>${type}</th><td>${changes[type].from || '-'}</td><td>${changes[type].to || '-'}</td>`;
-                        changesTableBody.appendChild(row);
-                    }
-                } else {
-                     changesTableBody.innerHTML = `<tr><td colspan="3" class="text-center text-text-muted italic py-4">No specific changes listed</td></tr>`;
+                if (nameEl) nameEl.textContent = data.employeeName || 'N/A';
+                if (idEl) idEl.textContent = data.employeeId || 'N/A';
+                if (transIdEl) transIdEl.textContent = data.transactionId || 'N/A';
+                if (effDateEl) effDateEl.textContent = data.effectiveDate || 'N/A';
+                if (typeEl) typeEl.textContent = data.transferType || 'N/A';
+
+                if (statusBadge) {
+                    statusBadge.textContent = data.status || 'N/A';
+                    statusBadge.className = `status-badge status-${(data.status || '').toLowerCase()}`;
+                }
+                if (imgEl) {
+                    const initials = (data.employeeName || '??').split(' ').map(n => n[0]).join('').toUpperCase();
+                    imgEl.src = `https://placehold.co/40x40/0d6efd/ffffff?text=${initials}`;
+                    imgEl.alt = data.employeeName || 'Employee';
                 }
 
-                // Show modal
-                detailModalOverlay.classList.add('open');
-                detailModalPanel.classList.add('open');
+                const changesTableBody = document.getElementById('modal-changes-table-body');
+                if (changesTableBody) {
+                    changesTableBody.innerHTML = '';
+                    const changes = getTransferChanges(data.transactionId); // Placeholder
+                    if (Object.keys(changes).length > 0) {
+                        for (const type in changes) {
+                            const row = changesTableBody.insertRow();
+                            const cell1 = row.insertCell(); cell1.outerHTML = `<th>${type}</th>`;
+                            const cell2 = row.insertCell(); cell2.textContent = changes[type].from || '-';
+                            const cell3 = row.insertCell(); cell3.textContent = changes[type].to || '-';
+                        }
+                    } else {
+                         const row = changesTableBody.insertRow();
+                         const cell = row.insertCell(); cell.colSpan = 3;
+                         cell.className = 'text-center text-text-muted italic py-4';
+                         cell.textContent = 'No specific changes listed';
+                    }
+                }
+                if (detailModalOverlay) detailModalOverlay.classList.add('open');
+                if (detailModalPanel) detailModalPanel.classList.add('open');
             }
-            function closeDetailModal() {
-                detailModalOverlay.classList.remove('open');
-                detailModalPanel.classList.remove('open');
+            function closeDetailModal() { /* ... (same as previous) ... */
+                if (detailModalOverlay) detailModalOverlay.classList.remove('open');
+                if (detailModalPanel) detailModalPanel.classList.remove('open');
             }
-            function getTransferChanges(transactionId) { // Placeholder
+            function getTransferChanges(transactionId) { /* ... (same as previous) ... */
                 console.log("Simulating fetch detail changes for:", transactionId);
                 if (transactionId === '2025050200001') return {'Branch': { from: 'Old Branch A', to: 'New Branch B' },'Job position': { from: 'Junior Dev', to: 'Senior Dev' }};
                 return {};
             }
-            closeDetailModalButton.addEventListener('click', closeDetailModal);
-            detailModalOverlay.addEventListener('click', closeDetailModal);
+            if (closeDetailModalButton) closeDetailModalButton.addEventListener('click', closeDetailModal);
+            if (detailModalOverlay) detailModalOverlay.addEventListener('click', closeDetailModal);
 
             // --- Create Modal Logic ---
-            function openCreateModal() {
+            function openCreateModal() { /* ... (same as previous) ... */
+                if (!createTransferForm || !createModalOverlay || !createModalPanel) return;
                 createTransferForm.reset();
-                // Ensure employee dropdown is populated (in case it wasn't loaded initially)
-                if (employeeSelect.options.length <= 1 && employees.length > 0) {
+                if (employeeSelect && employeeSelect.options.length <= 1 && employees.length > 0) {
                     populateEmployeeDropdown(employees);
-                } else if (employeeSelect.options.length <= 1) {
+                } else if (employeeSelect && employeeSelect.options.length <= 1) {
                      employeeSelect.innerHTML = '<option value="" disabled selected>Could not load employees</option>';
                 }
                 createModalOverlay.classList.add('open');
                 createModalPanel.classList.add('open');
             }
-            function closeCreateModal() {
-                createModalOverlay.classList.remove('open');
-                createModalPanel.classList.remove('open');
+            function closeCreateModal() { /* ... (same as previous) ... */
+                if (createModalOverlay) createModalOverlay.classList.remove('open');
+                if (createModalPanel) createModalPanel.classList.remove('open');
             }
-            createTransferForm.addEventListener('submit', async (event) => { // Made async
-                event.preventDefault();
-                console.log('Create Transfer form submitted');
 
-                 // Check if SCRIPT_URL is set
-                if (SCRIPT_URL === "YOUR_DEPLOYED_APPS_SCRIPT_WEB_APP_URL_HERE" || !SCRIPT_URL) {
-                   alert("SCRIPT_URL not set in JavaScript. Cannot submit form.");
-                   console.error("SCRIPT_URL not set.");
-                   return;
-                }
+            // Form submission using google.script.run
+            if (createTransferForm) {
+                createTransferForm.addEventListener('submit', (event) => { // No async needed here
+                    event.preventDefault();
+                    console.log('Create Transfer form submitted');
 
-                const formData = new FormData(createTransferForm);
-                const data = Object.fromEntries(formData.entries());
-                console.log('Form Data:', data);
+                    const formData = new FormData(createTransferForm);
+                    const dataObject = Object.fromEntries(formData.entries()); // Create object from form data
+                    console.log('Form Data Object:', dataObject);
 
-                // Disable button during submission
-                const saveButton = createTransferForm.nextElementSibling.querySelector('button[type="submit"]');
-                saveButton.disabled = true;
-                saveButton.textContent = 'Saving...';
+                    // Disable button during submission
+                    const saveButton = document.querySelector('#create-transfer-modal button[type="submit"]');
+                    if (saveButton) {
+                        saveButton.disabled = true;
+                        saveButton.textContent = 'Saving...';
+                    }
 
+                    // Define success handler for createNewTransfer
+                    function handleCreateSuccess(result) {
+                        console.log("Create Result:", result);
+                        if (result && result.success) {
+                            alert(result.message || 'Transfer created successfully!'); // Use message from backend
+                            closeCreateModal();
+                            fetchData(); // Refresh table data
+                        } else {
+                            // Handle cases where backend returns {success: false, error: ...}
+                             handleScriptError(new Error(result.error || 'Unknown error during creation.'));
+                        }
+                         // Re-enable button regardless of success/failure
+                         if (saveButton) {
+                            saveButton.disabled = false;
+                            saveButton.textContent = 'Save';
+                        }
+                    }
 
-                try {
-                    // Construct URL for the create action
-                     const createUrl = `${SCRIPT_URL}?action=createTransfer`;
-                     const response = await fetch(createUrl, {
-                        method: 'POST',
-                        // Apps Script web apps often expect payload as stringified form data
-                        // Adjust 'Content-Type' and body format based on your Apps Script doGet/doPost handling
-                        headers: {
-                           // 'Content-Type': 'application/json', // Use if Apps Script expects JSON
-                           'Content-Type': 'application/x-www-form-urlencoded', // Common for Apps Script POST
-                        },
-                        // body: JSON.stringify(data), // Use if sending JSON
-                         body: new URLSearchParams(data).toString() // Send as form data
-                     });
+                    // Define failure handler (reuse general one, but also re-enable button)
+                    function handleCreateFailure(error) {
+                        handleScriptError(error); // Call general error handler
+                         if (saveButton) { // Re-enable button on failure too
+                            saveButton.disabled = false;
+                            saveButton.textContent = 'Save';
+                        }
+                    }
 
-                     if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                     }
-
-                     const result = await response.json();
-                     console.log("Create Result:", result);
-
-                     if(result.success) {
-                        alert('Transfer created successfully! (Simulated)'); // Replace with better notification
-                        closeCreateModal();
-                        fetchData(); // Refresh the table data
-                     } else {
-                         alert(`Failed to create transfer: ${result.error || 'Unknown error'}`);
-                     }
-
-                } catch (error) {
-                     alert(`Error submitting form: ${error.message}`);
-                     console.error("Submit Error:", error);
-                } finally {
-                     // Re-enable button
-                     saveButton.disabled = false;
-                     saveButton.textContent = 'Save';
-                }
-            });
-            createTransferButton.addEventListener('click', openCreateModal);
-            closeCreateModalButton.addEventListener('click', closeCreateModal);
-            cancelCreateButton.addEventListener('click', closeCreateModal);
-            createModalOverlay.addEventListener('click', closeCreateModal);
+                    // Call the backend function via google.script.run
+                    google.script.run
+                        .withSuccessHandler(handleCreateSuccess)
+                        .withFailureHandler(handleCreateFailure) // Use specific failure handler if needed
+                        .createNewTransfer(dataObject); // Pass the data object
+                });
+            }
+            // Attach listeners only if elements exist
+            if (createTransferButton) createTransferButton.addEventListener('click', openCreateModal);
+            if (closeCreateModalButton) closeCreateModalButton.addEventListener('click', closeCreateModal);
+            if (cancelCreateButton) cancelCreateButton.addEventListener('click', closeCreateModal);
+            if (createModalOverlay) createModalOverlay.addEventListener('click', closeCreateModal);
 
              // --- Event Listeners for Pagination & Filtering ---
-             prevPageButton.addEventListener('click', () => changePage(currentPage - 1));
-             nextPageButton.addEventListener('click', () => changePage(currentPage + 1));
-             currentPageInput.addEventListener('change', (e) => {
+             if (prevPageButton) prevPageButton.addEventListener('click', () => changePage(currentPage - 1));
+             if (nextPageButton) nextPageButton.addEventListener('click', () => changePage(currentPage + 1));
+             if (currentPageInput) currentPageInput.addEventListener('change', (e) => {
                  const newPage = parseInt(e.target.value, 10);
-                 if (!isNaN(newPage)) {
-                     changePage(newPage);
-                 } else {
-                     // Reset if invalid input
-                     e.target.value = currentPage;
-                 }
+                 changePage(isNaN(newPage) ? currentPage : newPage);
              });
-             document.getElementById('rows-per-page').addEventListener('change', (e) => {
+             const rowsPerPageSelect = document.getElementById('rows-per-page');
+             if (rowsPerPageSelect) rowsPerPageSelect.addEventListener('change', (e) => {
                  rowsPerPage = parseInt(e.target.value, 10);
-                 currentPage = 1; // Reset to first page
+                 currentPage = 1;
                  renderTable();
              });
-             // Add listeners for filter inputs (status, date, search) here
-             // They should modify 'currentTransfers' and call renderTable()
+             // Add filter listeners here
 
 
             // --- Initial Load ---
             console.log("Employee Transfer page loaded. Fetching data...");
-            setupActionDropdowns(); // Setup listeners using event delegation
-            fetchData(); // Fetch initial data on load
+            setupActionDropdowns(); // Setup listeners
+            fetchData(); // Fetch initial data
 
-        });
+        }); // End DOMContentLoaded
     </script>
-
 </body>
 </html>
