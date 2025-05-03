@@ -3,649 +3,414 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Transfer</title>
+    <title>Employee Transfer Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <script>
-        // Optional: Tailwind Customization
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'], // Set Inter as the default font
-                    },
-                    colors: {
-                        // Custom colors matching the screenshot
-                        'header-bg': '#ffffff',
-                        'sidebar-bg': '#f8f9fa',
-                        'primary-blue': '#0d6efd', // Example primary blue
-                        'secondary-gray': '#6c757d',
-                        'light-gray': '#f1f3f5',
-                        'border-gray': '#dee2e6',
-                        'text-dark': '#212529',
-                        'text-muted': '#6c757d',
-                        'status-approved': '#198754', // Green for approved
-                        'status-pending': '#ffc107', // Yellow for pending
-                        'status-rejected': '#dc3545', // Red for rejected
-                        'modal-overlay': 'rgba(0, 0, 0, 0.5)', // Semi-transparent black overlay
-                    }
-                }
-            }
-        }
-    </script>
+
     <style>
-        /* Custom styles */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8f9fa;
         }
-        .nav-link-active {
-            color: #0d6efd;
-            border-bottom: 2px solid #0d6efd;
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 9999px;
+            display: inline-block;
         }
-        .table-container::-webkit-scrollbar { height: 8px; }
-        .table-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
-        .table-container::-webkit-scrollbar-track { background-color: #f1f3f5; }
-
-        /* Ensure dropdowns appear above table content */
-        .actions-dropdown-menu { z-index: 50; }
-
-        /* Status Badges */
-        .status-badge { padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; border-radius: 9999px; display: inline-block; }
-        .status-approved { background-color: #d1e7dd; color: #0f5132; }
-        .status-pending { background-color: #fff3cd; color: #664d03; }
-        .status-rejected { background-color: #f8d7da; color: #842029; }
-
-        /* Modal Styles (Shared) */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 998; opacity: 0; visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+        .status-approved {
+            background-color: #176980;
+            color: #ffffff;
         }
-        .modal-panel {
-            position: fixed; top: 0; right: 0; bottom: 0;
-            width: 100%; max-width: 550px; /* Slightly wider for create form */
-            background-color: white; z-index: 999;
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-            display: flex; flex-direction: column;
-            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+        .status-pending {
+            background-color: #D15B28;
+            color: #ffffff;
         }
-        .modal-panel.open { transform: translateX(0); }
-        .modal-overlay.open { opacity: 1; visibility: visible; }
-        .modal-header { padding: 1rem; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { overflow-y: auto; flex-grow: 1; padding: 1.5rem; }
-        .modal-footer { padding: 1rem; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; background-color: #f8f9fa; }
-
-        /* Detail Modal Table */
-        .detail-table th, .detail-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #dee2e6; vertical-align: top; }
-        .detail-table th { font-weight: 500; color: #6c757d; width: 150px; text-align: left; }
-        .detail-table td { color: #212529; }
-        .detail-table tr:last-child th, .detail-table tr:last-child td { border-bottom: none; }
-
-        /* Create Form Styles */
-        .form-label { display: block; margin-bottom: 0.25rem; font-size: 0.875rem; font-weight: 500; color: #495057; }
-        .form-label .required { color: #dc3545; margin-left: 2px; }
-        .form-input, .form-select {
-            display: block; width: 100%; padding: 0.5rem 0.75rem;
-            font-size: 0.875rem; line-height: 1.5; color: #495057;
-            background-color: #fff; background-clip: padding-box;
-            border: 1px solid #ced4da; border-radius: 0.375rem; /* rounded-md */
-            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #842029;
         }
-        .form-input:focus, .form-select:focus {
-            border-color: #86b7fe; outline: 0;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
-        }
-        /* Add icon to date input */
-        .date-input-container { position: relative; }
-        .date-input-icon { position: absolute; top: 50%; right: 0.75rem; transform: translateY(-50%); pointer-events: none; color: #6c757d; }
-
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
+            .dropdown-menu {
+                position: absolute;
+                right: 0;
+                top: 100%; /* Change to top positioning */
+                margin-top: 0.5rem; /* Change margin to top */
+                min-width: 12rem;
+                background-color: white;
+                border-radius: 0.375rem;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                z-index: 50;
+                display: none;
+            }
             
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.toggle('hidden');
-                mobileMenu.classList.toggle('flex');
-                mobileMenu.classList.toggle('flex-col');
-                mobileMenu.classList.toggle('absolute');
-                mobileMenu.classList.toggle('top-full');
-                mobileMenu.classList.toggle('left-0');
-                mobileMenu.classList.toggle('right-0');
-                mobileMenu.classList.toggle('bg-white');
-                mobileMenu.classList.toggle('shadow-lg');
-                mobileMenu.classList.toggle('p-4');
-                mobileMenu.classList.toggle('mt-2');
-                mobileMenu.classList.toggle('rounded-lg');
-            });
-
-            // Close mobile menu when clicking outside
-            document.addEventListener('click', function(event) {
-                if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
-                    mobileMenu.classList.add('hidden');
-                    mobileMenu.classList.remove('flex', 'flex-col', 'absolute', 'top-full', 'left-0', 'right-0', 'bg-white', 'shadow-lg', 'p-4', 'mt-2', 'rounded-lg');
-                }
-            });
-        });
-    </script>
+            .dropdown-menu.show {
+                display: block;
+            }
+        </style>
 </head>
-<body class="bg-light-gray">
-
-    <!-- Nav Bar -->
-    <header class="bg-header-bg shadow-sm sticky top-0 z-40">
-        <nav class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center space-x-8">
-                <div class="text-xl font-bold text-primary-blue">Logo</div>
-                <button class="md:hidden text-text-muted hover:text-primary-blue" id="mobile-menu-button">
-                    <i class="fas fa-bars text-xl"></i>
+<body>
+    <!-- Nav Bar atas -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-semibold text-gray-800">Employee Transfer</h1>
+            <div class="flex space-x-3">
+                <button class="px-4 py-2 bg-[#176980] text-white rounded-md hover:bg-[#125567]">
+                    <i class="fas fa-file-export mr-2"></i>Export
                 </button>
-                <ul class="hidden md:flex w-full md:w-auto items-center space-x-6" id="mobile-menu">
-                    <li><a href="#" class="text-text-muted hover:text-primary-blue py-2">Dashboard</a></li>
-                    <li><a href="#" class="text-text-dark hover:text-primary-blue py-2 nav-link-active font-medium">Employees</a></li>
-                    <li><a href="#" class="text-text-muted hover:text-primary-blue py-2">Time Management</a></li>
-                    <li><a href="#" class="text-text-muted hover:text-primary-blue py-2">Finance</a></li>
-                    <li><a href="#" class="text-text-muted hover:text-primary-blue py-2">Payroll</a></li>
-                    <li><a href="#" class="text-text-muted hover:text-primary-blue py-2">Company</a></li>
-                    <li><a href="#" class="text-text-muted hover:text-primary-blue py-2">Benefit</a></li>
-                </ul>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center space-x-1">
-                    <i class="fas fa-chart-pie text-xs"></i> <span>Summarize data</span>
+                <button class="px-4 py-2 bg-[#176980] text-white rounded-md hover:bg-[#125567]">
+                    <i class="fas fa-file-import mr-2"></i>Import
                 </button>
-                <button class="text-text-muted hover:text-primary-blue"><i class="fas fa-bell"></i></button>
-                <button class="text-text-muted hover:text-primary-blue"><i class="fas fa-question-circle"></i></button>
-                <button class="text-text-muted hover:text-primary-blue"><i class="fas fa-user-circle text-xl"></i></button>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Filter and Create Transfer -->
-    <main class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-semibold text-text-dark mb-6">Employee transfer</h1>
-
-        <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
-                <div>
-                    <label for="status-filter" class="block text-sm font-medium text-text-muted mb-1">Status</label>
-                    <select id="status-filter" class="w-full border border-border-gray rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-blue focus:border-primary-blue">
-                        <option value="">All status</option>
-                        <option value="approved">Approved</option>
-                        <option value="pending">Pending</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="effective-date-filter" class="block text-sm font-medium text-text-muted mb-1">Effective date</label>
-                    <input type="date" id="effective-date-filter" class="w-full border border-border-gray rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-blue focus:border-primary-blue" placeholder="Select effective date">
-                </div>
-                <div>
-                    <button class="w-full border border-border-gray rounded-lg px-3 py-2 text-sm text-text-muted hover:bg-gray-50 flex items-center justify-center space-x-1">
-                        <i class="fas fa-filter text-xs"></i> <span>All filters</span>
-                    </button>
-                </div>
-                <div class="lg:col-span-2">
-                    <label for="search-employee" class="block text-sm font-medium text-text-muted mb-1">Search</label>
-                    <div class="relative">
-                        <input type="text" id="search-employee" class="w-full border border-border-gray rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-blue focus:border-primary-blue" placeholder="Search employee...">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fas fa-search text-text-muted text-xs"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-4 flex flex-col sm:flex-row justify-between items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-                <div class="flex-grow"></div>
-                <div class="flex space-x-3">
-                    <button class="border border-border-gray rounded-lg px-4 py-2 text-sm text-text-muted hover:bg-gray-50 flex items-center space-x-1">
-                        <i class="fas fa-upload text-xs"></i> <span>Export</span>
-                    </button>
-                    <button class="border border-border-gray rounded-lg px-4 py-2 text-sm text-text-muted hover:bg-gray-50 flex items-center space-x-1">
-                        <i class="fas fa-download text-xs"></i> <span>Import</span>
-                    </button>
-                    <button id="create-transfer-button" class="bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center space-x-1">
-                        <i class="fas fa-plus text-xs"></i> <span>Create transfer</span>
-                    </button>
-                </div>
+                <button onclick="openModal()" class="px-4 py-2 bg-[#D15B28] text-white rounded-md hover:bg-[#b34a20]">
+                    <i class="fas fa-plus mr-2"></i>Create transfer
+                </button>
             </div>
         </div>
 
+        <!-- Filter -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div class="table-container overflow-x-auto -mx-4 sm:mx-0">
-                <table class="w-full min-w-[768px] text-sm text-left text-text-dark">
-                    <thead class="text-xs text-text-muted uppercase bg-light-gray border-b border-border-gray">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <select class="border rounded-md px-3 py-2 text-sm">
+                        <option>All status</option>
+                        <option>Approved</option>
+                        <option>Pending</option>
+                        <option>Rejected</option>
+                    </select>
+                    <div class="relative">
+                        <input type="date" class="border rounded-md px-3 py-2 text-sm" placeholder="Select effective date">
+                    </div>
+                </div>
+                <div class="relative">
+                    <input type="text" placeholder="Search employee..." class="border rounded-md pl-10 pr-4 py-2 text-sm w-64">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 text-xs uppercase text-gray-500">
                         <tr>
-                            <th scope="col" class="px-6 py-3">Transaction ID</th>
-                            <th scope="col" class="px-6 py-3">Employee name</th>
-                            <th scope="col" class="px-6 py-3">Employee ID</th>
-                            <th scope="col" class="px-6 py-3">Transfer type</th>
-                            <th scope="col" class="px-6 py-3">Created date</th>
-                            <th scope="col" class="px-6 py-3">Effective date</th>
-                            <th scope="col" class="px-6 py-3">Status</th>
-                            <th scope="col" class="px-6 py-3">Attachment</th>
-                            <th scope="col" class="px-6 py-3 text-center">Actions</th>
+                            <th class="px-6 py-3 text-left">Transaction ID</th>
+                            <th class="px-6 py-3 text-left">Employee name</th>
+                            <th class="px-6 py-3 text-left">Employee ID</th>
+                            <th class="px-6 py-3 text-left">Transfer type</th>
+                            <th class="px-6 py-3 text-left">Created date</th>
+                            <th class="px-6 py-3 text-left">Effective date</th>
+                            <th class="px-6 py-3 text-left">Status</th>
+                            <th class="px-6 py-3 text-left">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="transfer-table-body">
-                        <tr class="bg-white border-b border-border-gray hover:bg-gray-50"
-                            data-transaction-id="2025050200001"
-                            data-employee-name="Aevi Yuanita"
-                            data-employee-id="130942"
-                            data-transfer-type="Mutation"
-                            data-created-date="02 May 2025"
-                            data-effective-date="01 Mar 2025"
-                            data-status="Approved"
-                            data-attachment="false">
-                            <td class="px-6 py-4 text-primary-blue font-medium">2025050200001</td>
-                            <td class="px-6 py-4">Aevi Yuanita</td> <td class="px-6 py-4">130942</td>
-                            <td class="px-6 py-4">Mutation</td> <td class="px-6 py-4">02 May 2025</td>
-                            <td class="px-6 py-4">01 Mar 2025</td>
-                            <td class="px-6 py-4"><span class="status-badge status-approved">Approved</span></td>
-                            <td class="px-6 py-4 text-center">-</td>
-                            <td class="px-6 py-4 text-center">
-                                <div class="relative inline-block text-left">
-                                    <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false">
-                                        Actions <i class="fas fa-chevron-down text-xs ml-1"></i>
-                                    </button>
-                                    <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <div class="py-1" role="menu">
-                                            <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a>
-                                            <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                         <tr class="bg-white border-b border-border-gray hover:bg-gray-50" data-transaction-id="2025042600074" data-employee-name="Hendy Darmawan" data-employee-id="242390" data-transfer-type="Other" data-created-date="29 Apr 2025" data-effective-date="13 May 2025" data-status="Approved" data-attachment="false"> <td class="px-6 py-4 text-primary-blue font-medium">2025042600074</td> <td class="px-6 py-4">Hendy Darmawan</td> <td class="px-6 py-4">242390</td> <td class="px-6 py-4">Other</td> <td class="px-6 py-4">29 Apr 2025</td> <td class="px-6 py-4">13 May 2025</td> <td class="px-6 py-4"><span class="status-badge status-approved">Approved</span></td> <td class="px-6 py-4 text-center">-</td> <td class="px-6 py-4 text-center"> <div class="relative inline-block text-left"> <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false"> Actions <i class="fas fa-chevron-down text-xs ml-1"></i> </button> <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"> <div class="py-1" role="menu"> <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a> <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a> </div> </div> </div> </td> </tr>
-                         <tr class="bg-white border-b border-border-gray hover:bg-gray-50" data-transaction-id="2025042800073" data-employee-name="Alexander Ekanayake" data-employee-id="252505" data-transfer-type="Other" data-created-date="29 Apr 2025" data-effective-date="14 Apr 2025" data-status="Approved" data-attachment="false"> <td class="px-6 py-4 text-primary-blue font-medium">2025042800073</td> <td class="px-6 py-4">Alexander Ekanayake</td> <td class="px-6 py-4">252505</td> <td class="px-6 py-4">Other</td> <td class="px-6 py-4">29 Apr 2025</td> <td class="px-6 py-4">14 Apr 2025</td> <td class="px-6 py-4"><span class="status-badge status-approved">Approved</span></td> <td class="px-6 py-4 text-center">-</td> <td class="px-6 py-4 text-center"> <div class="relative inline-block text-left"> <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false"> Actions <i class="fas fa-chevron-down text-xs ml-1"></i> </button> <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"> <div class="py-1" role="menu"> <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a> <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a> </div> </div> </div> </td> </tr>
-                         <tr class="bg-white border-b border-border-gray hover:bg-gray-50" data-transaction-id="2025012800065" data-employee-name="Astri Rahayu" data-employee-id="173880" data-transfer-type="Mutation" data-created-date="28 Apr 2025" data-effective-date="01 Dec 2024" data-status="Approved" data-attachment="true"> <td class="px-6 py-4 text-primary-blue font-medium">2025012800065</td> <td class="px-6 py-4">Astri Rahayu</td> <td class="px-6 py-4">173880</td> <td class="px-6 py-4">Mutation</td> <td class="px-6 py-4">28 Apr 2025</td> <td class="px-6 py-4">01 Dec 2024</td> <td class="px-6 py-4"><span class="status-badge status-approved">Approved</span></td> <td class="px-6 py-4 text-center"><a href="#" class="text-primary-blue hover:underline" title="View Attachment"><i class="fas fa-paperclip"></i></a></td> <td class="px-6 py-4 text-center"> <div class="relative inline-block text-left"> <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false"> Actions <i class="fas fa-chevron-down text-xs ml-1"></i> </button> <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"> <div class="py-1" role="menu"> <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a> <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a> </div> </div> </div> </td> </tr>
-                         <tr class="bg-white border-b border-border-gray hover:bg-gray-50" data-transaction-id="2025050100010" data-employee-name="Budi Santoso" data-employee-id="198765" data-transfer-type="Promotion" data-created-date="01 May 2025" data-effective-date="01 Jun 2025" data-status="Pending" data-attachment="false"> <td class="px-6 py-4 text-primary-blue font-medium">2025050100010</td> <td class="px-6 py-4">Budi Santoso</td> <td class="px-6 py-4">198765</td> <td class="px-6 py-4">Promotion</td> <td class="px-6 py-4">01 May 2025</td> <td class="px-6 py-4">01 Jun 2025</td> <td class="px-6 py-4"><span class="status-badge status-pending">Pending</span></td> <td class="px-6 py-4 text-center">-</td> <td class="px-6 py-4 text-center"> <div class="relative inline-block text-left"> <button type="button" class="actions-button text-primary-blue hover:underline inline-flex justify-center items-center w-full rounded-md px-2 py-1 text-sm font-medium focus:outline-none" aria-haspopup="true" aria-expanded="false"> Actions <i class="fas fa-chevron-down text-xs ml-1"></i> </button> <div class="actions-dropdown-menu hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"> <div class="py-1" role="menu"> <a href="#" class="detail-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Detail</a> <a href="#" class="cancel-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cancel Transfer</a> </div> </div> </div> </td> </tr>
+                    <tbody class="divide-y divide-gray-200">
                     </tbody>
                 </table>
             </div>
-            <div class="flex flex-col md:flex-row justify-between items-center px-6 py-3 bg-white border-t border-border-gray text-sm text-text-muted">
-                <div class="flex items-center space-x-2 mb-2 md:mb-0">
-                    <span>Rows per page:</span>
-                    <select id="rows-per-page" class="border border-border-gray rounded px-2 py-1 text-xs focus:outline-none">
-                        <option value="10">10</option> <option value="25">25</option> <option value="50">50</option>
+
+            <!-- Pagenation -->
+            <div class="px-6 py-4 flex items-center justify-between border-t border-gray-200">
+                <div class="text-sm text-gray-500">
+                    Rows per page: 
+                    <select class="border rounded px-2 py-1 ml-2">
+                        <option>10</option>
+                        <option>20</option>
+                        <option>50</option>
                     </select>
-                    <span id="pagination-info">Showing 1-5 of 5</span> </div>
+                </div>
                 <div class="flex items-center space-x-2">
-                    <button id="prev-page" class="border border-border-gray rounded px-2 py-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled> <i class="fas fa-chevron-left text-xs"></i> </button>
-                    <span>Page</span>
-                    <input type="number" id="current-page" value="1" min="1" max="1" class="border border-border-gray rounded w-12 px-2 py-1 text-center text-xs focus:outline-none"> <span id="total-pages">of 1</span> <button id="next-page" class="border border-border-gray rounded px-2 py-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled> <i class="fas fa-chevron-right text-xs"></i> </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div id="detail-modal-overlay" class="modal-overlay"></div>
-    <div id="transfer-detail-modal" class="modal-panel">
-        <div class="modal-header">
-            <h2 class="text-lg font-semibold text-text-dark">Transfer detail</h2>
-            <button id="close-detail-modal-button" class="text-text-muted hover:text-text-dark"><i class="fas fa-times text-xl"></i></button>
-        </div>
-        <div class="modal-body space-y-6">
-            <div class="flex items-center space-x-3">
-                <img id="modal-employee-img" src="https://placehold.co/40x40/" alt="Employee" class="w-10 h-10 rounded-full object-cover">
-                <div>
-                    <p id="modal-employee-name" class="font-semibold text-text-dark"></p>
-                    <p id="modal-employee-id" class="text-sm text-text-muted"></p>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                <div class="text-text-muted">Transaction ID</div><div id="modal-transaction-id" class="text-text-dark font-medium"></div>
-                <div class="text-text-muted">Effective date</div><div id="modal-effective-date" class="text-text-dark"></div>
-                <div class="text-text-muted">Transfer Type</div><div id="modal-transfer-type" class="text-text-dark"></div>
-                <div class="text-text-muted">Status</div>
-                <div> <span id="modal-status-badge" class="status-badge"></span> <a href="#" class="ml-2 text-xs text-primary-blue hover:underline">See approval history</a> </div>
-            </div>
-            <div>
-                <div class="bg-blue-50 border-l-4 border-primary-blue p-3 text-sm text-blue-800 mb-4 rounded-r-md"> <i class="fas fa-info-circle mr-1"></i> Only data that contains changes will appear... </div>
-                <div class="border border-border-gray rounded-lg overflow-hidden">
-                    <table class="w-full detail-table">
-                        <thead class="bg-light-gray"> <tr> <th class="font-semibold text-text-muted uppercase text-xs">Type</th> <th class="font-semibold text-text-muted uppercase text-xs">From</th> <th class="font-semibold text-text-muted uppercase text-xs">To</th> </tr> </thead>
-                        <tbody id="modal-changes-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="create-modal-overlay" class="modal-overlay"></div>
-
-    <div id="create-transfer-modal" class="modal-panel">
-        <div class="modal-header">
-            <h2 class="text-lg font-semibold text-text-dark">Employee transfer</h2>
-            <button id="close-create-modal-button" class="text-text-muted hover:text-text-dark"><i class="fas fa-times text-xl"></i></button>
-        </div>
-        <form id="create-transfer-form" class="modal-body space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                 <div class="md:col-span-3">
-                    <label for="create-employee" class="form-label">Employees <span class="required">*</span></label>
-                    <select id="create-employee" name="employee" class="form-select" required>
-                        <option value="" disabled selected>Select employee</option>
-                        <option value="130942">Aevi Yuanita (130942)</option>
-                        <option value="242390">Hendy Darmawan (242390)</option>
-                        <option value="252505">Alexander Ekanayake (252505)</option>
-                         <option value="173880">Astri Rahayu (173880)</option>
-                         <option value="198765">Budi Santoso (198765)</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="create-effective-date" class="form-label">Effective date <span class="required">*</span></label>
-                     <div class="date-input-container">
-                        <input type="date" id="create-effective-date" name="effective_date" class="form-input" required>
-                        <i class="fas fa-calendar-alt date-input-icon"></i>
+                    <span class="text-sm text-gray-500">1 of 278 pages</span>
+                    <div class="flex space-x-1">
+                        <button class="p-1 rounded hover:bg-gray-100"><i class="fas fa-chevron-left"></i></button>
+                        <button class="p-1 rounded hover:bg-gray-100"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
-                <div>
-                    <label for="create-transfer-type" class="form-label">Transfer type <span class="required">*</span></label>
-                    <select id="create-transfer-type" name="transfer_type" class="form-select" required>
-                        <option value="" disabled selected>Select transfer type</option>
-                        <option value="Mutation">Mutation</option> <option value="Promotion">Promotion</option> <option value="Demotion">Demotion</option> <option value="Other">Other</option>
-                    </select>
-                </div>
-                 <div>
-                    <label for="create-group-structure" class="form-label">Group structure</label>
-                    <select id="create-group-structure" name="group_structure" class="form-select">
-                        <option value="" disabled selected>Select group structure</option>
-                        <option value="Structure A">Structure A</option> <option value="Structure B">Structure B</option>
-                    </select>
-                     <p class="text-xs text-text-muted mt-1">This setting will help you... <a href="#" class="text-primary-blue hover:underline">Go to settings</a></p>
-                </div>
             </div>
-            <div>
-                <h3 class="text-base font-semibold text-text-dark mb-2">Manage transfer</h3>
-                <p class="text-sm text-text-muted mb-4">You can select one of the fields to transfer.</p>
-                <div class="space-y-4">
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="create-employment-status" class="form-label">Employment status</label><select id="create-employment-status" name="employment_status" class="form-select"><option value="" selected>Select Employment Status</option><option value="Permanent">Permanent</option><option value="Contract">Contract</option><option value="Intern">Intern</option></select></div><div></div></div>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="create-branch" class="form-label">Branch</label><select id="create-branch" name="branch" class="form-select"><option value="" selected>Select Branch</option><option value="Branch A">Branch A</option><option value="Branch B">Branch B</option></select></div><div><label for="create-organization" class="form-label">Organization</label><select id="create-organization" name="organization" class="form-select"><option value="" selected>Select Organization</option><option value="Sales">Sales</option><option value="Marketing">Marketing</option><option value="Engineering">Engineering</option></select></div></div>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="create-job-position" class="form-label">Job position</label><select id="create-job-position" name="job_position" class="form-select"><option value="" selected>Select Job position</option><option value="Manager">Manager</option><option value="Developer">Developer</option><option value="Analyst">Analyst</option></select></div><div><label for="create-job-level" class="form-label">Job level</label><select id="create-job-level" name="job_level" class="form-select"><option value="" selected>Select Job level</option><option value="L1">L1</option><option value="L2">L2</option><option value="L3">L3</option></select></div></div>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="create-grade" class="form-label">Grade</label><select id="create-grade" name="grade" class="form-select"><option value="" selected>Select Grade</option><option value="G1">G1</option><option value="G2">G2</option></select></div><div><label for="create-class" class="form-label">Class</label><select id="create-class" name="class" class="form-select"><option value="" selected>Select Class</option><option value="C1">C1</option><option value="C2">C2</option></select></div></div>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="create-cost-center" class="form-label">Cost Center</label><select id="create-cost-center" name="cost_center" class="form-select"><option value="" selected>Select Cost center</option><option value="CC100">CC100</option><option value="CC200">CC200</option></select></div><div><label for="create-cost-center-category" class="form-label">Cost Center Category</label><select id="create-cost-center-category" name="cost_center_category" class="form-select"><option value="" selected>Select Cost center category</option><option value="Cat A">Cat A</option><option value="Cat B">Cat B</option></select></div></div>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="create-approval-line" class="form-label">Approval line</label><select id="create-approval-line" name="approval_line" class="form-select"><option value="" selected>Select approval line</option><option value="Line 1">Line 1</option><option value="Line 2">Line 2</option></select></div><div><label for="create-manager" class="form-label">Manager</label><select id="create-manager" name="manager" class="form-select"><option value="" selected>Select manager</option><option value="Manager A">Manager A</option><option value="Manager B">Manager B</option></select></div></div>
-                </div>
-            </div>
-        </form>
-        <div class="modal-footer space-x-3">
-            <button type="button" id="cancel-create-button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancel</button>
-            <button type="submit" form="create-transfer-form" class="px-4 py-2 text-sm font-medium text-white bg-primary-blue border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Save</button>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Element References ---
-            const tableBody = document.getElementById('transfer-table-body');
-            // Detail Modal Elements
-            const detailModalOverlay = document.getElementById('detail-modal-overlay');
-            const detailModalPanel = document.getElementById('transfer-detail-modal');
-            const closeDetailModalButton = document.getElementById('close-detail-modal-button');
-            // Create Modal Elements
-            const createModalOverlay = document.getElementById('create-modal-overlay');
-            const createModalPanel = document.getElementById('create-transfer-modal');
-            const createTransferButton = document.getElementById('create-transfer-button');
-            const closeCreateModalButton = document.getElementById('close-create-modal-button');
-            const cancelCreateButton = document.getElementById('cancel-create-button');
-            const createTransferForm = document.getElementById('create-transfer-form');
+    <!-- Modal - Create Transfer -->
+    <div id="transferModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl mx-auto mt-20 p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Employee transfer</h2>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="transferForm" class="space-y-6">
+                <!-- Employee Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Employee *</label>
+                    <select class="w-full border rounded-md px-3 py-2">
+                        <option value="">Select employee</option>
+                    </select>
+                </div>
 
-            // --- Dropdown Logic (Table Actions) ---
-            function setupActionDropdowns() {
-                tableBody.addEventListener('click', (event) => {
-                    const target = event.target;
-                    
-                    // Handle dropdown toggle
-                    if (target.closest('.actions-button')) {
-                        const dropdown = target.closest('.actions-button').nextElementSibling;
-                        hideAllDropdowns();
-                        dropdown.classList.toggle('hidden');
-                        return;
-                    }
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Effective Date -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Effective date *</label>
+                        <input type="date" class="w-full border rounded-md px-3 py-2">
+                    </div>
 
-                    // Handle detail view
-                    if (target.closest('.detail-link')) {
-                        event.preventDefault();
-                        const row = target.closest('tr');
-                        openDetailModal(row.dataset);
-                        return;
-                    }
+                    <!-- Transfer Type -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Transfer type *</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select transfer type</option>
+                        </select>
+                    </div>
+                </div>
 
-                    // Handle cancel action
-                    if (target.closest('.cancel-link')) {
-                        event.preventDefault();
-                        const row = target.closest('tr');
-                        const id = row.dataset.transactionId;
-                        handleCancelTransfer(id);
-                        return;
-                    }
-                });
+                <!-- Group Structure -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Group structure</label>
+                    <select class="w-full border rounded-md px-3 py-2">
+                        <option value="">Select group structure</option>
+                    </select>
+                </div>
 
-                // Hide dropdowns when clicking outside
-                document.addEventListener('click', (e) => {
-                    if (!e.target.closest('.actions-button')) {
-                        hideAllDropdowns();
-                    }
-                });
-            }
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Employment Status -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Employment status</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select Employment status</option>
+                        </select>
+                    </div>
 
-            function hideAllDropdowns() {
-                document.querySelectorAll('.actions-dropdown-menu').forEach(menu => {
-                    menu.classList.add('hidden');
-                });
-            }
+                    <!-- Branch -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Branch</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select branch</option>
+                        </select>
+                    </div>
+                </div>
 
-            function handleCancelTransfer(id) {
-                if (confirm(`Are you sure you want to cancel transfer ${id}?`)) {
-                    console.log(`Cancelling transfer: ${id}`);
-                    // Add your cancel logic here
-                }
-            }
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Job Position -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Job position</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select job position</option>
+                        </select>
+                    </div>
 
-            function closeAllDropdowns(exceptMenu = null) {
-                document.querySelectorAll('.actions-dropdown-menu').forEach(menu => {
-                    if (menu !== exceptMenu && !menu.classList.contains('hidden')) {
-                        menu.classList.add('hidden');
-                        const button = menu.previousElementSibling;
-                        if (button && button.classList.contains('actions-button')) {
-                           button.setAttribute('aria-expanded', 'false');
-                        }
-                    }
-                });
-            }
+                    <!-- Job Level -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Job level</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select job level</option>
+                        </select>
+                    </div>
+                </div>
 
-            // Close dropdowns if clicked outside
-            window.addEventListener('click', (event) => {
-                 if (!event.target.closest('.actions-dropdown-menu') && !event.target.closest('.actions-button')) {
-                    closeAllDropdowns();
-                }
-            });
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Grade -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Grade</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select Grade</option>
+                        </select>
+                    </div>
 
+                    <!-- Class -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Class</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select Class</option>
+                        </select>
+                    </div>
+                </div>
 
-            // --- Detail Modal Logic ---
-            function openDetailModal(data) {
-                // Populate modal fields using data passed from the row's dataset
-                const nameEl = document.getElementById('modal-employee-name');
-                const idEl = document.getElementById('modal-employee-id');
-                const transIdEl = document.getElementById('modal-transaction-id');
-                const effDateEl = document.getElementById('modal-effective-date');
-                const typeEl = document.getElementById('modal-transfer-type');
-                const statusBadge = document.getElementById('modal-status-badge');
-                const imgEl = document.getElementById('modal-employee-img');
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Cost Center -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Cost Center</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select Cost Center</option>
+                        </select>
+                    </div>
 
-                if (nameEl) nameEl.textContent = data.employeeName || 'N/A';
-                if (idEl) idEl.textContent = data.employeeId || 'N/A';
-                if (transIdEl) transIdEl.textContent = data.transactionId || 'N/A';
-                if (effDateEl) effDateEl.textContent = data.effectiveDate || 'N/A';
-                if (typeEl) typeEl.textContent = data.transferType || 'N/A';
+                    <!-- Cost Center Category -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Cost Center Category</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select Cost Center Category</option>
+                        </select>
+                    </div>
+                </div>
 
-                if (statusBadge) {
-                    statusBadge.textContent = data.status || 'N/A';
-                    statusBadge.className = `status-badge status-${(data.status || '').toLowerCase()}`;
-                }
-                if (imgEl) {
-                    const initials = (data.employeeName || '??').split(' ').map(n => n[0]).join('').toUpperCase();
-                    imgEl.src = `https://placehold.co/40x40/0d6efd/ffffff?text=${initials}`;
-                    imgEl.alt = data.employeeName || 'Employee';
-                }
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Approval Line -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Approval line</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select approval line</option>
+                        </select>
+                    </div>
 
-                // Populate Changes Table (Placeholder)
-                const changesTableBody = document.getElementById('modal-changes-table-body');
-                if (changesTableBody) {
-                    changesTableBody.innerHTML = ''; // Clear previous data
-                    const changes = getTransferChanges(data.transactionId); // Placeholder function
-                    if (Object.keys(changes).length > 0) {
-                        for (const type in changes) {
-                            const row = changesTableBody.insertRow();
-                            const cell1 = row.insertCell(); cell1.outerHTML = `<th>${type}</th>`;
-                            const cell2 = row.insertCell(); cell2.textContent = changes[type].from || '-';
-                            const cell3 = row.insertCell(); cell3.textContent = changes[type].to || '-';
-                        }
-                    } else {
-                         const row = changesTableBody.insertRow();
-                         const cell = row.insertCell(); cell.colSpan = 3;
-                         cell.className = 'text-center text-text-muted italic py-4';
-                         cell.textContent = 'No specific changes listed';
-                    }
-                }
+                    <!-- Manager -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Manager</label>
+                        <select class="w-full border rounded-md px-3 py-2">
+                            <option value="">Select manager</option>
+                        </select>
+                    </div>
+                </div>
 
-                // Show the detail modal
-                if (detailModalOverlay) detailModalOverlay.classList.add('open');
-                if (detailModalPanel) detailModalPanel.classList.add('open');
-            }
-
-            function closeDetailModal() {
-                if (detailModalOverlay) detailModalOverlay.classList.remove('open');
-                if (detailModalPanel) detailModalPanel.classList.remove('open');
-            }
-
-            // Placeholder function to simulate fetching transfer change details
-            function getTransferChanges(transactionId) {
-                console.log("Simulating fetch detail changes for:", transactionId);
-                // Replace with actual logic if needed
-                if (transactionId === '2025050200001') return {'Branch': { from: 'Old Branch A', to: 'New Branch B' },'Job position': { from: 'Junior Dev', to: 'Senior Dev' }};
-                if (transactionId === '2025012800065') return {'Organization': { from: 'Sales', to: 'Marketing' }};
-                return {};
-            }
-
-            // Attach listeners for detail modal close actions
-            if (closeDetailModalButton) closeDetailModalButton.addEventListener('click', closeDetailModal);
-            if (detailModalOverlay) detailModalOverlay.addEventListener('click', closeDetailModal);
-
-
-            // --- Create Modal Logic ---
-            function openCreateModal() {
-                if (createTransferForm) createTransferForm.reset(); // Reset form fields when opening
-                if (createModalOverlay) createModalOverlay.classList.add('open');
-                if (createModalPanel) createModalPanel.classList.add('open');
-            }
-
-            function closeCreateModal() {
-                if (createModalOverlay) createModalOverlay.classList.remove('open');
-                if (createModalPanel) createModalPanel.classList.remove('open');
-            }
-
-            // Handle form submission (Placeholder)
-            if (createTransferForm) {
-                createTransferForm.addEventListener('submit', (event) => {
-                    event.preventDefault(); // Prevent default form submission
-                    console.log('Create Transfer form submitted (Placeholder)');
-
-                    const formData = new FormData(createTransferForm);
-                    const data = Object.fromEntries(formData.entries());
-                    console.log('Form Data:', data);
-
-                    // Placeholder for actual submission logic
-                    alert('Form submitted (Placeholder - No data saved). See console for data.');
-
-                    // Optionally close modal after submission
-                    // closeCreateModal();
-                    // You might want to refresh the main table data here if submission was successful
-                });
-            }
-
-            // Attach listeners for create modal open/close actions
-            if (createTransferButton) createTransferButton.addEventListener('click', openCreateModal);
-            if (closeCreateModalButton) closeCreateModalButton.addEventListener('click', closeCreateModal);
-            if (cancelCreateButton) cancelCreateButton.addEventListener('click', closeCreateModal);
-            if (createModalOverlay) createModalOverlay.addEventListener('click', closeCreateModal);
-
-
-             // --- Event Listeners for Pagination (Using Sample Data) ---
-             // Basic pagination logic for the sample data
-             let currentPage = 1;
-             let rowsPerPage = 10; // Default
-
-             function updateSamplePagination() {
-                 const rows = Array.from(tableBody.querySelectorAll('tr'));
-                 const totalItems = rows.length;
-                 const totalPages = Math.ceil(totalItems / rowsPerPage);
-                 const paginationInfo = document.getElementById('pagination-info');
-                 const currentPageInput = document.getElementById('current-page');
-                 const totalPagesSpan = document.getElementById('total-pages');
-                 const prevPageButton = document.getElementById('prev-page');
-                 const nextPageButton = document.getElementById('next-page');
-
-                 if (!totalPagesSpan || !currentPageInput || !paginationInfo || !prevPageButton || !nextPageButton) return;
-
-                 totalPagesSpan.textContent = `of ${totalPages || 1}`;
-                 currentPageInput.max = totalPages || 1;
-                 currentPageInput.value = currentPage;
-
-                 const startItem = totalItems === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
-                 const endItem = Math.min(startItem + rowsPerPage - 1, totalItems);
-                 paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${totalItems}`;
-
-                 prevPageButton.disabled = currentPage === 1;
-                 nextPageButton.disabled = currentPage === totalPages || totalItems === 0;
-
-                 // Show/hide rows based on pagination
-                 rows.forEach((row, index) => {
-                     row.style.display = (index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage) ? '' : 'none';
-                 });
-             }
-
-             function changeSamplePage(newPage) {
-                 const rows = Array.from(tableBody.querySelectorAll('tr'));
-                 const totalPages = Math.ceil(rows.length / rowsPerPage);
-                 const validNewPage = Math.max(1, Math.min(newPage, totalPages || 1));
-                 if (validNewPage !== currentPage) {
-                     currentPage = validNewPage;
-                     updateSamplePagination();
-                 } else {
-                     const currentPageInput = document.getElementById('current-page');
-                     if (currentPageInput) currentPageInput.value = currentPage;
-                 }
-             }
-
-             const prevBtn = document.getElementById('prev-page');
-             const nextBtn = document.getElementById('next-page');
-             const pageInput = document.getElementById('current-page');
-             const rowsSelect = document.getElementById('rows-per-page');
-
-             if (prevBtn) prevBtn.addEventListener('click', () => changeSamplePage(currentPage - 1));
-             if (nextBtn) nextBtn.addEventListener('click', () => changeSamplePage(currentPage + 1));
-             if (pageInput) pageInput.addEventListener('change', (e) => {
-                 const newPage = parseInt(e.target.value, 10);
-                 changeSamplePage(isNaN(newPage) ? currentPage : newPage);
-             });
-             if (rowsSelect) rowsSelect.addEventListener('change', (e) => {
-                 rowsPerPage = parseInt(e.target.value, 10);
-                 currentPage = 1;
-                 updateSamplePagination();
-             });
-
-            // --- Initial Setup ---
-            console.log("Employee Transfer page loaded.");
-            setupActionDropdowns(); // Setup listeners for table actions
-            updateSamplePagination(); // Initial pagination setup for sample data
-
-        }); // End DOMContentLoaded
-    </script>
+                <div class="flex justify-end space-x-3 pt-6">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-md">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>
+
+<!-- Script get data Employee -->
+<script>
+    // Store employee data globally
+    let employeeData = [];
+
+    function getData() {
+        google.script.run.withSuccessHandler(function(response) {
+            if (response && response.length > 0) {
+                employeeData = response.map(emp => ({
+                    transactionId: emp.transactionId,
+                    employeeName: emp.name,
+                    employeeId: emp.nik,
+                    transferType: emp.type,
+                    createdDate: emp.createdDate,
+                    effectiveDate: emp.effectiveDate,
+                    status: emp.status || 'Pending'
+                }));
+                // Log the first item's transaction ID or the entire response for debugging
+                console.log('Response:', response);
+                console.log('First transaction ID:', response[0]?.transactionId);
+                
+                // Generate table with employee data
+                generateTableRows();
+            }
+        }).importData();
+    }
+
+    // Update the generateTableRows function to use employeeData
+    function generateTableRows() {
+        const tbody = document.querySelector('tbody');
+        tbody.innerHTML = employeeData.map(data => `
+            <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 text-sm">${data.transactionId}</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center">
+                        <span class="text-sm">${data.employeeName}</span>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-sm">${data.employeeId}</td>
+                <td class="px-6 py-4 text-sm">${data.transferType}</td>
+                <td class="px-6 py-4 text-sm">${data.createdDate}</td>
+                <td class="px-6 py-4 text-sm">${data.effectiveDate}</td>
+                <td class="px-6 py-4">
+                    <span class="status-badge status-${data.status.toLowerCase()}">${data.status}</span>
+                </td>
+                <td class="px-6 py-4 relative">
+                    <div class="relative inline-block text-left">
+                        <button class="text-[#176980] hover:text-[#125567] focus:outline-none flex items-center border border-[#176980] rounded px-3 py-1" onclick="toggleDropdown(this)">
+                            Actions
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="py-1" role="menu">
+                                <a href="#" class="block px-4 py-2 text-sm text-[#176980] hover:bg-gray-100" role="menuitem">Detail</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-[#D15B28] hover:bg-gray-100" role="menuitem">Cancel transfer</a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+
+
+    // Call getData when the page loads
+    document.addEventListener('DOMContentLoaded', getData);
+</script>
+
+
+<script>
+    function toggleDropdown(button) {
+        const menu = button.nextElementSibling;
+        
+        // Close all other dropdowns first
+        document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+            if (dropdown !== menu) {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        // Toggle current dropdown
+        menu.classList.toggle('show');
+        
+        // Stop event propagation
+        event.stopPropagation();
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        const dropdowns = document.querySelectorAll('.dropdown-menu');
+        dropdowns.forEach(dropdown => {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    });
+
+
+
+
+        // // Helper function to generate transaction ID
+    // function generateTransactionId() {
+    //     const date = new Date();
+    //     const year = date.getFullYear();
+    //     const month = String(date.getMonth() + 1).padStart(2, '0');
+    //     const day = String(date.getDate()).padStart(2, '0');
+    //     const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    //     return `${year}${month}${day}${random}`;
+    // }
+
+    //     // Helper function to format date
+    // function formatDate(date) {
+    //     const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    //     return date.toLocaleDateString('en-GB', options);
+    // }
+
+</script>
+
+<!-- Add this script -->
+<script>
+    // Add click event to Create transfer button
+    document.querySelector('button:contains("Create transfer")').addEventListener('click', openModal);
+
+    function openModal() {
+        document.getElementById('transferModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('transferModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('transferModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+</script>
