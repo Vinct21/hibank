@@ -214,6 +214,7 @@
         async function handleRegister(event) {
             event.preventDefault();
             
+            const nik = document.getElementById('nik').value.trim();
             const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
@@ -236,19 +237,34 @@
             errorMessage.classList.add('d-none');
 
             try {
-                // Simulate API call with delay
-                await new Promise(resolve => setTimeout(resolve, 1500));
-
                 // Hash password before sending to server
                 const salt = bcrypt.genSaltSync(10);
                 const hashedPassword = bcrypt.hashSync(password, salt);
 
-                // Here you would typically send the registration data to your server
-                console.log('Registration data:', { fullName, email, hashedPassword });
-                
-                // Redirect to login page on success
-                window.location.href = "loginPage.html";
+                // Send registration data to Google Apps Script
+                const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nik,
+                        fullName,
+                        email,
+                        hashedPassword
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Redirect to login page on success
+                    window.location.href = "loginPage.html";
+                } else {
+                    throw new Error(result.message || 'Registration failed');
+                }
             } catch (error) {
+                errorMessage.querySelector('span').textContent = error.message;
                 errorMessage.classList.remove('d-none');
             } finally {
                 registerBtn.disabled = false;
