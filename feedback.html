@@ -7,6 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- For instead in Appscript -->
+    <!-- <?!= include('style'); ?>
+    <?!= include('script'); ?> -->
     <style>
         :root {
             --primary-color: #176980;
@@ -33,9 +36,70 @@
         .star-rating .active {
             color: var(--secondary-color) !important;
         }
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.7);
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .success-popup.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .success-popup .checkmark {
+            width: 80px;
+            height: 80px;
+            display: block;
+            margin: 10% auto;
+            color: var(--secondary-color);
+            animation: scale .3s ease-in-out .4s both;
+        }
+        .success-popup .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 30px var(--secondary-color);
+            }
+        }
     </style>
 </head>
 <body style="background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
+    <!-- Success Popup -->
+    <div class="success-popup" id="successPopup">
+        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" stroke="currentColor" stroke-width="3"/>
+        </svg>
+        <h3 class="text-2xl font-semibold mb-2" style="color: var(--primary-color);">Thank You!</h3>
+        <p class="text-gray-600">Your feedback has been submitted successfully.</p>
+        <button onclick="closeSuccessPopup()" class="mt-4 px-6 py-2 text-white rounded-md btn-primary">Close</button>
+    </div>
     <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 transition-all duration-300 hover:shadow-xl">
             <div class="text-center mb-8">
@@ -44,11 +108,11 @@
             </div>
 
             <form id="feedbackForm" class="space-y-6" onsubmit="handleSubmit(event)">
-                <!-- Department Selection -->
+                <!-- Division Selection -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
-                    <select id="department" name="department" required class="w-full border rounded-md px-3 py-2 form-input">
-                        <option value="">Select Department</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Division</label>
+                    <select id="division" name="division" required class="w-full border rounded-md px-3 py-2 form-input">
+                        <option value="">Select Division</option>
                         <option value="hr">Human Resources</option>
                         <option value="finance">Finance</option>
                         <option value="it">Information Technology</option>
@@ -153,7 +217,7 @@
             }
 
             const formData = {
-                department: document.getElementById('department').value,
+                division: document.getElementById('division').value,
                 category: document.getElementById('category').value,
                 rating: currentRating,
                 feedbackDetails: document.getElementById('feedbackDetails').value,
@@ -170,11 +234,12 @@
             google.script.run
                 .withSuccessHandler(function(response) {
                     if (response.success) {
-                        alert(response.message);
                         document.getElementById('feedbackForm').reset();
                         // Reset stars
                         currentRating = 0;
                         document.querySelectorAll('.fa-star').forEach(s => s.style.color = '#d1d5db');
+                        // Show success popup
+                        document.getElementById('successPopup').classList.add('show');
                     } else {
                         alert('Error: ' + response.message);
                     }
@@ -187,6 +252,16 @@
                     submitBtn.disabled = false;
                 })
                 .submitFeedback(formData);
+        }
+
+        function closeSuccessPopup() {
+            document.getElementById('successPopup').classList.remove('show');
+            // Reset star rating
+            currentRating = 0;
+            document.querySelectorAll('.fa-star').forEach(star => {
+                star.style.color = '#d1d5db';
+                star.classList.remove('active');
+            });
         }
     </script>
 </body>
