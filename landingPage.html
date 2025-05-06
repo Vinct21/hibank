@@ -187,15 +187,21 @@
         }
 
         .feature-card {
+            display: block;
+            text-decoration: none;
             background: white;
             padding: 2rem;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            color: inherit;
         }
 
         .feature-card:hover {
             transform: translateY(-10px);
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
         }
 
         .feature-icon {
@@ -350,9 +356,9 @@
                 <ul class="navbar-nav me-3">
                     <a class="navbar-brand mb-0" href="#">hibank</a>
                     <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/view/hcsquad" target="_blank">HC Squad</a></li>
-                    <li class="nav-item"><a class="nav-link" href="feedback.html">Feedback</a></li>
-                    <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-squad" target="_blank">HC Squad</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Feedback</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">FAQ</a></li>
                 </ul>
             </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -515,46 +521,46 @@
             <h2 class="text-center text-dark mb-5">Our Services</h2>
             <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="feature-card text-center">
+                    <a href="/loan-simulation" target="_blank" class="feature-card text-center">
                         <i class="fas fa-calculator feature-icon"></i>
                         <h3 class="feature-title">Loan Simulation</h3>
                         <p>Calculate and plan your loan with our advanced simulation tools.</p>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="feature-card text-center">
+                    <a href="/mobility-hub" class="feature-card text-center">
                         <i class="fas fa-exchange-alt feature-icon"></i>
                         <h3 class="feature-title">Internal Mobility Hub</h3>
                         <p>Quick and secure employee transfers across departments.</p>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="feature-card text-center">
+                    <a href="/pdf-tools" class="feature-card text-center">
                         <i class="fas fa-file-pdf feature-icon"></i>
                         <h3 class="feature-title">PDF Tools</h3>
                         <p>Efficient tools for managing and processing PDF documents.</p>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="feature-card text-center">
+                    <a href="/data-hub" class="feature-card text-center">
                         <i class="fas fa-database feature-icon"></i>
                         <h3 class="feature-title">Data Hub</h3>
                         <p>Self-service platform for employee data access and export.</p>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="feature-card text-center">
+                    <a href="/request-center" class="feature-card text-center">
                         <i class="fas fa-tasks feature-icon"></i>
                         <h3 class="feature-title">Request Center</h3>
                         <p>One system for managing all HC-related forms and requests.</p>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="feature-card text-center">
+                    <a href="/job-board" class="feature-card text-center">
                         <i class="fas fa-briefcase feature-icon"></i>
-                        <h3 class="feature-title">Internal Job Posting</h3>
+                        <h3 class="feature-title">Internal Job Board</h3>
                         <p>Explore and apply for internal career opportunities across the organization.</p>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
