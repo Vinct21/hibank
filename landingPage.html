@@ -358,12 +358,6 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link auth-btn login-btn" href="loginPage.html">Login</a></li>
-                    <li class="nav-item"><a class="nav-link auth-btn register-btn" href="registerPage.html">Register</a></li>
-                </ul>
-            </div>
         </div>
     </nav>
 
@@ -373,7 +367,7 @@
                 <div class="col-lg-6 hero-content">
                     <h1 class="hero-title">Human Capital Innovation Hub</h1>
                     <p class="hero-text">Your centralized platform for managing and developing human capital. We streamline employee management, facilitate career growth, and optimize workforce potential through innovative digital solutions.</p>
-                    <a href="registerPage.html" class="btn btn-primary btn-lg">Get Started</a>
+                    <a href="#services" class="btn btn-primary btn-lg">Get Started</a>
                 </div>
             </div>
         </div>
@@ -389,7 +383,7 @@
                         <div class="value-content-box">
                             <h4>Amanah</h4>
                             <div class="value-description">
-                                <p>Trustworthy and responsible in carrying out duties and obligations with full integrity and commitment.</p>
+                                <p>Memegang teguh kepercayaan yang diberikan.</p>
                             </div>
                         </div>
                     </div>
@@ -400,7 +394,7 @@
                         <div class="value-content-box">
                             <h4>Kompeten</h4>
                             <div class="value-description">
-                                <p>Continuously developing skills and knowledge to achieve excellence in performance.</p>
+                                <p>Terus belajar dan mengembangkan kapabilitas.</p>
                             </div>
                         </div>
                     </div>
@@ -411,7 +405,7 @@
                         <div class="value-content-box">
                             <h4>Harmonis</h4>
                             <div class="value-description">
-                                <p>Creating a balanced and peaceful work environment through mutual respect and understanding.</p>
+                                <p>Saling peduli dan menghargai perbedaan.</p>
                             </div>
                         </div>
                     </div>
@@ -422,7 +416,7 @@
                         <div class="value-content-box">
                             <h4>Loyal</h4>
                             <div class="value-description">
-                                <p>Demonstrating dedication and commitment to the organization's goals and values.</p>
+                                <p>Berdedikasi dan mengutamakan kepentingan Bangsa dan Negara</p>
                             </div>
                         </div>
                     </div>
@@ -433,7 +427,7 @@
                         <div class="value-content-box">
                             <h4>Adaptif</h4>
                             <div class="value-description">
-                                <p>Embracing change and flexibility in responding to new challenges and opportunities.</p>
+                                <p>Terus berinovasi dan antusias dalam menggerakan ataupun menghadapi perubahan.</p>
                             </div>
                         </div>
                     </div>
@@ -444,7 +438,7 @@
                         <div class="value-content-box">
                             <h4>Kolaboratif</h4>
                             <div class="value-description">
-                                <p>Working together effectively to achieve common goals through shared knowledge and resources.</p>
+                                <p>Membangun kerjasama yang sinergis.</p>
                             </div>
                         </div>
                     </div>
@@ -456,43 +450,69 @@
     <section class="working-character-section py-5" style="background-color: white;">
         <div class="container">
             <h2 class="text-center text-dark mb-5">Our Working Character</h2>
-            <div class="row g-4 justify-content-center">
+            <div class="row g-4 justify-content-center" id="working-character-grid">
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card text-center">
-                        <div class="value-letter">F</div>
-                        <h4>Fast</h4>
+                    <div class="value-card" data-value="fast">
+                        <div class="value-letter-box">F</div>
+                        <div class="value-content-box">
+                            <h4>Digital First</h4>
+                            <div class="value-description">
+                                <p>Mengedepankan proses dan produk berbasis digital dalam upaya untuk meningkatkan pengalaman pelanggan dengan Bank.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card text-center">
-                        <div class="value-letter">I</div>
-                        <h4>Innovative</h4>
+                    <div class="value-card" data-value="innovative">
+                        <div class="value-letter-box">I</div>
+                        <div class="value-content-box">
+                            <h4>Innovative</h4>
+                            <div class="value-description">
+                                <p>Adaptif, kreatif, ulet dan berorientasi pada solusi dalam berinovasi.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card text-center">
-                        <div class="value-letter">R</div>
-                        <h4>Reliable</h4>
+                    <div class="value-card" data-value="reliable">
+                        <div class="value-letter-box">R</div>
+                        <div class="value-content-box">
+                            <h4>Relationship-Building & Customer Centric</h4>
+                            <div class="value-description">
+                                <p>Berorientasi pada membina hubungan yang baik dengan pelanggan dengan terus berupaya menyediakan produk, proses, dan layanan terbaik bagi pelanggan.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card text-center">
-                        <div class="value-letter">S</div>
-                        <h4>Synergy</h4>
+                    <div class="value-card" data-value="synergy">
+                        <div class="value-letter-box">S</div>
+                        <div class="value-content-box">
+                            <h4>Strategic Focus</h4>
+                            <div class="value-description">
+                                <p>Fokus pada pemikiran yang strategis dan selangkah lebih maju untuk memastikan keberhasilan inovasi yang diterapkan terhadap kepuasan pelanggan.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card text-center">
-                        <div class="value-letter">T</div>
-                        <h4>Trustworthy</h4>
+                    <div class="value-card" data-value="trustworthy">
+                        <div class="value-letter-box">T</div>
+                        <div class="value-content-box">
+                            <h4>Trust, Respect, & Accountable</h4>
+                            <div class="value-description">
+                                <p>Menunjukan sikap yang dapat dipertanggungjawabkan dalam bekerja, saling percaya dan saling menghormati antar individu.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="features-section">
+    <section id="services" class="features-section">
         <div class="container">
+            <h2 class="text-center text-dark mb-5">Our Services</h2>
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="feature-card text-center">
@@ -520,6 +540,71 @@
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+    <!-- Javascript for Working Character Cards -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const workingCharacterGrid = document.getElementById('working-character-grid');
+            const workingCharacterCards = workingCharacterGrid.querySelectorAll('.value-card');
+            let currentlyExpandedWorkingChar = null;
+            let isAnimatingWorkingChar = false;
+
+            function toggleWorkingCharacterCard(card, expand) {
+                if (isAnimatingWorkingChar) return;
+                isAnimatingWorkingChar = true;
+
+                requestAnimationFrame(() => {
+                    if (expand) {
+                        card.classList.add('expanded');
+                        workingCharacterGrid.classList.add('expanded-view');
+                    } else {
+                        card.classList.remove('expanded');
+                        workingCharacterGrid.classList.remove('expanded-view');
+                    }
+
+                    setTimeout(() => {
+                        isAnimatingWorkingChar = false;
+                    }, 400);
+                });
+            }
+
+            workingCharacterCards.forEach(card => {
+                card.addEventListener('click', function(event) {
+                    event.stopPropagation();
+
+                    if (currentlyExpandedWorkingChar === this) {
+                        toggleWorkingCharacterCard(this, false);
+                        currentlyExpandedWorkingChar = null;
+                    } else {
+                        if (currentlyExpandedWorkingChar) {
+                            toggleWorkingCharacterCard(currentlyExpandedWorkingChar, false);
+                        }
+                        toggleWorkingCharacterCard(this, true);
+                        currentlyExpandedWorkingChar = this;
+                    }
+                }, { passive: true });
+            });
+
+            document.addEventListener('click', function(event) {
+                if (currentlyExpandedWorkingChar && !workingCharacterGrid.contains(event.target)) {
+                    toggleWorkingCharacterCard(currentlyExpandedWorkingChar, false);
+                    currentlyExpandedWorkingChar = null;
+                }
+            }, { passive: true });
+        });
+    </script>
 
     <!-- Javascript for Culture Cards -->
     <script>
