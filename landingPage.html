@@ -7,16 +7,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
         :root {
             --primary-color: #176980;
             --secondary-color: #D15B28;
-            --bg-gradient: linear-gradient(135deg, #1e293b, #334155);
+            --bg-gradient: #176980;
         }
 
         body {
             font-family: 'Jost', sans-serif;
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+        }
+
+        #canvas-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            filter: blur(3px);
+            opacity: 0.8;
         }
 
         .navbar {
@@ -33,21 +46,69 @@
         .nav-link {
             color: var(--primary-color);
             font-weight: 500;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
         }
 
-        .nav-link:hover {
+        .nav-link.auth-btn {
+            background-color: transparent;
+            border-radius: 20px;
+            margin-left: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .nav-link.login-btn {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-link.register-btn {
+            background-color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+            color: white;
+        }
+
+        .nav-link.login-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .nav-link.register-btn:hover {
+            background-color: #b94f23;
+            border-color: #b94f23;
+            color: white;
+        }
+
+        .nav-link:not(.auth-btn)::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:not(.auth-btn):hover {
             color: var(--secondary-color);
         }
 
+        .nav-link:not(.auth-btn):hover::after {
+            width: 100%;
+        }
+
         .hero-section {
-            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
             align-items: center;
             color: white;
             position: relative;
             overflow: hidden;
+            background: transparent;
         }
 
         .hero-content {
@@ -59,6 +120,44 @@
             font-size: 3.5rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .hero-text {
+                font-size: 1.1rem;
+            }
+            .value-card {
+                min-height: 120px;
+                margin-bottom: 1rem;
+            }
+            .value-card.expanded {
+                left: 5%;
+                width: 90%;
+                flex-direction: column;
+            }
+            .value-card.expanded .value-letter-box {
+                width: 100%;
+                padding: 1.5rem;
+                border-right: none;
+                border-bottom: 1px solid #ccc;
+            }
+            .value-card.expanded .value-content-box {
+                width: 100%;
+                padding: 1.5rem;
+            }
+            .feature-card {
+                margin-bottom: 1.5rem;
+            }
+            .navbar-nav {
+                margin-top: 1rem;
+            }
+            .nav-link.auth-btn {
+                margin: 0.5rem 0;
+                width: 100%;
+            }
         }
 
         .hero-text {
@@ -110,23 +209,159 @@
             font-weight: 600;
             margin-bottom: 1rem;
         }
+
+        #culture-grid {
+            transition: all 0.5s ease;
+        }
+
+        .value-card {
+            background: rgba(23, 105, 128, 0.1);
+            border-radius: 15px;
+            padding: 1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(23, 105, 128, 0.2);
+            height: 100%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            will-change: transform, opacity;
+        }
+
+        .value-card:hover:not(.expanded) {
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .value-letter-box {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        .value-content-box {
+            transition: all 0.5s ease;
+        }
+
+        .value-card h4 {
+            color: #333;
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 500;
+            transition: all 0.5s ease;
+        }
+
+        .value-description {
+            display: none; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s; /* Slightly faster with less delay */
+            text-align: left;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #555;
+            transform: translateY(5px);
+            will-change: opacity, transform;
+        }
+
+        /* Styles when a card is expanded */
+        .value-card.expanded {
+            position: absolute;
+            left: 2.5%;
+            width: 95%;
+            max-width: none;
+            margin: 0;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: flex-start;
+            padding: 0;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            height: auto;
+            min-height: 100px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+            transform-origin: center center;
+        }
+
+        .value-card.expanded .value-letter-box {
+            font-size: 3.5rem;
+            padding: 2.5rem;
+            margin-bottom: 0;
+            border-right: 1px solid #ccc;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px; /* Increased width for letter box */
+            flex-shrink: 0;
+        }
+
+        .value-card.expanded .value-content-box {
+            padding: 2.5rem;
+            text-align: left;
+            flex-grow: 1;
+            width: calc(100% - 150px); /* Adjusted width calculation */
+        }
+
+        .value-card.expanded h4 {
+            font-size: 1.5rem; /* Larger title */
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .value-card.expanded .value-description {
+            display: block; /* Show description */
+            opacity: 1;
+        }
+
+        /* Styles to hide non-expanded cards */
+        #culture-grid.expanded-view .value-card:not(.expanded) {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        #culture-grid.expanded-view {
+            min-height: 200px;
+            position: relative;
+        }
+
+        .culture-section, .working-character-section {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">HiBank</a>
+            <div class="d-flex align-items-center">
+                <ul class="navbar-nav me-3">
+                    <a class="navbar-brand mb-0" href="#">hibank</a>
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/view/hcsquad" target="_blank">HC Squad</a></li>
+                    <li class="nav-item"><a class="nav-link" href="feedback.html">Feedback</a></li>
+                    <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="loansimulation.html">Loan Simulation</a></li>
-                    <li class="nav-item"><a class="nav-link" href="employeeTransfer.html">Employee Transfer</a></li>
-                    <li class="nav-item"><a class="nav-link" href="feedback.html">Feedback</a></li>
-                    <li class="nav-item"><a class="nav-link" href="loginPage.html">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="registerPage.html">Register</a></li>
+                    <li class="nav-item"><a class="nav-link auth-btn login-btn" href="loginPage.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link auth-btn register-btn" href="registerPage.html">Register</a></li>
                 </ul>
             </div>
         </div>
@@ -136,9 +371,121 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 hero-content">
-                    <h1 class="hero-title">Welcome to Modern Banking</h1>
-                    <p class="hero-text">Experience seamless financial services with HiBank. We provide innovative solutions for all your banking needs.</p>
+                    <h1 class="hero-title">Human Capital Innovation Hub</h1>
+                    <p class="hero-text">Your centralized platform for managing and developing human capital. We streamline employee management, facilitate career growth, and optimize workforce potential through innovative digital solutions.</p>
                     <a href="registerPage.html" class="btn btn-primary btn-lg">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="culture-section py-5" style="background-color: white;">
+        <div class="container">
+            <h2 class="text-center text-dark mb-5">Our Culture</h2>
+            <div class="row g-4 justify-content-center" id="culture-grid">
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="amanah">
+                        <div class="value-letter-box">A</div>
+                        <div class="value-content-box">
+                            <h4>Amanah</h4>
+                            <div class="value-description">
+                                <p>Trustworthy and responsible in carrying out duties and obligations with full integrity and commitment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="kompeten">
+                        <div class="value-letter-box">K</div>
+                        <div class="value-content-box">
+                            <h4>Kompeten</h4>
+                            <div class="value-description">
+                                <p>Continuously developing skills and knowledge to achieve excellence in performance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="harmonis">
+                        <div class="value-letter-box">H</div>
+                        <div class="value-content-box">
+                            <h4>Harmonis</h4>
+                            <div class="value-description">
+                                <p>Creating a balanced and peaceful work environment through mutual respect and understanding.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="loyal">
+                        <div class="value-letter-box">L</div>
+                        <div class="value-content-box">
+                            <h4>Loyal</h4>
+                            <div class="value-description">
+                                <p>Demonstrating dedication and commitment to the organization's goals and values.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="adaptif">
+                        <div class="value-letter-box">A</div>
+                        <div class="value-content-box">
+                            <h4>Adaptif</h4>
+                            <div class="value-description">
+                                <p>Embracing change and flexibility in responding to new challenges and opportunities.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="kolaboratif">
+                        <div class="value-letter-box">K</div>
+                        <div class="value-content-box">
+                            <h4>Kolaboratif</h4>
+                            <div class="value-description">
+                                <p>Working together effectively to achieve common goals through shared knowledge and resources.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="working-character-section py-5" style="background-color: white;">
+        <div class="container">
+            <h2 class="text-center text-dark mb-5">Our Working Character</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card text-center">
+                        <div class="value-letter">F</div>
+                        <h4>Fast</h4>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card text-center">
+                        <div class="value-letter">I</div>
+                        <h4>Innovative</h4>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card text-center">
+                        <div class="value-letter">R</div>
+                        <h4>Reliable</h4>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card text-center">
+                        <div class="value-letter">S</div>
+                        <h4>Synergy</h4>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card text-center">
+                        <div class="value-letter">T</div>
+                        <h4>Trustworthy</h4>
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,5 +520,141 @@
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Javascript for Culture Cards -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cultureGrid = document.getElementById('culture-grid');
+            const valueCards = cultureGrid.querySelectorAll('.value-card');
+            let currentlyExpanded = null;
+            let isAnimating = false;
+
+            function toggleCard(card, expand) {
+                if (isAnimating) return;
+                isAnimating = true;
+
+                requestAnimationFrame(() => {
+                    if (expand) {
+                        card.classList.add('expanded');
+                        cultureGrid.classList.add('expanded-view');
+                    } else {
+                        card.classList.remove('expanded');
+                        cultureGrid.classList.remove('expanded-view');
+                    }
+
+                    // Reset animation flag after transition completes
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 400); // Match the CSS transition duration
+                });
+            }
+
+            valueCards.forEach(card => {
+                card.addEventListener('click', function(event) {
+                    event.stopPropagation();
+
+                    if (currentlyExpanded === this) {
+                        toggleCard(this, false);
+                        currentlyExpanded = null;
+                    } else {
+                        if (currentlyExpanded) {
+                            toggleCard(currentlyExpanded, false);
+                        }
+                        toggleCard(this, true);
+                        currentlyExpanded = this;
+                    }
+                }, { passive: true });
+            });
+
+            document.addEventListener('click', function(event) {
+                if (currentlyExpanded && !cultureGrid.contains(event.target)) {
+                    toggleCard(currentlyExpanded, false);
+                    currentlyExpanded = null;
+                }
+            }, { passive: true });
+        });
+
+    </script>
+
+    <!-- Javascript for Starr -->
+    <script>
+        let stars = [];
+        let starCount = 100;
+        let maxDistance = 150;
+
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.id('canvas-background');
+            for (let i = 0; i < starCount; i++) {
+                stars.push(new Star(random(width), random(height)));
+            }
+        }
+
+        function draw() {
+            clear(); // Make canvas transparent
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].move();
+                stars[i].show();
+                stars[i].connect(stars);
+            }
+        }
+
+        class Star {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+
+                if (random(1) < 0.2) {
+                    this.vx = random(-4, 4);
+                    this.vy = random(-4, 4);
+                } else {
+                    this.vx = random(-2, 2);
+                    this.vy = random(-2, 2);
+                }
+            }
+
+            move() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x > width || this.x < 0) {
+                    this.vx *= -1;
+                }
+                if (this.y > height || this.y < 0) {
+                    this.vy *= -1;
+                }
+            }
+
+            show() {
+                noStroke();
+                fill(255);
+                ellipse(this.x, this.y, 5, 5);
+            }
+
+            connect(stars) {
+                for (let i = 0; i < stars.length; i++) {
+                    let other = stars[i];
+                    let d = dist(this.x, this.y, other.x, other.y);
+
+                    if (d < maxDistance) {
+                        let opacity = map(d, 0, maxDistance, 255, 0);
+                        stroke(255, 255, 255, opacity);
+                        line(this.x, this.y, other.x, other.y);
+                    }
+
+                    let dToCursor = dist(this.x, this.y, mouseX, mouseY);
+                    if (dToCursor < maxDistance) {
+                        let cursorOpacity = map(dToCursor, 0, maxDistance, 255, 0);
+                        stroke(255, 255, 255, cursorOpacity);
+                        line(this.x, this.y, mouseX, mouseY);
+                    }
+                }
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+    </script>
 </body>
 </html>
