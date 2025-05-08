@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Orange: #D15B28
-Tile : #176980 -->
-<!-- Add Font Awesome CDN for icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,1000 +17,824 @@ Tile : #176980 -->
 
 <!-- Style for Header & Footer Section -->
 <style>
-  :root {
-            --primary-color: #176980;
-            --secondary-color: #D15B28;
-            --bg-gradient: #176980;
-        }
-         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
-
-        .navbar-brand {
-            color: var(--primary-color);
-            font-weight: 600;
-            font-size: 1.5rem;
-        }
-
-        .nav-link {
-            color: var(--primary-color);
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 0.5rem 1rem;
-        }
-
-        .nav-link.auth-btn {
-            background-color: transparent;
-            border-radius: 20px;
-            margin-left: 0.5rem;
-            padding: 0.5rem 1.5rem;
-            min-width: 100px;
-            text-align: center;
-        }
-
-        .nav-link:not(.auth-btn)::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: var(--secondary-color);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:not(.auth-btn):hover {
-            color: var(--secondary-color);
-        }
-
-        .nav-link:not(.auth-btn):hover::after {
-            width: 100%;
-        }
-
-.site-footer {
-    background-color: #176980;
-    color: white;
-    padding: 15px 0;
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    margin-top: auto;
-    position: relative;
-    left: 0; /* Ensure footer starts from the left edge */
-    right: 0; /* Ensure footer extends to right edge */
-}
-
-/* Update body padding */
-body {
-    font-family: Jost;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding-top: 80px;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
-.site-footer {
-    background-color: #176980;
-    color: white;
-    padding: 15px 0;
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    margin-top: 1%;
-    position: relative;
-    bottom: 0;
-}
-
-.footer-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-</style>
-
-<!-- Style for Component -->
-<style>
+    :root {
+      --primary-color: #176980;
+      --secondary-color: #D15B28;
+      --bg-gradient: #176980;
+    }
+    
+    body {
+      font-family: 'Jost', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4; /* Light grey background */
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Ensure footer stays at bottom */
+      padding-top: 70px; /* Space for fixed navbar, adjust if navbar height changes */
+      overflow-x: hidden; /* Prevent horizontal scroll on body */
+    }
+    /* Navbar styling */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+      backdrop-filter: blur(10px); /* Frosted glass effect */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
+    }
+    .navbar-brand {
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+    .nav-link {
+      color: var(--primary-color);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 0.5rem 1rem;
+    }
+    .nav-link:not(.auth-btn)::after { /* Underline animation for nav links */
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--secondary-color);
+      transition: width 0.3s ease;
+    }
+    .nav-link:not(.auth-btn):hover {
+      color: var(--secondary-color);
+    }
+    .nav-link:not(.auth-btn):hover::after {
+      width: 100%;
+    }
+    /* Footer styling */
+    .site-footer {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 20px 0; /* Increased padding */
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem; /* Slightly smaller font */
+      margin-top: auto; /* Pushes footer to bottom */
+    }
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+  </style>
+  
+  <style>
     label {
-    margin-top: 0px;
+      margin-top: 0px; /* Base margin, can be overridden */
+      font-weight: 500; /* Default label weight */
+      color: var(--primary-color); /* Default label color */
     }
-
+    /* General input/select styling (less specific, form-container styles will override) */
     input, select {
-    width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
-
+    /* General button styling (can be overridden by Bootstrap or specific selectors) */
     button {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
+      padding: 10px 15px;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px; /* Default border radius for buttons */
     }
-
-    button:hover {
-    background-color: #45a049;
-    }
-
+    /* NIK Check Button specific style */
     #chckbtn {
-        transition: all 0.2s ease-in-out;
-        border: none;
-        background: linear-gradient(45deg, #176980, #1a7b96);
+      transition: all 0.2s ease-in-out;
+      background: linear-gradient(45deg, var(--primary-color), #1a7b96); /* Gradient for check button */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-
     #chckbtn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(23, 105, 128, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(23, 105, 128, 0.2);
     }
-
     #chckbtn:active {
-        transform: translateY(0);
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-
-    input, select {
-        width: 100%;
-        padding: 8px;
-        margin: 0px 0; /* Reduced from 1px */
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
+    /* Bootstrap margin utility customization */
     .mb-3 {
-        margin-bottom: 12px; /* Reduced from default bootstrap's 1rem (16px) */
+      margin-bottom: 1rem !important; /* Using Bootstrap's default or a bit more space */
     }
-
+    /* Main Page Heading */
     h1 {
-        text-align: center;
-        margin: 0 auto;
-        padding: 30px 0;
-        color: #176980;
-        font-weight: 600;
-        font-size: 2.5rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border-bottom: 3px solid #D15B28;
-        width: fit-content;
-        margin-bottom: 40px;
+      text-align: center;
+      margin: 0 auto; /* Center the heading block */
+      padding: 30px 0;
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 2.2rem; /* Adjusted size */
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 3px solid var(--secondary-color);
+      width: fit-content; /* Make border only as wide as text */
+      margin-bottom: 40px; /* Space below heading */
     }
-</style>
-
-<!-- Style for Table -->
-<style>
+  </style>
+  
+  <style>
     .simulation-header {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 25px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 25px;
     }
-
     .simulation-header h3 {
-        color: #176980;
-        font-weight: 600;
-        margin: 0;
-        font-size: 1.5rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin: 0;
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-
     .header-line {
-        margin-top: 10px;
-        height: 3px;
-        background: linear-gradient(to right, #D15B28, rgba(209, 91, 40, 0.2));
-        border-radius: 2px;
+      margin-top: 10px;
+      height: 3px;
+      background: linear-gradient(to right, var(--secondary-color), rgba(209, 91, 40, 0.2));
+      border-radius: 2px;
     }
-
-    .table {
-        width: 100%;
-        table-layout: auto;
+    .table-responsive { /* Bootstrap class, enhanced */
+      overflow-x: auto;
+      width: 100%;
+      border-radius: 12px; /* Rounded corners for the scrollable area */
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* Subtle shadow */
     }
-
-    .table-responsive {
-        overflow-x: auto;
-        width: 100%;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    .table-wrapper { /* Wraps the table itself */
+      border-radius: 12px; /* Match responsive wrapper */
+      background: white;
+      /* padding: 1px; /* Minimal padding, can be removed if not needed */
+      margin-top: 20px; /* Space above table */
+      overflow: hidden; /* Ensures inner content respects border radius */
+      width: 100%;
     }
-
-    .table-wrapper {
-        border-radius: 12px;
-        background: white;
-        padding: 1px;
-        margin-top: 20px;
-        overflow: hidden;
-        width: 100%;
+    .sticky-table { /* The actual table */
+      width: 100%;
+      border-collapse: separate; /* Allows border-spacing and rounded corners on table (though wrapper handles it) */
+      border-spacing: 0;
     }
-
-    .sticky-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-
     .sticky-table th {
-        background-color: #176980;
-        color: white;
-        font-weight: 500;
-        padding: 15px;
-        text-align: center;
-        white-space: nowrap;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: 500; /* Medium weight for headers */
+      padding: 15px;
+      text-align: center;
+      white-space: nowrap; /* Prevent header text wrapping */
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1); /* Subtle border */
     }
-
     .sticky-table td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #eee;
-        text-align: right;
-        font-size: 14px;
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee; /* Light separator for rows */
+      text-align: right; /* Align numbers to the right */
+      font-size: 0.9rem; /* Slightly smaller table data font */
+      color: #333; /* Dark grey for readability */
     }
-
     .sticky-table tr:hover {
-        background-color: #f8f9fa;
-        transition: background-color 0.2s ease;
+      background-color: #f8f9fa; /* Light hover effect for rows */
+      transition: background-color 0.2s ease;
     }
-
-    .sticky-table tr:last-child {
-        font-weight: bold;
-        border-top-right-radius: 12px;
+    .sticky-table tr:last-child td { /* Remove border from last row */
+      border-bottom: none;
     }
-
-    .sticky-table tr:last-child td {
-        border-bottom: none;
-    }   
-
-    /* Column specific styles */
-    .sticky-table td:first-child {
-        text-align: center;
-        font-weight: 500;
-        border-top-left-radius: 12px;
+    .sticky-table td:first-child { /* First column (Angsuran Ke-) styling */
+      text-align: center;
+      font-weight: 500;
     }
-
-    .sticky-table td:not(:first-child) {
-        text-align: right;
-        white-space: nowrap;
-        color: #444;
+    .sticky-table td:not(:first-child) { /* Other numeric columns */
+      white-space: nowrap; /* Prevent numbers from wrapping */
     }
-
-    .sticky-table td span {
-        display: inline-block;
-    }
-</style>
-
-<!-- Style for Container -->
-<style>
+  </style>
+  
+  <style>
     .container {
-        flex: 1;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        width: 100%;
-        max-width: 1800px;
-        margin: 0 auto;
-        padding: 20px;
-        gap: 0px; /* Added gap property to control space between containers */
-        box-sizing: border-box;
+      flex: 1; /* Allows container to grow and push footer down */
+      display: flex;
+      /* DEFAULT: Side-by-side layout for larger screens */
+      flex-direction: row; 
+      justify-content: center; /* Center the form-result group if they don't fill max-width */
+      align-items: flex-start; /* Align items to the top */
+      flex-wrap: wrap; /* Allows wrapping if screen becomes too narrow before media query */
+      width: 100%;
+      max-width: 1800px; /* Overall max-width for the content area */
+      margin: 0 auto; /* Center the container itself */
+      padding: 20px;
+      gap: 25px; /* Increased gap for better separation */
+      box-sizing: border-box;
     }
-
-    .result-container {
-        width: 100%;
-        max-width: calc(50% - 10px);
-        padding: 20px; /* Changed from padding-left only */
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        height: auto;
-        overflow-y: auto;
-        overflow-x: auto;
-        font-size: x-small;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
+  
     .form-container {
-        position: sticky;
-        top: 20px;
-        width: 100%;
-        max-width: 800px; /* Increased from 600px */
-        margin: 0 auto;
-        padding: 40px; /* Increased padding */
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      /* Flex properties for side-by-side layout */
+      flex: 1 1 40%; /* Can grow and shrink, with a basis of ~40% */
+      max-width: 750px; /* Max width for the form */
+      min-width: 320px; /* Minimum width before wrapping or squishing too much */
+      
+      padding: 30px; /* Adjusted padding */
+      background-color: white;
+      border-radius: 12px; /* Softer radius */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Softer shadow */
+      box-sizing: border-box;
     }
-
-    .form-container, .result-container {
-        width: 100%;
-        max-width: calc(50% - 10px); /* Adjusted to account for gap */
-        margin-bottom: 20px;
-        box-sizing: border-box;
+  
+    .result-container {
+      /* Flex properties for side-by-side layout */
+      flex: 1 1 55%; /* Can grow and shrink, with a basis of ~55% */
+      max-width: 1000px; /* Max width for the results, can be wider than form */
+      min-width: 320px; /* Minimum width */
+  
+      padding: 25px; /* Adjusted padding */
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      height: auto; 
+      overflow-y: auto; 
+      overflow-x: auto; 
+      font-size: 0.9rem; 
+      display: flex;
+      flex-direction: column;
+      align-items: stretch; /* Stretch children like table-wrapper to full width */
+      box-sizing: border-box;
     }
-
+  
+    /* Styles specific to elements within .form-container */
     .form-container form {
-        display: grid;
-        gap: 20px; /* Consistent spacing between form elements */
-     }
-
-    .form-container .row {
-        margin-bottom: 20px; /* Add space between row elements */
+      display: grid;
+      gap: 18px; /* Spacing between form elements/rows */
     }
-
     .form-container label {
-        font-weight: 500;
-        margin-bottom: 0px; /* Reduced from 1px */
-        color: #176980;
+      font-weight: 500;
+      margin-bottom: 4px; /* Space between label and input */
+      color: var(--primary-color);
+      font-size: 0.9rem; /* Slightly smaller labels */
     }
-
     .form-container input,
     .form-container select {
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        width: 100%;
-        transition: border-color 0.3s;
+      padding: 10px 12px; /* Comfortable padding */
+      border: 1px solid #ced4da; /* Standard Bootstrap border color */
+      border-radius: 6px;
+      width: 100%;
+      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      margin: 0; /* Remove default margins from general input/select */
+      font-size: 0.95rem;
     }
-
     .form-container input:focus,
     .form-container select:focus {
-        border-color: #176980;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(23, 105, 128, 0.1);
+      border-color: var(--primary-color);
+      outline: 0; /* Remove default outline */
+      box-shadow: 0 0 0 0.2rem rgba(23, 105, 128, 0.25); /* Focus ring */
     }
-
-    .form-container button {
-        background-color: #176980;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 6px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
+    /* Buttons within the form-container */
+    .form-container .btn { /* Targeting Bootstrap .btn class specifically */
+      padding: 10px 20px; /* Uniform padding for form buttons */
+      font-weight: 500;
     }
-
-    .form-container button:hover {
-        background-color: #145d70;
+    .form-container .btn-success { background-color: #28a745; border-color: #28a745; }
+    .form-container .btn-secondary { background-color: #6c757d; border-color: #6c757d; }
+    .form-container .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
+  
+    .form-container .btn:hover {
+       filter: brightness(90%); /* Darken button on hover */
     }
-
-</style>
-
-<!-- Style for Responsize Size -->
-<style>
-    @media (max-width: 1920px) {
-        .container {
-            max-width: 1600px;
-        }
+  </style>
+  
+  <style>
+    /* --- Screens < 1440px (Large Desktops / Laptops) --- */
+    /* This is the primary breakpoint to switch to stacked layout */
+    @media (max-width: 1440px) { 
+      .container {
+        flex-direction: column; /* Stack form and result vertically */
+        align-items: center;    /* Center them in the column */
+        gap: 20px; /* Gap when stacked */
+      }
+      .form-container {
+        flex: 0 0 auto; /* Reset flex properties for column layout */
+        width: 100%; 
+        max-width: 750px; /* Maintain its preferred max-width */
+        min-width: unset; /* Reset min-width */
+        padding: 30px;
+      }
+      .result-container {
+        flex: 0 0 auto; /* Reset flex properties */
+        width: 100%; 
+        max-width: 900px; /* Can be wider than form when stacked, or match form (e.g., 750px) */
+        min-width: unset; /* Reset min-width */
+        padding: 25px;
+      }
     }
-
-    @media (max-width: 1440px) {
-        .container {
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .form-container {
-        order: 1;
-        width: 100%;
-        min-width: 100%;
-        margin-bottom: 15px;
-        }
-
-        .result-container {
-        order: 0; 
-        width: 100%;
-        min-width: 100%;
-        }
-
-        .form-container, .result-container {
-            width: 100%;
-            max-width: 100%;
-            padding: 30px;
-        }
-    }
-
+  
+    /* --- Screens < 992px (Tablets) --- */
     @media (max-width: 992px) {
-        .container {
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .form-container {
-        order: 1;
-        width: 100%;
-        min-width: 100%;
-        margin-bottom: 15px;
-        }
-
-        .result-container {
-        order: 0; 
-        width: 100%;
-        min-width: 100%;
-        }
-
-        .form-container, .result-container {
-            width: 100%;
-            max-width: 100%;
-            padding: 30px;
-        }
+      .container {
+        padding: 15px; /* Reduce container padding */
+        gap: 20px;
+      }
+      .form-container, .result-container {
+          /* max-width will be inherited or can be set to 100% to fill the column more */
+          max-width: 100%; 
+          padding: 25px; 
+      }
+      h1 {
+          font-size: 2rem; 
+          margin-bottom: 30px;
+      }
+      .form-container label { font-size: 0.85rem; }
+      .form-container input, .form-container select { font-size: 0.9rem; padding: 9px 10px;}
     }
-
+  
+    /* --- Screens < 768px (Mobile - Large) --- */
     @media (max-width: 768px) {
-        h1 {
-            font-size: 1.8rem;
-            padding: 20px 0;
-            margin-bottom: 20px;
-        }
-
-        .simulation-header h3 {
-            font-size: 1.3rem;
-        }
-
-        .form-container label {
-            font-size: 0.95rem;
-        }
-
-        .sticky-table {
-            font-size: 0.75rem; /* Smaller font for table on mobile */
-        }
-
-        .form-container {
-            padding: 20px 15px;
-            margin: 10px 0;
-            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .form-container input,
-        .form-container select {
-            padding: 12px; /* Larger touch targets */
-            margin: 4px 0;
-            font-size: 16px; /* Prevent zoom on iOS */
-        }
-
-        .form-container .row {
-            margin-bottom: 15px;
-        }
-
-        /* Better button layout for mobile */
-        .d-flex.gap-2 {
-            flex-direction: column;
-            gap: 10px !important;
-        }
-
-        .d-flex.gap-2 button {
-            width: 100%;
-            padding: 12px;
-            margin: 5px 0;
-        }
-
-        .result-container {
-            padding: 10px;
-            margin-top: 20px;
-        }
-
-        .table-wrapper {
-            margin: 10px 0;
-            border-radius: 8px;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 0 -15px;
-            padding: 0 15px;
-        }
-
-        .sticky-table td, 
-        .sticky-table th {
-            padding: 10px 8px;
-            white-space: nowrap;
-        }
-
-        .modal-content {
-            width: 95%;
-            margin: 10px auto;
-            padding: 15px;
-        }
-
-        .modal {
-            padding-top: 30px;
-        }
-
-        .modal-close {
-            padding: 10px;
-        }
-
-        #initialInfoBoard .modal-content {
-            padding: 20px;
-        }
-
-        #initialInfoBoard ul li {
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        #floatingBox {
-            width: 85%;
-            bottom: 70px;
-            right: 50%;
-            transform: translateX(50%);
-        }
-
-        #toggleButton {
-            width: auto;
-            right: 50%;
-            transform: translateX(50%);
-            padding: 10px 20px;
-            font-size: 14px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .container {
-            padding: 5px;
-        }
-
-        .form-container, .result-container {
-            padding: 15px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            padding: 20px 0;
-        }
-    }
-</style>
-
-<!-- Style for Modal (NOtification/Alert) -->
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
-        backdrop-filter: blur(5px); /* Add blur effect */
-        -webkit-backdrop-filter: blur(5px); /* For Safari support */
-        overflow: auto;
-        padding-top: 60px;
-    }
-
-    .modal-content {
-        background-color: #fefefe;
-        margin: 5% auto;
+      body { padding-top: 60px; } /* Adjust for potentially smaller navbar */
+      h1 {
+        font-size: 1.7rem;
+        padding: 20px 0;
+        margin-bottom: 25px;
+      }
+      .simulation-header h3 { font-size: 1.2rem; }
+      .form-container {
         padding: 20px;
-        border: none;
-        border-radius: 12px;
-        width: 80%;
-        max-width: 600px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        animation: modalFadeIn 0.3s ease-out;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      }
+      .form-container input,
+      .form-container select {
+        padding: 12px; /* Larger touch targets */
+        font-size: 1rem; /* Prevent zoom on iOS, ensure readability */
+      }
+      .d-flex.gap-2 { /* Button group on mobile */
+        flex-direction: column; /* Stack buttons */
+        gap: 12px !important;
+      }
+      .d-flex.gap-2 .btn { /* Full width buttons in stacked group */
+        width: 100%;
+        padding: 12px;
+      }
+      .result-container {
+        padding: 20px;
+        font-size: 0.8rem; 
+      }
+      .sticky-table { font-size: 0.7rem; }
+      .sticky-table td, .sticky-table th { padding: 8px 6px; }
+      
+      /* Modal adjustments for mobile */
+      .modal-content { width: 90%; margin: 20px auto; padding: 20px; }
+      #initialInfoBoard .modal-content { padding: 25px; }
+      #initialInfoBoard ul li { font-size: 0.85rem; margin-bottom: 6px; }
+  
+      /* Floating box and toggle button centering for mobile */
+      #floatingBox {
+        width: 90%;
+        bottom: 75px; /* Position above toggle button */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%);
+        right: auto; /* Override desktop 'right' */
+        padding: 15px;
+      }
+      #floatingBox h6 { font-size: 1rem; margin-bottom: 10px; }
+      #floatingBox p { font-size: 0.8rem; }
+  
+      #toggleButton {
+        width: auto; /* Let content define width */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%);
+        right: auto; /* Override desktop 'right' */
+        padding: 10px 18px;
+        font-size: 0.9rem;
+      }
     }
-
+  
+    /* --- Screens < 480px (Mobile - Small) --- */
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+        gap: 15px;
+      }
+      .form-container, .result-container {
+        padding: 15px;
+        border-radius: 10px; /* Slightly smaller radius */
+      }
+      h1 {
+        font-size: 1.5rem;
+        padding: 15px 0;
+        margin-bottom: 20px;
+      }
+      .form-container label { font-size: 0.8rem; }
+      .form-container input, .form-container select { padding: 10px; font-size: 0.95rem; }
+      .form-container .btn { padding: 10px; font-size: 0.9rem;}
+      .result-container { font-size: 0.75rem; }
+      .simulation-header h3 { font-size: 1.1rem; }
+      .sticky-table { font-size: 0.65rem; }
+    }
+  </style>
+  
+  <style>
+    .modal { /* General modal backdrop and positioning */
+      display: none; /* Hidden by default, shown by JS */
+      position: fixed;
+      z-index: 1050; /* Higher than navbar (Bootstrap's default is 1050 for modals) */
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Darker, standard overlay */
+      backdrop-filter: blur(3px); /* Subtle blur */
+      -webkit-backdrop-filter: blur(3px);
+      overflow: auto; /* Enable scroll if modal content is too long */
+      padding-top: 5vh; /* Push modal content down a bit */
+    }
+    .modal-content { /* Styling for the modal box itself */
+      background-color: #fefefe;
+      margin: 0 auto; /* Centered horizontally, auto top/bottom margin handled by padding-top on .modal */
+      padding: 25px;
+      border: none; /* Remove default border */
+      border-radius: 10px; /* Softer radius */
+      width: 90%; /* Responsive width */
+      max-width: 600px; /* Max width for general modals */
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+      animation: modalFadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
+    }
     @keyframes modalFadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+      from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
-
-    .modal-header {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 10px;
+    .modal-header { /* Header part of the modal */
+      font-size: 1.25rem; /* Larger header text */
+      font-weight: 600; /* Bolder */
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee; /* Separator line */
     }
-
-    .modal-body {
-        font-size: 16px;
+    .modal-body { /* Body part of the modal */
+      font-size: 1rem;
+      color: #333;
+      line-height: 1.6;
     }
-
-    .modal-close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
+    .modal-close { /* Close (X) button */
+      color: #888;
+      float: right;
+      font-size: 1.8rem; /* Larger close icon */
+      font-weight: bold;
+      transition: color 0.2s ease;
     }
-
     .modal-close:hover,
     .modal-close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
+      color: #333; /* Darken on hover */
+      text-decoration: none;
+      cursor: pointer;
     }
-</style>
-
-<!-- Style for Iniatial Board -->
-<style>
+  
+    /* Specific styles for the Initial Information Board Modal */
     #initialInfoBoard .modal-content {
-        padding: 30px;
-        border-radius: 12px;
-        border: none;
-        /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); */
+      max-width: 800px; /* Wider for more content */
+      padding: 30px;
     }
-
+    #initialInfoBoard .modal-header h4 { /* Target the h4 inside this specific modal's header */
+      margin: 0;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--secondary-color);
+      color: var(--primary-color);
+      font-size: 1.4rem;
+    }
+    #initialInfoBoard ul { padding-left: 5px; } /* Align list items */
     #initialInfoBoard ul li {
-        margin-bottom: 10px;
-        font-size: 16px;
-        color: #555;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      color: #444; /* Slightly darker text for list items */
     }
-
-    #initialInfoBoard .modal-header h4 {
-        margin: 0;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #D15B28;
+    #initialInfoBoard .loan-type h5, #initialInfoBoard .loan-type h6 {
+      margin-top: 15px;
+      margin-bottom: 8px;
     }
-</style>
-
-<!-- Style Floating Box & Button-->
-<style>
+    #initialInfoBoard .loan-type ul {
+      padding-left: 15px; /* Indent loan type details */
+      list-style-type: disc; /* Use standard bullets */
+    }
+  </style>
+  
+  <style>
     #floatingBox {
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        width: 300px;
-        padding: 20px;
-        background-color: white;
-        border-radius: 10px;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        display: none;
-        z-index: 100;
-        transition: all 0.3s ease;
+      position: fixed;
+      bottom: 85px; /* Space above toggle button */
+      right: 25px;
+      width: 320px; /* Slightly wider */
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0; /* Lighter border */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
+      display: none; /* Initially hidden */
+      z-index: 100; /* Below modals but above most content */
+      transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+      transform: translateY(10px); /* Start slightly lower for entry animation */
+      opacity: 0;
     }
-
-    #floatingBox .card-body {
-        padding: 0;
+    #floatingBox.visible { /* Class to show the box */
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
     }
-
+    #floatingBox .card-body { padding: 0; } /* Remove Bootstrap card-body padding if not needed */
     #floatingBox h6 {
-        color: #176980;
-        font-weight: 600;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #D15B28;
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 1.1rem; /* Slightly larger title */
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--secondary-color);
     }
-
     #floatingBox p {
-        margin: 0;
-        font-size: 14px;
-        color: #555;
-        line-height: 1.6;
+      margin: 0 0 10px 0; /* Space between paragraphs */
+      font-size: 0.88rem; /* Adjusted font size */
+      color: #555;
+      line-height: 1.5;
     }
-
     /* Button to toggle floating box */
     #toggleButton {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        padding: 12px 20px;
-        background-color: #176980;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(23, 105, 128, 0.2);
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      padding: 12px 18px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50px; /* Pill shape */
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(23, 105, 128, 0.3); /* Enhanced shadow */
+      z-index: 101; /* Above floating box */
     }
-
     #toggleButton:hover {
-        background-color: #145d70;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(23, 105, 128, 0.3);
+      background-color: #145d70; /* Darken on hover */
+      transform: translateY(-2px) scale(1.05); /* Slight lift and scale */
+      box-shadow: 0 5px 15px rgba(23, 105, 128, 0.4);
     }
-</style>
-
-<!-- Style Tooltip-->
-<style>
-    .tooltip {
-        position: relative;
-        display: inline-block;
-        cursor: pointer
+    #toggleButton i { margin-right: 5px; } /* Space between icon and text */
+  </style>
+  
+  <style>
+    /* Styling for Bootstrap tooltips (via FontAwesome icons) */
+    label .fa-info-circle { /* Target info icons within labels */
+      color: var(--primary-color); 
+      cursor: help;   
+      margin-left: 6px;
+      font-size: 1em; /* Relative to label's font size */
+      transition: color 0.2s ease;
     }
-
-    .tooltip .tooltiptext {
-        visibility: hidden; /* Hidden by default */
-        width: 300%;
-        background-color: rgb(23, 105, 128);
-        color: #fdfdfd;
-        text-align: center;
-        padding: 5px 10px;
-        border-radius: 6px;
-        /* Position the tooltip text */
-        position: absolute;
-        z-index: 1;
-        top: -60%; /* Position above the icon */
-        left: 190%;
-        margin-left: -80px; /* Center the tooltip */
-        opacity: 0; /* Make it fully transparent */
-        transition: opacity 0.3s, visibility 0s 0.3s; /* Transition for opacity */
-        white-space: normal; /* Allow text wrapping */
-        word-wrap: break-word; /* Ensures long words wrap to the next line */
+    label .fa-info-circle:hover {
+      color: var(--secondary-color); /* Change color on hover */
     }
-
-    /* Show the tooltip when hovering over the icon */
-    .tooltip:hover .tooltiptext {
-        visibility: visible; /* Make it visible when hovered */
-        opacity: 1; /* Fade in the tooltip */
-        transition: opacity 0.3s; /* Smooth transition */
+    /* Ensure label and icon are vertically aligned */
+    label[for="gajiPokok"],
+    label[for="cicilanBerjalan"] {
+      display: flex;
+      align-items: center;
     }
-
-    /* Icon styling */
-    #gajiTooltipIcon {
-        color: #007bff;
-        cursor: pointer;
-        margin-left: 5px;
-        font-size: 16px;
+    /* Bootstrap tooltip customization (optional) */
+    .tooltip-inner {
+      background-color: var(--primary-color); /* Custom background for tooltip */
+      color: white;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
     }
-
-    /* Ensure the icon is aligned with the label */
-    label[for="gajiPokok"] {
-        display: flex;
-        align-items: center;
+    .tooltip.bs-tooltip-top .tooltip-arrow::before {
+      border-top-color: var(--primary-color); /* Match arrow color */
     }
-</style>
-
+    .tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+      border-bottom-color: var(--primary-color);
+    }
+    .tooltip.bs-tooltip-start .tooltip-arrow::before {
+      border-left-color: var(--primary-color);
+    }
+    .tooltip.bs-tooltip-end .tooltip-arrow::before {
+      border-right-color: var(--primary-color);
+    }
+  </style>
 </head>
 
 <body>
 
 <!-- Initial Information Board Section -->
-<div id="initialInfoBoard" class="modal" style="display: block;">
-    <div class="modal-content" style="max-width: 800px;"> <!-- Increased width -->
-        <span class="modal-close" onclick="closeInitialInfo()">&times;</span>
-        <div class="modal-header" style="color: #176980;">
-            <h4>Selamat Datang di Simulasi Pinjaman Karyawan</h4>
-        </div>
-        <div class="modal-body">
-            <h6 style="color: #176980; margin-top: 20px;">Syarat & Ketentuan Umum:</h6>
-                <ul style="list-style-type: none; padding-left: 0;">
-                    <li>✓ Status karyawan tetap</li>
-                    <li>✓ Minimal masa kerja 2 tahun</li>
-                    <li>✓ Usia minimal 21 tahun</li>
-                    <li>✓ Memiliki rekening HiBank</li>
-                    <li>✓ Melampirkan slip gaji terakhir</li>
-                    <li>✓ Memiliki kinerja yang baik dengan penilaian minimum Met atau setara</li>
-                    <li>✓ Tidak sedang dalam masa sanksi atau pembinaan kinerja (SP/PIP)</li>
-                    <li>✓ IDEB SLIK dalam 12 bulan terakhir menunjukkan kolektibilitas Lancar</li>
-                    <li>✓ Jaminan Tanah/Bangunan atas nama Hak Milik pribadi</li>
-                    <li>✓ Melengkapi formulir pengajuan dan dokumen yang dibutuhkan</li>
-                    <li>✓ DBR (Debt Burden Ratio) maksimal sesuai ketentuan</li>
-                </ul>
-            <div class="loan-info">
-
-                <h5 style="color: #176980; margin-top: 20px;">Informasi Produk Pinjaman:</h5>
-                
-                <div class="loan-type">
-                    <h6 style="color: #D15B28;">1. Kredit Pemilikan Rumah (KPR)</h6>
-                    <ul>
-                        <li>Penggunaan: Pembelian rumah, apartemen, atau ruko</li>
-                        <li>Plafon: Maksimum Rp5 miliar</li>
-                        <li>Tenor: Maksimal 20 tahun atau hingga usia 55 tahun saat jatuh tempo</li>
-                        <li>Uang Muka: 10% untuk rumah, 30% untuk ruko</li>
-                        <li>Suku Bunga: 5% (fixed rate)</li>
-                    </ul>
-                </div>
-
-                <div class="loan-type">
-                    <h6 style="color: #D15B28;">2. Kredit Multi Guna (KMG)</h6>
-                    <ul>
-                        <li>Penggunaan: Renovasi rumah dan kebutuhan lainnya</li>
-                        <li>Plafon: Maksimum Rp500 juta</li>
-                        <li>Tenor: 5 tahun</li>
-                        <li>Suku Bunga: 7% (fixed rate)</li>
-                    </ul>
-                </div>
-
-                <div class="loan-type">
-                    <h6 style="color: #D15B28;">3. Kredit Kendaraan Bermotor (KKB)</h6>
-                    <ul>
-                        <li>Penggunaan: Pembelian mobil dan motor</li>
-                        <li>Plafon: Maksimum Rp700 juta</li>
-                        <li>Tenor: 5 tahun (3 tahun untuk kendaraan full listrik)</li>
-                        <li>Suku Bunga: 4% (umum), 3.5% (kendaraan full listrik)</li>
-                    </ul>
-                </div>
-
-                <div class="loan-type">
-                    <h6 style="color: #D15B28;">4. Emergency Loan</h6>
-                    <ul>
-                        <li>Penggunaan: Medis, bantuan finansial, atau pendidikan anak kandung</li>
-                        <li>Plafon: Maksimum Rp100 juta</li>
-                        <li>Tenor: 1 tahun</li>
-                        <li>Suku Bunga: 0%</li>
-                    </ul>
-                </div>
-
-                <div class="loan-type">
-                    <h6 style="color: #D15B28;">5. Debt Burden Ratio (DBR)</h6>
-                    <ul>
-                        <li>Penghasilan ≤ Rp10 juta: 30%</li>
-                        <li>Penghasilan Rp10–50 juta: 35%</li>
-                        <li>Penghasilan > Rp50 juta: 40%</li>
-                    </ul>
-                </div>
-
-               
-                
-                <button onclick="closeInitialInfo()" class="btn btn-primary" style="background-color: #176980; margin-top: 20px;">
-                    Mulai Simulasi
-                </button>
-            </div>
-        </div>
+<div id="initialInfoBoard" class="modal" style="display: block;"> <div class="modal-content">
+    <span class="modal-close" onclick="closeInitialInfo()">&times;</span>
+    <div class="modal-header">
+      <h4>Selamat Datang di Simulasi Pinjaman Karyawan</h4>
     </div>
+    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+      <h6 style="color: #176980; margin-top: 10px;">Syarat & Ketentuan Umum:</h6>
+      <ul style="list-style-type: none; padding-left: 0;">
+        <li><i class="fas fa-check-circle text-success me-2"></i>Status karyawan tetap</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>Minimal masa kerja 2 tahun</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>Usia minimal 21 tahun</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>Memiliki rekening HiBank</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>Melampirkan slip gaji terakhir</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>Kinerja baik (penilaian minimum Met/setara)</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>Tidak dalam sanksi/pembinaan (SP/PIP)</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>IDEB SLIK 12 bulan terakhir: Lancar</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>Jaminan Tanah/Bangunan (Hak Milik pribadi)</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>Melengkapi formulir & dokumen</li>
+        <li><i class="fas fa-check-circle text-success me-2"></i>DBR (Debt Burden Ratio) maksimal sesuai ketentuan</li>
+      </ul>
+      <div class="loan-info mt-4"> <h5 style="color: #176980;">Informasi Produk Pinjaman:</h5>
+        <div class="loan-type mt-3">
+          <h6 style="color: #D15B28; font-weight: bold;">1. Kredit Pemilikan Rumah (KPR)</h6>
+          <ul>
+            <li><strong>Penggunaan:</strong> Pembelian rumah, apartemen, atau ruko</li>
+            <li><strong>Plafon:</strong> Maksimum Rp5 miliar</li>
+            <li><strong>Tenor:</strong> Maks. 20 tahun (atau s.d. usia 55 thn saat jatuh tempo)</li>
+            <li><strong>Uang Muka:</strong> 10% (rumah), 30% (ruko)</li>
+            <li><strong>Suku Bunga:</strong> 5% (fixed rate)</li>
+          </ul>
+        </div>
+        <div class="loan-type mt-3">
+          <h6 style="color: #D15B28; font-weight: bold;">2. Kredit Multi Guna (KMG)</h6>
+          <ul>
+            <li><strong>Penggunaan:</strong> Renovasi rumah, kebutuhan konsumtif lainnya</li>
+            <li><strong>Plafon:</strong> Maksimum Rp500 juta</li>
+            <li><strong>Tenor:</strong> 5 tahun</li>
+            <li><strong>Suku Bunga:</strong> 7% (fixed rate)</li>
+          </ul>
+        </div>
+        <div class="loan-type mt-3">
+          <h6 style="color: #D15B28; font-weight: bold;">3. Kredit Kendaraan Bermotor (KKB)</h6>
+          <ul>
+            <li><strong>Penggunaan:</strong> Pembelian mobil dan motor</li>
+            <li><strong>Plafon:</strong> Maksimum Rp700 juta</li>
+            <li><strong>Tenor:</strong> 5 tahun (3 tahun untuk kendaraan full listrik)</li>
+            <li><strong>Suku Bunga:</strong> 4% (umum), 3.5% (kendaraan full listrik)</li>
+          </ul>
+        </div>
+        <div class="loan-type mt-3">
+          <h6 style="color: #D15B28; font-weight: bold;">4. Emergency Loan</h6>
+          <ul>
+            <li><strong>Penggunaan:</strong> Medis, bantuan finansial, pendidikan anak kandung</li>
+            <li><strong>Plafon:</strong> Maksimum Rp100 juta</li>
+            <li><strong>Tenor:</strong> 1 tahun</li>
+            <li><strong>Suku Bunga:</strong> 0%</li>
+          </ul>
+        </div>
+        <div class="loan-type mt-3">
+          <h6 style="color: #D15B28; font-weight: bold;">5. Debt Burden Ratio (DBR) Maksimal</h6>
+          <ul>
+            <li>Penghasilan ≤ Rp10 juta: <strong>30%</strong></li>
+            <li>Penghasilan Rp10 – 50 juta: <strong>35%</strong></li>
+            <li>Penghasilan > Rp50 juta: <strong>40%</strong></li>
+          </ul>
+        </div>
+        <button onclick="closeInitialInfo()" class="btn btn-primary w-100 mt-4" style="background-color: #176980; border-color: #176980;">
+          Mulai Simulasi
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Header Section -->
-<!-- <header class="site-header">
-    <div class="header-content">
-        <div class="logo-container">
-            <img src="https://script.google.com/macros/s/1LIvASx0b3Fe0KcLSsOc0lYo-LVRhuVkB/exec" alt=" hibank Bubble" width="200">
-        </div>
+<!-- Nav Bar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid px-lg-4"> <a class="navbar-brand mb-0" href="#">hibank</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li> <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-squad" target="_blank">HC Squad</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Feedback</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">FAQ</a></li>
+        </ul>
+      </div>
     </div>
-</header> -->
-
-<<nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
-        <div class="d-flex align-items-center">
-            <ul class="navbar-nav me-3">
-                <a class="navbar-brand mb-0" href="#">Loan Simulation</a>
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-squad" target="_blank">HC Squad</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Feedback</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">FAQ</a></li>
-            </ul>
-        </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</nav>
+  </nav>
 
 <h1>Simulasi Pinjaman Karyawan</h1>
+
 <div class="container">
-<div class="form-container">
-
-<form id="loanForm" novalidate>
-
-<div class="row g-3 align-items-end">
-    <div class="col-md-5 col-sm-12">
-        <label for="nik" class="form-label">Nomor Induk Karyawan (NIK)</label>
-        <div class="input-group">
-            <input type="text" class="form-control" id="nik" required 
-                   aria-describedby="nikHelp" pattern="[0-9]+" minlength="6" maxlength="6"
-                   placeholder="Masukkan NIK">
-                <button id="chckbtn" class="btn btn-primary rounded-pill d-flex align-items-center justify-content-center shadow-sm hover-lift" type="button" onclick="getData()" style="width: 38px; height: 38px; margin: auto 0;">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            <div class="invalid-feedback">Please enter a valid NIK</div>
+    <div class="form-container">
+      <form id="loanForm" novalidate>
+        <div class="row g-3 align-items-end">
+          <div class="col-md-6 col-sm-12"> <label for="nik" class="form-label">Nomor Induk Karyawan (NIK)</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="nik" required 
+                     aria-describedby="nikHelp" pattern="[0-9]+" minlength="6" maxlength="6"
+                     placeholder="Masukkan 6 digit NIK">
+              <button id="chckbtn" class="btn btn-primary d-flex align-items-center justify-content-center" type="button" onclick="getData()" style="width: 42px; height: 42px; border-radius: 0 0.375rem 0.375rem 0;">
+                <i class="fas fa-search fa-sm"></i>
+              </button>
+              <div class="invalid-feedback">NIK harus 6 digit angka.</div>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12"> <label for="name" class="form-label">Nama Karyawan</label>
+            <input type="text" class="form-control" id="name" disabled placeholder="Nama akan muncul di sini">
+          </div>
         </div>
-</div>
-    <div class="col-md-7 col-sm-12">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" disabled
-               placeholder="Name will appear here">
-    </div>
-</div>
-
-<p id="status" hidden></p>
-
-<div class="row g-3 align-items-end">
-    <div class="col-md-8">
-        <div class="form-group">
-            <label for="tipePinjaman" style="margin-bottom: 0;">Tipe Pinjaman</label>
-            <select id="tipePinjaman" class="form-select" aria-label="Default select example" required onchange="updateBunga(),updateDP()" style="margin-top: 2px;">
-                <option selected>--Pilih Tipe Pinjaman--</option>
-                <option value="Kredit Pemilikan Rumah (KPR)">Kredit Pemilikan Rumah (KPR)</option>
-                <option value="Kredit Pemilikan Ruko">Kredit Pemilikan Ruko</option>
-                <option value="Kredit Multi Guna (KMG)">Kredit Multi Guna (KMG)</option>
-                <option value="Kredit Kendaraan Bermotor (KKB)">Kredit Kendaraan Bermotor (KKB)</option>
-                <option value="Kredit Kendaraan Bermotor - Electronic Vehicle">Kredit Kendaraan Bermotor - Electronic Vehicle</option>
-                <option value="Emergency Loan">Emergency Loan</option>
+  
+        <p id="status" class="visually-hidden"></p> <div class="row g-3 align-items-end">
+          <div class="col-md-7"> <label for="tipePinjaman">Tipe Pinjaman</label>
+            <select id="tipePinjaman" class="form-select" required onchange="updateBunga(); updateDP();">
+              <option value="" selected disabled>-- Pilih Tipe Pinjaman --</option>
+              <option value="Kredit Pemilikan Rumah (KPR)">Kredit Pemilikan Rumah (KPR)</option>
+              <option value="Kredit Pemilikan Ruko">Kredit Pemilikan Ruko</option>
+              <option value="Kredit Multi Guna (KMG)">Kredit Multi Guna (KMG)</option>
+              <option value="Kredit Kendaraan Bermotor (KKB)">Kredit Kendaraan Bermotor (KKB)</option>
+              <option value="Kredit Kendaraan Bermotor - Electronic Vehicle">KKB - Kendaraan Listrik</option>
+              <option value="Emergency Loan">Emergency Loan</option>
             </select>
+            <div class="invalid-feedback">Silakan pilih tipe pinjaman.</div>
+          </div>
+          <div class="col-md-5"> <label for="dp" class="form-label">Down Payment (DP)</label>
+            <input type="text" id="dp" class="form-control" disabled placeholder="Otomatis">
+          </div>
+        </div> 
+  
+        <div> <label for="plafond" class="form-label">Plafond Pinjaman</label>
+          <input type="text" class="form-control" id="plafond" required placeholder="Contoh: Rp 100.000.000">
+          <div class="invalid-feedback">Masukkan jumlah pinjaman.</div>
         </div>
-    </div>
-    
-    <div class="col-md-4">
-        <label for="dp" class="form-label">Down Payment (DP)</label>
-        <input type="text" id="dp" class="form-control" disabled>
-    </div>
-</div>  
-
-<div class="mb-3">
-    <label for="plafond" class="form-label">Plafond Pinjaman</label>
-    <input type="text" class="form-control" id="plafond" required>
-</div>
-
-<div class="mb-3">
-    <label for="jangkaWaktu" class="form-label">Jangka Waktu (Bulan) </label>
-    <input type="number" class="form-control" id="jangkaWaktu" required>
-</div>
-
-<div class="mb-3">
-    <label for="bunga">Bunga Pinjaman</label>
-    <input type="text" id="bunga" disabled>
-</div>
-
-<div class="mb-3">
-    <label for="gajiPokok" class="form-label">
-        Gaji Pokok
-        <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika Joint Income dengan penghasilan pasangan (suami/istri), maka harap mencantumkan total penjumlahan Gaji Pokok."></i>
-    </label>
-
-    <input type="text" class="form-control" id="gajiPokok" required onchange="updateDBR()">
-</div>
-
-<div class="mb-3">
-    <label for="dbr">DBR</label>
-    <input type="text" id="dbr" disabled>
-</div>
-
-<div class="mb-3">
-    <label for="cicilanBerjalan">Cicilan Berjalan
-        <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Jika memiliki cicilan pinjaman yang masih aktif di Hibank dan di luar Hibank, maka harap dicantumkan total cicilan tersebut."></i>
-    </label>
-    <input type="text" id="cicilanBerjalan" value=0>
-</div>
-
-<div class="d-flex gap-2">
-    <button type="button" class="btn btn-success btn-sm px-3" onclick="genHitung()">Hitung</button>
-    <button type="button" class="btn btn-secondary btn-sm px-3" onclick="resetForm()">Reset</button>
-    <button type="button" id="downloadPdfButton" class="btn btn-primary btn-sm px-3">Download PDF</button>
-</div>
-
-</form>
-<!-- <h3 id="error" >error handling</h3> -->
-
-<!-- Floating Box Section -->
-<div id="floatingBox" class="card">
-    <div class="card-body">
-        <h6>Syarat & Ketentuan:</h6>
-        <p>• Minimal masa kerja 1 tahun</p>
-        <p>• Status karyawan tetap</p>
-        <p>• Usia minimal 21 tahun</p>
-        <p>• Memiliki rekening HiBank</p>
-        <p>• Melampirkan slip gaji terakhir</p>
-        <p>• DBR (Debt Burden Ratio) maksimal sesuai ketentuan</p>
-    </div>
-</div>
-
-<!-- Button to toggle visibility of floating box -->
-<button id="toggleButton" class="btn">
-    <i class="fas fa-info-circle"></i> Info
-</button>
-</div>
-
-<!-- Result Container -->
-<div class="result-container">
-    <div id="result"></div>
+  
+        <div>
+          <label for="jangkaWaktu" class="form-label">Jangka Waktu (Bulan)</label>
+          <input type="number" class="form-control" id="jangkaWaktu" required min="1" placeholder="Contoh: 12">
+          <div class="invalid-feedback">Masukkan jangka waktu pinjaman.</div>
+        </div>
+  
+        <div>
+          <label for="bunga">Suku Bunga Pinjaman (% p.a.)</label>
+          <input type="text" id="bunga" class="form-control" disabled placeholder="Otomatis">
+        </div>
+  
+        <div>
+          <label for="gajiPokok" class="form-label">
+            Penghasilan Kotor Bulanan
+            <i class="fas fa-info-circle" data-bs-toggle="tooltip" 
+               title="Jika Joint Income (gabungan penghasilan dengan pasangan), masukkan total penjumlahan Gaji Pokok Anda dan pasangan."></i>
+          </label>
+          <input type="text" class="form-control" id="gajiPokok" required onchange="updateDBR()" placeholder="Contoh: Rp 10.000.000">
+          <div class="invalid-feedback">Masukkan penghasilan kotor bulanan.</div>
+        </div>
+  
+        <div>
+          <label for="dbr">DBR Maksimal</label>
+          <input type="text" id="dbr" class="form-control" disabled placeholder="Otomatis">
+        </div>
+  
+        <div>
+          <label for="cicilanBerjalan">Total Cicilan Pinjaman Lain (jika ada)
+            <i class="fas fa-info-circle" data-bs-toggle="tooltip" 
+               title="Masukkan total angsuran bulanan dari pinjaman lain yang masih aktif, baik di Hibank maupun di luar Hibank. Isi 'Rp 0' jika tidak ada."></i>
+          </label>
+          <input type="text" id="cicilanBerjalan" class="form-control" value="Rp 0" placeholder="Contoh: Rp 1.000.000">
+        </div>
+  
+        <div class="d-flex flex-wrap gap-2 mt-2"> <button type="button" class="btn btn-success flex-grow-1" onclick="validateAndSubmit()">Hitung Simulasi</button>
+          <button type="button" class="btn btn-secondary flex-grow-1" onclick="resetForm()">Reset Form</button>
+          <button type="button" id="downloadPdfButton" class="btn btn-primary flex-grow-1">Download PDF</button>
+        </div>
+      </form>
+    </div> <div class="result-container">
+      <div id="result" class="w-100">
+          <p class="text-center text-muted p-4">Hasil simulasi akan ditampilkan di sini setelah Anda mengisi formulir dan menekan tombol "Hitung Simulasi".</p>
+      </div>
+    </div> </div> <div id="floatingBox" class="card"> <div class="card-body">
+      <h6><i class="fas fa-clipboard-list me-2"></i>Syarat & Ketentuan (Ringkas):</h6>
+      <p>• Minimal masa kerja 1 tahun (tetap)</p>
+      <p>• Usia minimal 21 tahun</p>
+      <p>• Rekening gaji di HiBank</p>
+      <p>• Melampirkan slip gaji terakhir</p>
+      <p>• DBR maksimal sesuai ketentuan Bank</p>
     </div>
 </div>
 
 <!-- Custom Modal -->
-<div id="alertModal" class="modal">
-    <div class="modal-content">
-        <span class="modal-close" onclick="closeModal()">&times;</span>
-            <div class="modal-header" id="modalTitle"></div>
-        <div class="modal-body" id="modalMessage"></div>
+<div id="alertModal" class="modal" tabindex="-1"> <div class="modal-dialog modal-dialog-centered"> <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="modalTitle">Alert Title</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button> </div>
+    <div class="modal-body" id="modalMessage">
+      Alert message goes here.
     </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()">Tutup</button>
+    </div>
+  </div>
+</div>
 </div>
 
-<footer class="site-footer">
+<button id="toggleButton" class="btn">
+    <i class="fas fa-info-circle"></i> Info Singkat
+  </button>
+
+  <footer class="site-footer">
     <div class="footer-content">
-        <p>&copy; 2025 Human Capital Management System. All rights reserved.</p>
+      <p>&copy; <span id="currentYear"></span> Human Capital Management System - hibank. All rights reserved.</p>
     </div>
-</footer>
+  </footer>
 
 <!-- Script Untuk Vlookup Bunga dari Tipe Kredit -->
 <script>
