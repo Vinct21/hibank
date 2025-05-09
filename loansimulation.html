@@ -436,7 +436,6 @@
     .modal { /* General modal backdrop and positioning */
       display: none; /* Hidden by default, shown by JS */
       position: fixed;
-      z-index: 1050; /* Higher than navbar (Bootstrap's default is 1050 for modals) */
       left: 0;
       top: 0;
       width: 100%;
@@ -827,7 +826,7 @@
 </div>
 
 <button id="toggleButton" class="btn">
-    <i class="fas fa-info-circle"></i> Info Singkat
+    <i class="fas fa-info-circle"></i> Info
   </button>
 
   <footer class="site-footer">
@@ -922,6 +921,14 @@ function updateDBR() {
   function closeModal() { // Called by modal's close buttons
      if (alertModalInstance) {
          alertModalInstance.hide();
+         // Remove modal backdrop and restore page interactivity
+         const backdrop = document.querySelector('.modal-backdrop');
+         if (backdrop) {
+             backdrop.remove();
+         }
+         document.body.classList.remove('modal-open');
+         document.body.style.overflow = '';
+         document.body.style.paddingRight = '';
      }
   }
 </script>
@@ -929,7 +936,7 @@ function updateDBR() {
 <!-- Toggle visibility of the floating info box -->
 <script>
 
-// Initialize floating box state
+  // Toggle visibility of the floating info box
   document.addEventListener('DOMContentLoaded', function() {
     const box = document.getElementById("floatingBox");
     const button = document.getElementById("toggleButton");
@@ -937,7 +944,7 @@ function updateDBR() {
       button.addEventListener('click', function() {
         if (box.classList.contains('visible')) {
           box.classList.remove('visible');
-          this.innerHTML = '<i class="fas fa-info-circle"></i> Info Singkat';
+          this.innerHTML = '<i class="fas fa-info-circle"></i> Info';
         } else {
           box.classList.add('visible');
           this.innerHTML = '<i class="fas fa-times"></i> Tutup Info'; // Changed icon and text
