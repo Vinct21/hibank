@@ -838,6 +838,17 @@
 
 <!-- Script Untuk Vlookup Bunga dari Tipe Kredit -->
 <script>
+    // Set current year in footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+// Initialize Bootstrap Tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl, {
+      trigger: 'hover focus' // Show on hover and focus for accessibility
+  });
+});
+
 // Function to update Bunga field based on selected loan type
 function updateBunga() {
     var tipePinjaman = document.getElementById("tipePinjaman").value;
@@ -881,395 +892,525 @@ function updateDBR() {
     var gajiPokok = parseFloat(document.getElementById("gajiPokok").value.replace(/\D/g, ''));
     var dbr;
     // Check the ranges for Gaji Pokok and set the corresponding DBR
-    if (gajiPokok <= 10000000) {
-        dbr = "30%";
-        } else if (gajiPokok <= 50000000) {
-        dbr = "35%";
-        } else if (gajiPokok > 50000000) {
-        dbr = "40%";
-        } else {
-        dbr = ""; // Default if no condition is met
+    if (isNaN(gajiPokok) || gajiPokok <= 0) {
+      dbr = ""; // Clear DBR if income is not valid
+    } else if (gajiPokok <= 10000000) {
+      dbr = "30%";
+    } else if (gajiPokok <= 50000000) {
+      dbr = "35%";
+    } else { // gajiPokok > 50000000
+      dbr = "40%";
     }
-// Set the DBR field value
+    // Set the DBR field value
     document.getElementById("dbr").value = dbr;
-}
+  }
+
 </script>
 
 <!-- Script Untuk Alert Error -->
 <script>
 // Custom Modal Show
-function showAlert(title, message) {
+  let alertModalInstance = null; // Store modal instance
+  function showAlert(title, message) {
     document.getElementById("modalTitle").innerText = title;
-    document.getElementById("modalMessage").innerText = message;
-    document.getElementById("alertModal").style.display = "block";
-}
-// Close the custom modal
-function closeModal() {
-    document.getElementById("alertModal").style.display = "none";
-}
+    document.getElementById("modalMessage").innerHTML = message; // Use innerHTML for potential HTML in message
+    if (!alertModalInstance) {
+        alertModalInstance = new bootstrap.Modal(document.getElementById('alertModal'));
+    }
+    alertModalInstance.show();
+  }
+  function closeModal() { // Called by modal's close buttons
+     if (alertModalInstance) {
+         alertModalInstance.hide();
+     }
+  }
 </script>
 
 <!-- Toggle visibility of the floating info box -->
 <script>
 
 // Initialize floating box state
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize floating box and button
+  document.addEventListener('DOMContentLoaded', function() {
     const box = document.getElementById("floatingBox");
     const button = document.getElementById("toggleButton");
-    
-    // Set initial state
-    box.style.display = "none";
-    
-    // Add click event listener to button
-    button.addEventListener('click', function() {
-        if (box.style.display === "none") {
-            box.style.display = "block";
-            this.innerHTML = '<i class="fas fa-info-circle"></i> Hide Info';
+    if (box && button) {
+      button.addEventListener('click', function() {
+        if (box.classList.contains('visible')) {
+          box.classList.remove('visible');
+          this.innerHTML = '<i class="fas fa-info-circle"></i> Info Singkat';
         } else {
-            box.style.display = "none";
-            this.innerHTML = '<i class="fas fa-info-circle"></i> Info';
+          box.classList.add('visible');
+          this.innerHTML = '<i class="fas fa-times"></i> Tutup Info'; // Changed icon and text
         }
-    });
-});
-
-function toggleInfoBox() {
-    var box = document.getElementById("floatingBox");
-    var button = document.getElementById("toggleButton");
-    if (box.style.display === "none") {
-        box.style.display = "block";
-        button.innerHTML = '<i class="fas fa-info-circle"></i> Hide Info';
-    } else {
-        box.style.display = "none";
-        button.innerHTML = '<i class="fas fa-info-circle"></i> Show Info';
+      });
     }
-}
+  });
+
+    // Helper to parse currency string (e.g., "Rp 10.000.000") to float
+  const parseCurrency = (valueStr) => {
+    if (typeof valueStr !== 'string') return 0;
+    return parseFloat(valueStr.replace(/[^0-9]/g, '')) || 0;
+  };
+  
+  // Helper to format number to IDR currency string
+  const formatToIDR = (number) => {
+    if (isNaN(number)) return "Rp 0";
+    return `Rp ${Math.round(number).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  };
+
 </script>
 
 <!-- Script Generate & Reset Table -->
 <script>
-function genHitung(){
-const plafondInput = document.getElementById("plafond").value;
-const plafond = parseFloat(plafondInput.replace(/[^\d]/g, '')); // Remove all non-digits
+function genHitung() {
+    const plafond = parseCurrency(document.getElementById("plafond").value);
+    const jangkaWaktu = parseInt(document.getElementById("jangkaWaktu").value);
+    const bungaAnnualPercentText = document.getElementById("bunga").value;
+    const dbrPercentText = document.getElementById("dbr").value;
+    const gajiPokok = parseCurrency(document.getElementById("gajiPokok").value);
+    const cicilanBerjalan = parseCurrency(document.getElementById("cicilanBerjalan").value);
+    const tipePinjaman = document.getElementById("tipePinjaman").value;
 
-const jangkaWaktu = parseInt(document.getElementById("jangkaWaktu").value);
+    // Convert percentages from text to decimal
+    const bungaAnnualRate = parseFloat(bungaAnnualPercentText.replace('%', '')) / 100;
+    const dbrRate = parseFloat(dbrPercentText.replace('%', '')) / 100;
+    
+    // --- Input Validations ---
+    if (plafond <= 0) { showAlert("Input Error", "Plafond pinjaman harus lebih dari 0."); return; }
+    if (isNaN(jangkaWaktu) || jangkaWaktu <= 0) { showAlert("Input Error", "Jangka waktu harus berupa angka positif."); return; }
+    if (isNaN(bungaAnnualRate) || bungaAnnualRate < 0) { showAlert("Input Error", "Suku bunga tidak valid. Pilih tipe pinjaman."); return; }
+    if (gajiPokok <= 0) { showAlert("Input Error", "Penghasilan kotor bulanan harus diisi dan lebih dari 0."); return; }
+    if (isNaN(dbrRate) || dbrRate <= 0) { showAlert("Input Error", "DBR tidak valid. Pastikan penghasilan terisi dengan benar."); return; }
 
-const bunga = parseFloat(document.getElementById("bunga").value.replace('%', ''));
-const dbr = parseFloat(document.getElementById("dbr").value.replace('%', ''));
+    // Loan specific term validations (max plafond, max tenor)
+    if (!validateLoanTerms(tipePinjaman, plafond, jangkaWaktu)) { return; }
 
-const gajiPokokInput = document.getElementById("gajiPokok").value;
-const gajiPokok = parseFloat(gajiPokokInput.replace(/[^\d]/g, '')); // Remove all non-digits
+    const bungaMonthlyRate = bungaAnnualRate / 12;
+    const angsuranBulanan = calculatePMT(bungaMonthlyRate, jangkaWaktu, plafond);
 
-const cicilanBerjalanInput = document.getElementById("cicilanBerjalan").value;
-const cicilanBerjalan = parseFloat(cicilanBerjalanInput.replace(/[^\d]/g, '')); // Remove all non-digits
-
-const maksimalCicilan = gajiPokok * (dbr/100);
-const validasiDBR = maksimalCicilan - cicilanBerjalan;
-
-var tipePinjaman = document.getElementById("tipePinjaman").value;
-
-// Perhitungan dengan Tabel
-var sisaPinjaman = plafond; // Initialize with Plafond
-// Calculate Monthly Installment based on the interest rate and plafond
-var angsuran = calculatePMT(bunga,jangkaWaktu,plafond); // Monthly installment calculation
-
-// Validate inputs
-if (isNaN(plafond) || plafond <= 0) {
-        showAlert("Error", "Please enter a valid plafond amount");
-        return;
+    if (isNaN(angsuranBulanan) || angsuranBulanan <= 0) {
+      showAlert("Kesalahan Perhitungan", "Tidak dapat menghitung angsuran. Periksa kembali input bunga dan plafond.");
+      return;
     }
 
-if (isNaN(jangkaWaktu) || jangkaWaktu <= 0) {
-        showAlert("Error", "Please enter a valid loan period");
-        return;
-}
+    const maksimalCicilanAllowable = gajiPokok * dbrRate;
+    const sisaKemampuanCicilan = maksimalCicilanAllowable - cicilanBerjalan;
 
-if (!validateKMG(tipePinjaman, plafond, jangkaWaktu)) {
-    return; // Stop execution if validation fails
-}
+    if (angsuranBulanan > sisaKemampuanCicilan) {
+      showAlert("DBR Terlampaui", 
+        `Angsuran bulanan (${formatToIDR(angsuranBulanan)}) melebihi batas kemampuan bayar Anda berdasarkan DBR yang tersisa (${formatToIDR(sisaKemampuanCicilan)}).<br>
+         Saran: Pertimbangkan untuk mengurangi jumlah pinjaman atau memperpanjang tenor (jika memungkinkan).`);
+      document.getElementById("result").innerHTML = `<p class="text-center text-danger p-4">Angsuran melebihi batas DBR.</p>`;
+      return;
+    }
 
-
-if (angsuran > validasiDBR) {
-    showAlert("Error", "Angsuran melebihi batas maksimal.");
-    return;
-}
-
-var resultHtml = `
-<div class="simulation-header">
-    <h3>Hasil Simulasi</h3>
-    <div class="header-line"></div>
-</div>
-<div class="table-wrapper">
-    <table class="table table-hover sticky-table">
-        <thead>
+    // --- Generate Amortization Table ---
+    let sisaPinjaman = plafond;
+    let resultHtml = `
+    <div class="simulation-header">
+      <h3>Hasil Simulasi (${tipePinjaman})</h3>
+      <div class="header-line"></div>
+    </div>
+    <div class="table-responsive">
+      <div class="table-wrapper">
+        <table class="table table-hover sticky-table">
+          <thead>
             <tr>
-                <th>Angsuran Ke-</th>
-                <th>Sisa Pinjaman</th>
-                <th>Pokok</th>
-                <th>Angsuran Bunga</th>
-                <th>Total Angsuran</th>
+              <th>Ke-</th>
+              <th>Sisa Pinjaman</th>
+              <th>Pokok</th>
+              <th>Bunga</th>
+              <th>Total Angsuran</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             <tr>
-                <td>0</td>
-                <td>Rp ${plafond.toLocaleString('id-ID')}</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-            </tr>
-`;
-// Loop for each month of the loan period
-for (var i = 1; i <= jangkaWaktu; i++) {
-// Calculate interest for the current remaining loan balance
-var bungaAmount = sisaPinjaman * (bunga / 100) / 12;
-// bungaAmount = Math.round(bungaAmount);
-// console.log(bungaAmount)
-// Calculate the principal part of the installment
-var pokok = angsuran - bungaAmount;
-// pokok = Math.round(pokok);
-// Calculate total installment (pokok + bunga)
-var angsuranTotal = pokok + bungaAmount;
-// angsuranTotal = Math.round(angsuranTotal);
-// Decrease the remaining balance (sisa pinjaman) by the principal portion
-sisaPinjaman -= pokok;
-resultHtml += `
-<tr>
-<td>${i}</td>
-<td>Rp ${sisaPinjaman.toLocaleString()}</td>
-<td>Rp ${pokok.toLocaleString()}</td>
-<td>Rp ${bungaAmount.toLocaleString()}</td>
-<td>Rp ${angsuranTotal.toLocaleString()}</td>
-</tr>
-`;
-}
-resultHtml += `</table>`;
-document.getElementById("result").innerHTML = resultHtml;
-}
-function resetForm() {
-document.getElementById("loanForm").reset();
-document.getElementById("result").innerHTML = "";
-}
+              <td class="text-center">0</td>
+              <td>${formatToIDR(plafond)}</td>
+              <td class="text-center">-</td>
+              <td class="text-center">-</td>
+              <td class="text-center">-</td>
+            </tr>`;
+
+    for (let i = 1; i <= jangkaWaktu; i++) {
+      let bungaAmount = sisaPinjaman * bungaMonthlyRate;
+      let pokokAmount = angsuranBulanan - bungaAmount;
+      
+      // Adjustment for the last payment
+      if (i === jangkaWaktu) {
+        pokokAmount = sisaPinjaman; // Principal is whatever is left
+        bungaAmount = angsuranBulanan - pokokAmount; 
+        if (bungaAmount < 0) bungaAmount = 0; // Interest cannot be negative
+      }
+      
+      sisaPinjaman -= pokokAmount;
+      if (sisaPinjaman < 0.5) sisaPinjaman = 0; // Correct minor floating point inaccuracies to show Rp 0
+
+      resultHtml += `
+      <tr>
+        <td class="text-center">${i}</td>
+        <td>${formatToIDR(sisaPinjaman)}</td>
+        <td>${formatToIDR(pokokAmount)}</td>
+        <td>${formatToIDR(bungaAmount)}</td>
+        <td>${formatToIDR(angsuranBulanan)}</td>
+      </tr>`;
+    }
+    resultHtml += `</tbody></table></div></div>`;
+    document.getElementById("result").innerHTML = resultHtml;
+  }
+
+    // Reset Form Function
+  function resetForm() {
+    const loanForm = document.getElementById("loanForm");
+    loanForm.reset(); // Resets form fields to their initial values
+    document.getElementById("result").innerHTML = '<p class="text-center text-muted p-4">Hasil simulasi akan ditampilkan di sini setelah Anda mengisi formulir dan menekan tombol "Hitung Simulasi".</p>';
+    // Clear auto-filled fields explicitly
+    document.getElementById("bunga").value = "";
+    document.getElementById("dp").value = "";
+    document.getElementById("dbr").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("status").textContent = ""; // Clear hidden status
+    
+    // Reset Bootstrap validation state
+    loanForm.classList.remove('was-validated');
+    const invalidInputs = loanForm.querySelectorAll('.is-invalid');
+    invalidInputs.forEach(input => input.classList.remove('is-invalid'));
+    // Re-apply initial value for cicilanBerjalan after reset
+    document.getElementById('cicilanBerjalan').value = 'Rp 0';
+    formatCurrencyInput(document.getElementById('cicilanBerjalan')); // Re-format
+  }
 </script>
 
 <!-- Script Rumus PMT -->
 <script>
-function calculatePMT(interestRate, numberOfPeriods, loanAmount) {
-if (interestRate == 0) {
-return loanAmount / numberOfPeriods;
-} else {
-// Monthly interest rate
-const monthlyRate = interestRate / 12 / 100;
-// PMT formula
-const pmt = (monthlyRate * loanAmount) / (1 - Math.pow(1 + monthlyRate, -numberOfPeriods));
-return pmt;
-}
-}
+  function calculatePMT(monthlyRate, numberOfPeriods, loanAmount) {
+    if (monthlyRate === 0) { // For 0% interest loans (e.g., Emergency Loan)
+      return loanAmount / numberOfPeriods;
+    }
+    // Standard PMT formula for loans with interest
+    const pmt = (monthlyRate * loanAmount) / (1 - Math.pow(1 + monthlyRate, -numberOfPeriods));
+    return pmt;
+  }
 </script>
 
 
 <!-- Script get data Employee -->
 <script>
-function getData() {
-const nikk = document.getElementById("nik").value.trim();
-const checkBtn = document.getElementById("chckbtn");
-// const password = document.getElementById("password").value;
-// console.log(nikk);
-checkBtn.disabled = true;
+  function getData() {
+    const nikInput = document.getElementById("nik");
+    const nikk = nikInput.value.trim();
+    const checkBtn = document.getElementById("chckbtn");
+    const originalBtnHtml = checkBtn.innerHTML; // Save original button content
 
-google.script.run.withSuccessHandler(function(response) {
-checkBtn.disabled = false;
+    if (!nikk || !/^[0-9]{6}$/.test(nikk)) {
+      showAlert("NIK Tidak Valid", "Harap masukkan 6 digit NIK yang benar.");
+      nikInput.classList.add('is-invalid');
+      nikInput.focus();
+      return;
+    }
+    nikInput.classList.remove('is-invalid'); // Clear previous validation error
 
-console.log(response.name);
-console.log(response.status);
-// console.log(document.getElementById("status").value);
+    checkBtn.disabled = true;
+    checkBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'; // Loading spinner
 
-if (response) {
-    document.getElementById("name").value = response.name;
-    document.getElementById("status").value = response.status;
-    
-    // ✅ DEPARTMENT VALIDATION
-    if (response.status === "Contract") {
-        // Not Allowed
-        showAlert("Anda tidak bisa mengajukan pinjaman, tetapi anda masih bisa menggunakan Simulasi Pinjaman ini.","");
-        console.log("Anda tidak bisa mengajukan pinjaman, tetapi anda masih bisa menggunakan Simulasi Pinjaman ini.");
+    // --- Mocking google.script.run for local development/testing ---
+    if (typeof google === 'undefined' || typeof google.script === 'undefined' || typeof google.script.run === 'undefined') {
+      console.warn("google.script.run is not available. Using mock NIK check.");
+      setTimeout(() => {
+        checkBtn.disabled = false;
+        checkBtn.innerHTML = originalBtnHtml;
+        let mockResponse = {};
+        if (nikk === "123456") {
+          mockResponse = { name: "John Doe (Mock)", status: "Permanent" };
+          showAlert("NIK Ditemukan (Mock)", `Data untuk ${mockResponse.name} berhasil dimuat.`);
+        } else if (nikk === "654321") {
+          mockResponse = { name: "Jane Roe (Mock)", status: "Contract" };
+          showAlert("Peringatan (Mock)", `Karyawan ${mockResponse.name} berstatus Kontrak dan tidak dapat mengajukan pinjaman. Simulasi tetap dapat digunakan.`);
+        } else {
+          mockResponse = { name: "", status: "" }; // NIK not found
+          showAlert("NIK Tidak Ditemukan (Mock)", "NIK tidak terdaftar dalam sistem.");
+        }
+        document.getElementById("name").value = mockResponse.name;
+        document.getElementById("status").textContent = mockResponse.status;
+      }, 1200); // Simulate network delay
+      return;
+    }
+    // --- Actual Google Apps Script call ---
+    google.script.run
+      .withSuccessHandler(function(response) {
+        checkBtn.disabled = false;
+        checkBtn.innerHTML = originalBtnHtml;
+        if (response && response.name) {
+          document.getElementById("name").value = response.name;
+          document.getElementById("status").textContent = response.status;
+          if (response.status === "Contract") {
+            showAlert("Peringatan", `Karyawan ${response.name} berstatus Kontrak dan tidak dapat mengajukan pinjaman. Anda masih bisa menggunakan Simulasi Pinjaman ini.`);
+          } else if (response.status === "Permanent") {
+            showAlert("NIK Ditemukan", `Data untuk ${response.name} berhasil dimuat.`);
+          } else {
+            showAlert("Status Tidak Diketahui", `Status karyawan ${response.name} tidak dikenali.`);
+          }
+        } else {
+          document.getElementById("name").value = ""; 
+          document.getElementById("status").textContent = "";
+          showAlert("NIK Tidak Ditemukan", "NIK tidak terdaftar atau terjadi kesalahan saat pengambilan data.");
+        }
+      })
+      .withFailureHandler(function(error) {
+        checkBtn.disabled = false;
+        checkBtn.innerHTML = originalBtnHtml;
+        showAlert("Error Akses Data", "Gagal menghubungi server atau mengambil data karyawan: " + error.message);
+        console.error("GAS Failure: ", error);
+      })
+      .checkNIK(nikk); // Assuming 'checkNIK' is your GAS function name
+  }
+
+    // Close Initial Information Modal
+  let initialModalInstance = null;
+  function closeInitialInfo() {
+    if (!initialModalInstance) {
+        initialModalInstance = bootstrap.Modal.getInstance(document.getElementById('initialInfoBoard'));
+    }
+    if (initialModalInstance) {
+      initialModalInstance.hide();
+    } else { // Fallback if Bootstrap JS not fully initialized or modal instance not found
+      document.getElementById('initialInfoBoard').style.display = 'none';
+    }
+  }
+
+    // Ensure initial modal can be closed if Bootstrap JS loads slightly later
+  document.addEventListener('DOMContentLoaded', function () {
+    var initialModalElement = document.getElementById('initialInfoBoard');
+    if (initialModalElement && typeof bootstrap !== 'undefined') {
+      if (initialModalElement.style.display === 'block') { // Only get instance if it's meant to be shown
+        initialModalInstance = new bootstrap.Modal(initialModalElement);
+      }
+    }
+  });
+
+    // Form Validation and Submission Logic
+  function validateAndSubmit() {
+    const form = document.getElementById('loanForm');
+    // Remove previous validation states before re-validating
+    form.classList.remove('was-validated');
+    const invalidInputs = form.querySelectorAll('.is-invalid');
+    invalidInputs.forEach(input => input.classList.remove('is-invalid'));
+
+    if (!form.checkValidity()) { // HTML5 validation
+      form.classList.add('was-validated'); // Trigger Bootstrap's native validation styles
+      showAlert("Input Tidak Lengkap", "Harap periksa kembali dan lengkapi semua field yang wajib diisi (ditandai merah) sebelum melanjutkan.");
+      const firstInvalidField = form.querySelector(':invalid');
+      if (firstInvalidField) {
+        firstInvalidField.focus(); // Focus the first invalid field
+      }
+      return;
+    }
+    // If all HTML5 validations pass, proceed to calculation
+    genHitung(); 
+  }
+
+   // Loan Term Validation (Max Plafond, Max Tenor) based on Loan Type
+  function validateLoanTerms(tipePinjaman, plafond, jangkaWaktu) {
+    const loanRules = {
+      "Kredit Pemilikan Rumah (KPR)": { maxPlafond: 5000000000, maxTenor: 240, name: "KPR" },
+      "Kredit Pemilikan Ruko": { maxPlafond: 5000000000, maxTenor: 240, name: "KPR Ruko" },
+      "Kredit Multi Guna (KMG)": { maxPlafond: 500000000, maxTenor: 60, name: "KMG" },
+      "Kredit Kendaraan Bermotor (KKB)": { maxPlafond: 700000000, maxTenor: 60, name: "KKB" },
+      "Kredit Kendaraan Bermotor - Electronic Vehicle": { maxPlafond: 700000000, maxTenor: 36, name: "KKB Kendaraan Listrik" },
+      "Emergency Loan": { maxPlafond: 100000000, maxTenor: 12, name: "Emergency Loan" }
+    };
+    const rule = loanRules[tipePinjaman];
+    if (!rule) { // Should not happen if dropdown is correctly populated
+      showAlert("Error Sistem", "Tipe pinjaman tidak dikenali untuk validasi.");
+      return false;
+    }
+    if (plafond > rule.maxPlafond) {
+      showAlert(`Plafond Melebihi Batas untuk ${rule.name}`,
+        `Plafond pinjaman untuk ${rule.name} tidak boleh lebih dari ${formatToIDR(rule.maxPlafond)}.`);
+      return false;
+    }
+    if (jangkaWaktu > rule.maxTenor) {
+      showAlert(`Tenor Melebihi Batas untuk ${rule.name}`,
+        `Jangka waktu untuk ${rule.name} tidak boleh lebih dari ${rule.maxTenor / 12} tahun (${rule.maxTenor} bulan).`);
+      return false;
+    }
+    return true; // All specific validations passed
+  }
+
+    // Currency Formatting for Input Fields
+  function formatCurrencyInput(inputElement) {
+    let value = inputElement.value.replace(/[^\d]/g, ''); // Remove non-digits
+    if (value) {
+      const numberValue = parseInt(value, 10);
+      if (!isNaN(numberValue)) {
+        inputElement.value = 'Rp ' + numberValue.toLocaleString('id-ID');
+      } else {
+        inputElement.value = 'Rp '; // Default if somehow NaN
+      }
     } else {
-        // Not allowed
-        // document.getElementById("name").value = "";
-        // document.getElementById("status").value = "";
+      // If user clears the input, set to 'Rp 0' for cicilanBerjalan, empty for others
+      if (inputElement.id === 'cicilanBerjalan') {
+          inputElement.value = 'Rp 0';
+      } else {
+          inputElement.value = '';
+      }
+    }
+  }
+
+  // Add event listeners for real-time currency formatting
+  ['plafond', 'gajiPokok', 'cicilanBerjalan'].forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      // Format on input
+      element.addEventListener('input', function() { formatCurrencyInput(this); });
+      // Format on blur and update DBR if it's gajiPokok
+      element.addEventListener('blur', function() { 
+        formatCurrencyInput(this); 
+        if (this.value.trim() === 'Rp' || this.value.trim() === 'Rp 0' && this.id !== 'cicilanBerjalan') {
+            if (this.id !== 'cicilanBerjalan') this.value = ''; // Clear if only "Rp" or "Rp 0" unless it's cicilanBerjalan
+        }
+        if (this.id === 'gajiPokok') {
+          updateDBR(); // Update DBR after gajiPokok is formatted and loses focus
+        }
+      });
+      // Initial formatting for cicilanBerjalan
+      if (id === 'cicilanBerjalan') {
+          formatCurrencyInput(element);
+      }
+    }
+  });
+
+  // PDF Download Functionality
+  document.getElementById('downloadPdfButton').addEventListener('click', function() {
+    const { jsPDF } = window.jspdf; // Destructure from window.jspdf
+    const doc = new jsPDF();
+    const form = document.getElementById('loanForm');
+    const resultsDiv = document.getElementById('result');
+
+    // Check if form is valid and simulation has been run
+    if (!form.checkValidity()) {
+      showAlert("Tidak Bisa Download", "Harap lengkapi semua field yang valid pada formulir sebelum mengunduh PDF.");
+      form.classList.add('was-validated');
+      return;
+    }
+    if (!resultsDiv.querySelector('.sticky-table')) {
+      showAlert("Tidak Bisa Download", "Belum ada hasil simulasi untuk diunduh. Silakan tekan tombol 'Hitung Simulasi' terlebih dahulu.");
+      return;
     }
 
-} else if (nikk == "") {
-    showAlert("Miss field", "Lengkapi NIK terlebih dahulu");
-} else {
-    showAlert("NIK Tidak Ditemukan", "Coba Lagi");
-}
-}).checkNIK(nikk);
-}
-</script>
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Simulasi Pinjaman Karyawan - hibank", 14, 20);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(100); // Grey color for subtitles
 
+    let yPos = 30;
+    const addText = (label, value, isBold = false) => {
+      if (yPos > 275) { // Check for page break
+        doc.addPage();
+        yPos = 20; // Reset Y position for new page
+      }
+      doc.setFont("helvetica", isBold ? "bold" : "normal");
+      doc.text(`${label}:`, 14, yPos);
+      doc.setFont("helvetica", "normal"); // Reset to normal for value
+      doc.text(value || "N/A", 60, yPos); // Adjust X for value
+      yPos += 7;
+    };
+
+    // Add form data to PDF
+    addText("NIK Karyawan", document.getElementById('nik').value);
+    addText("Nama Karyawan", document.getElementById('name').value);
+    addText("Tipe Pinjaman", document.getElementById('tipePinjaman').value);
+    addText("Plafond Pinjaman", document.getElementById('plafond').value, true);
+    addText("Jangka Waktu", `${document.getElementById('jangkaWaktu').value} bulan`);
+    addText("Suku Bunga Pinjaman", document.getElementById('bunga').value);
+    addText("Penghasilan Kotor", document.getElementById('gajiPokok').value);
+    addText("DBR Maksimal", document.getElementById('dbr').value);
+    addText("Cicilan Pinjaman Lain", document.getElementById('cicilanBerjalan').value);
+    
+    // Add calculated monthly installment from table if available
+    const angsuranElement = resultsDiv.querySelector('.sticky-table tbody tr:nth-child(2) td:last-child');
+    if (angsurElement) {
+        addText("Perkiraan Angsuran Bulanan", angsurElement.innerText, true);
+    }
+
+
+    yPos += 3; // Extra space before table
+    doc.setLineWidth(0.2);
+    doc.line(14, yPos, 196, yPos); // Separator line
+    yPos += 7;
+
+
+    // Add Amortization Table to PDF
+    const tableElement = resultsDiv.querySelector('.sticky-table');
+    if (tableElement) {
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text("Tabel Detail Angsuran:", 14, yPos);
+      yPos += 8;
+
+      // Using jsPDF-AutoTable plugin would be much better for complex tables.
+      // This is a simplified manual rendering.
+      const head = [['Ke-', 'Sisa Pinjaman', 'Pokok', 'Bunga', 'Total Angsuran']];
+      const body = [];
+      tableElement.querySelectorAll('tbody tr').forEach((tr, index) => {
+        if (index === 0) return; // Skip the initial "0" row for PDF if it's just placeholder
+        const rowData = [];
+        tr.querySelectorAll('td').forEach(td => {
+          rowData.push(td.innerText.replace(/Rp\s?/g, '').trim()); // Remove "Rp " and trim
+        });
+        body.push(rowData);
+      });
+
+      if (typeof doc.autoTable === 'function') { // Check if autoTable plugin is loaded
+        doc.autoTable({
+            head: head,
+            body: body,
+            startY: yPos,
+            theme: 'grid', // 'striped', 'grid', 'plain'
+            headStyles: { fillColor: [23, 105, 128] }, // --primary-color
+            styles: { fontSize: 8, cellPadding: 2 },
+            columnStyles: {
+                0: { halign: 'center', cellWidth: 15 },
+                1: { halign: 'right', cellWidth: 40 },
+                2: { halign: 'right', cellWidth: 40 },
+                3: { halign: 'right', cellWidth: 40 },
+                4: { halign: 'right', cellWidth: 40 },
+            }
+        });
+      } else {
+        // Manual table rendering (very basic)
+        doc.setFontSize(8);
+        head[0].forEach((header, idx) => doc.text(header, 14 + idx * 35, yPos));
+        yPos += 5;
+        body.forEach(row => {
+            if (yPos > 275) { doc.addPage(); yPos = 20; }
+            row.forEach((cell, idx) => doc.text(cell, 14 + idx * 35, yPos));
+            yPos += 5;
+        });
+        showAlert("Info PDF", "Tabel angsuran ditampilkan secara sederhana. Untuk tampilan tabel yang lebih baik di PDF, plugin jsPDF-AutoTable direkomendasikan.");
+      }
+    }
+    
+    // Add disclaimer
+    const finalY = typeof doc.autoTable === 'function' ? doc.lastAutoTable.finalY + 10 : yPos + 10;
+    if (finalY > 270) doc.addPage();
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text("Disclaimer: Simulasi ini bersifat perkiraan dan dapat berbeda dengan perhitungan akhir bank.", 14, finalY > 270 ? 20 : finalY);
+    doc.text("Syarat dan ketentuan berlaku.", 14, (finalY > 270 ? 20 : finalY) + 4);
+
+    doc.save(`Simulasi_Pinjaman_${document.getElementById('nik').value || 'Karyawan'}.pdf`);
+  });
+
+  // Closing Initial Info Section
+  function closeInitialInfo() {
+        document.getElementById('initialInfoBoard').style.display = 'none';
+    }
+
+</script>
 
 </body>
 </html>
-
-<!-- Closing Initial Info Section -->
-<script>
-    function closeInitialInfo() {
-        document.getElementById('initialInfoBoard').style.display = 'none';
-    }
-</script>
-
-<!-- Add form validation script -->
-<script>
-const form = document.getElementById('loanForm');
-const inputs = form.querySelectorAll('input, select');
-
-// Add real-time validation
-inputs.forEach(input => {
-    input.addEventListener('input', () => {
-        validateInput(input);
-    });
-});
-
-function validateInput(input) {
-    if (!input.checkValidity()) {
-        input.classList.add('is-invalid');
-        input.setAttribute('aria-invalid', 'true');
-    } else {
-        input.classList.remove('is-invalid');
-        input.removeAttribute('aria-invalid');
-    }
-}
-
-function validateKMG(tipePinjaman, plafond, jangkaWaktu) {
-  if (tipePinjaman === "Kredit Multi Guna (KMG)") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 500000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Kredit Multi Guna (KMG) tidak boleh lebih dari Rp 500,000,000"
-      );
-      return false; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 60) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Kredit Multi Guna (KMG) tidak boleh lebih dari 5 tahun/60 bulan"
-      );
-      return false;  // Exit the function and prevent further calculations
-    }
-  }
-
-  if (tipePinjaman === "Kredit Pemilikan Rumah (KPR)") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 5000000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Kredit Pemilikan Rumah (KPR) tidak boleh lebih dari Rp 5,000,000,000"
-      );
-      return false; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 240) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Kredit Pemilikan Rumah (KPR) tidak boleh lebih dari 20 tahun/240 bulan"
-      );
-      return false;  // Exit the function and prevent further calculations
-    }
-  }
-
-  if (tipePinjaman === "Kredit Kendaraan Bermotor (KKB)") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 700000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Kredit Kendaraan Bermotor (KKB) tidak boleh lebih dari Rp 700,000,000"
-      );
-      return false; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 240) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Kredit Kendaraan Bermotor (KKB) tidak boleh lebih dari 5 tahun/60 bulan"
-      );
-      return false;  // Exit the function and prevent further calculations
-    }
-  }
-  
-  if (tipePinjaman === "Kredit Kendaraan Bermotor - Electronic Vehicle") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 700000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Kredit Kendaraan Bermotor - Electronic Vehicle tidak boleh lebih dari Rp 700,000,000"
-      );
-      return false; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 36) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Kredit Kendaraan Bermotor - Electronic Vehicle tidak boleh lebih dari 3 tahun/36 bulan"
-      );
-      return false;  // Exit the function and prevent further calculations
-    }
-  }
-
-  if (tipePinjaman === "Emergency Loan") {
-    // Check if plafond exceeds the maximum allowed value
-    if (plafond > 100000000) {
-      showAlert(
-        "Error: Plafond Terlalu Besar",
-        "Plafond Pinjaman untuk Emergency Loan tidak boleh lebih dari Rp 700,000,000"
-      );
-      return false; 
-    }
-
-    // Check if jangkaWaktu exceeds the maximum allowed value
-    if (jangkaWaktu > 12) {
-      showAlert(
-        "Error: Jangka Waktu Terlalu Panjang",
-        "Jangka Waktu untuk Emergency Loan tidak boleh lebih dari 1 tahun/12 bulan"
-      );
-      return false;  // Exit the function and prevent further calculations
-    }
-}
-return true;
-  
-}
-
-// Remove the existing Cleave.js initialization and replace with these functions
-function formatCurrency(input) {
-    // Remove all non-digits and convert to number
-    let value = input.value.replace(/[^\d]/g, '');
-    
-    // Format the number with thousand separator and prefix
-    if (value) {
-        value = parseInt(value, 10).toLocaleString('id-ID');
-        input.value = 'Rp ' + value;
-    } else {
-        input.value = '';
-    }
-}
-
-// Add event listeners to the input fields
-document.getElementById('plafond').addEventListener('input', function(e) {
-    formatCurrency(this);
-});
-
-document.getElementById('gajiPokok').addEventListener('input', function(e) {
-    formatCurrency(this);
-});
-
-document.getElementById('cicilanBerjalan').addEventListener('input', function(e) {
-    formatCurrency(this);
-});
-</script>
 
