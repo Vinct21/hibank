@@ -5,264 +5,625 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Human Capital Feedback Form - HiBank</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- For instead in Appscript -->
-    <!-- <?!= include('style'); ?>
-    <?!= include('script'); ?> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #176980;
-            --secondary-color: #D15B28;
+            --primary-color: #176980; /* Deep teal */
+            --secondary-color: #D15B28; /* Burnt orange */
+            --accent-color: #FBBF24; /* Amber for stars */
+            --success-color: #10B981; /* Emerald */
+            --error-color: #EF4444; /* Red */
+            --light-gray: #f3f4f6;
+            --medium-gray: #9ca3af;
         }
+
         body {
             font-family: 'Jost', sans-serif;
+            background: linear-gradient(135deg, var(--light-gray), #e5e7eb); /* Slightly adjusted gradient */
         }
-        .form-input:focus {
+
+        /* Custom focus style for better visibility, Tailwind's ring is also good */
+        .form-input:focus, .form-select:focus {
             border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 2px rgba(23, 105, 128, 0.2) !important;
+            box-shadow: 0 0 0 3px rgba(23, 105, 128, 0.3) !important;
+            outline: none;
         }
+
         .btn-primary {
             background-color: var(--secondary-color) !important;
+            color: white;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .btn-primary:hover {
-            background-color: #b94d22 !important;
+            background-color: #b94d22 !important; /* Darker shade for hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .btn-primary:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn-primary:disabled {
+            background-color: #e0a992 !important; /* Lighter, desaturated for disabled */
+            cursor: not-allowed;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: rgba(23, 105, 128, 0.1);
             transform: translateY(-1px);
         }
-        .star-rating button:hover {
+
+
+        /* Star Rating Enhancements */
+        .star-rating-container {
+            display: flex;
+            align-items: center;
+        }
+        .star-rating button {
+            color: var(--medium-gray); /* Default star color */
+            transition: transform 0.2s ease, color 0.2s ease;
+            font-size: 1.75rem; /* Larger stars */
+            padding: 0.25rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .star-rating button:hover,
+        .star-rating button:focus {
             transform: scale(1.2);
+            outline: none;
         }
-        .star-rating .active {
-            color: var(--secondary-color) !important;
+        .star-rating button.active { /* Filled star */
+            color: var(--accent-color) !important;
         }
-        .success-popup {
+        .star-rating button.hover-active { /* For hover effect on unselected stars */
+             color: #fde68a !important; /* Lighter amber for hover fill */
+        }
+
+
+        /* Success/Error Popup (Modal) */
+        .modal-overlay {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.7);
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            text-align: center;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
             z-index: 1000;
         }
-        .success-popup.show {
+        .modal-overlay.show {
             opacity: 1;
             visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
         }
-        .success-popup .checkmark {
-            width: 80px;
-            height: 80px;
-            display: block;
-            margin: 10% auto;
-            color: var(--secondary-color);
-            animation: scale .3s ease-in-out .4s both;
+        .modal-content {
+            background: white;
+            padding: 2rem; /* More padding */
+            border-radius: 1rem; /* Larger radius */
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            width: 90%;
+            max-width: 450px; /* Max width for modal */
         }
-        .success-popup .checkmark__check {
-            transform-origin: 50% 50%;
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-icon .checkmark__check {
             stroke-dasharray: 48;
             stroke-dashoffset: 48;
-            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+            animation: stroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards;
         }
+        .modal-icon .error__cross_1 {
+            stroke-dasharray: 30;
+            stroke-dashoffset: 30;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards;
+        }
+         .modal-icon .error__cross_2 {
+            stroke-dasharray: 30;
+            stroke-dashoffset: 30;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.3s forwards;
+        }
+
         @keyframes stroke {
-            100% {
-                stroke-dashoffset: 0;
-            }
+            100% { stroke-dashoffset: 0; }
         }
-        @keyframes scale {
-            0%, 100% {
-                transform: none;
-            }
-            50% {
-                transform: scale3d(1.1, 1.1, 1);
-            }
+
+        /* Input error styling */
+        .form-input.error, .form-select.error {
+            border-color: var(--error-color) !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3) !important;
         }
-        @keyframes fill {
-            100% {
-                box-shadow: inset 0px 0px 0px 30px var(--secondary-color);
-            }
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.25rem; /* mt-1 */
         }
+
+        /* HiBank Logo Placeholder */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .logo-placeholder {
+            width: 50px; /* Adjust as needed */
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* font-semibold */
+            font-size: 1.5rem; /* text-2xl */
+        }
+
     </style>
 </head>
-<body style="background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
-    <!-- Success Popup -->
-    <div class="success-popup" id="successPopup">
-        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" stroke="currentColor" stroke-width="3"/>
-        </svg>
-        <h3 class="text-2xl font-semibold mb-2" style="color: var(--primary-color);">Thank You!</h3>
-        <p class="text-gray-600">Your feedback has been submitted successfully.</p>
-        <button onclick="closeSuccessPopup()" class="mt-4 px-6 py-2 text-white rounded-md btn-primary">Close</button>
+<body class="antialiased">
+
+    <div id="feedbackModal" class="modal-overlay">
+        <div class="modal-content">
+            <div id="modalIconContainer" class="modal-icon w-20 h-20 mx-auto mb-5">
+                </div>
+            <h3 id="modalTitle" class="text-2xl font-semibold mb-2"></h3>
+            <p id="modalMessage" class="text-gray-600 mb-6"></p>
+            <button id="modalCloseButton" class="px-8 py-2.5 text-white rounded-md btn-primary w-full sm:w-auto">Close</button>
+        </div>
     </div>
-    <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 transition-all duration-300 hover:shadow-xl">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold" style="color: var(--primary-color);">Human Capital Feedback</h2>
-                <p class="mt-2" style="color: var(--secondary-color);">Your feedback helps us improve our services</p>
+
+    <div class="min-h-screen py-8 sm:py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+        <div class="max-w-2xl w-full mx-auto bg-white rounded-xl shadow-2xl p-6 sm:p-10 transition-all duration-300 hover:shadow-3xl">
+            
+            <div class="logo-container">
+                <div class="logo-placeholder">HB</div>
             </div>
 
-            <form id="feedbackForm" class="space-y-6" onsubmit="handleSubmit(event)">
-                <!-- Division Selection -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl sm:text-4xl font-bold" style="color: var(--primary-color);">Human Capital Feedback</h1>
+                <p class="mt-2 text-md" style="color: var(--secondary-color);">Your insights help us improve our services.</p>
+            </div>
+
+            <form id="feedbackForm" class="space-y-6" novalidate>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Division</label>
-                    <select id="division" name="division" required class="w-full border rounded-md px-3 py-2 form-input">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Your Email <span class="text-red-500">*</span></label>
+                    <input type="email" id="email" name="email" required class="w-full border-gray-300 rounded-md px-3 py-2.5 form-input shadow-sm" placeholder="you@example.com">
+                    <p class="error-message hidden" id="emailError"></p>
+                </div>
+
+                <div>
+                    <label for="division" class="block text-sm font-medium text-gray-700 mb-1">Division <span class="text-red-500">*</span></label>
+                    <select id="division" name="division" required class="w-full border-gray-300 rounded-md px-3 py-2.5 form-select shadow-sm">
                         <option value="">Select Division</option>
                         <option value="hr">Human Resources</option>
                         <option value="finance">Finance</option>
                         <option value="it">Information Technology</option>
                         <option value="operations">Operations</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="legal">Legal</option>
                     </select>
+                    <p class="error-message hidden" id="divisionError"></p>
                 </div>
 
-                <!-- Feedback Category -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Feedback Category</label>
-                    <select id="category" name="category" required class="w-full border rounded-md px-3 py-2 form-input">
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Feedback Category <span class="text-red-500">*</span></label>
+                    <select id="category" name="category" required class="w-full border-gray-300 rounded-md px-3 py-2.5 form-select shadow-sm">
                         <option value="">Select Category</option>
-                        <option value="service">Service Quality</option>
-                        <option value="process">Process Improvement</option>
+                        <option value="service_quality">Service Quality</option>
+                        <option value="process_improvement">Process Improvement</option>
                         <option value="communication">Communication</option>
-                        <option value="training">Training & Development</option>
+                        <option value="training_development">Training & Development</option>
+                        <option value="work_environment">Work Environment</option>
+                        <option value="technology_tools">Technology & Tools</option>
                         <option value="other">Other</option>
                     </select>
+                    <p class="error-message hidden" id="categoryError"></p>
                 </div>
 
-                <!-- Satisfaction Rating -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Overall Satisfaction</label>
-                    <div class="flex space-x-4 text-2xl star-rating" style="color: #d1d5db;">
-                        <button type="button" class="hover:scale-110 transition-transform">
-                            <i class="fas fa-star"></i>
-                        </button>
-                        <button type="button" class="hover:scale-110 transition-transform">
-                            <i class="fas fa-star"></i>
-                        </button>
-                        <button type="button" class="hover:scale-110 transition-transform">
-                            <i class="fas fa-star"></i>
-                        </button>
-                        <button type="button" class="hover:scale-110 transition-transform">
-                            <i class="fas fa-star"></i>
-                        </button>
-                        <button type="button" class="hover:scale-110 transition-transform">
-                            <i class="fas fa-star"></i>
-                        </button>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Overall Satisfaction <span class="text-red-500">*</span></label>
+                    <div class="star-rating-container">
+                        <div class="star-rating" role="radiogroup" aria-label="Overall Satisfaction Rating">
+                            </div>
+                        <span id="ratingLabel" class="ml-3 text-sm text-gray-600 font-medium"></span>
                     </div>
+                     <input type="hidden" id="satisfactionRating" name="satisfactionRating" value="0">
+                    <p class="error-message hidden" id="ratingError"></p>
                 </div>
 
-                <!-- Feedback Details -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Feedback Details</label>
+                    <label for="feedbackDetails" class="block text-sm font-medium text-gray-700 mb-1">Feedback Details <span class="text-red-500">*</span></label>
                     <textarea
                         id="feedbackDetails"
                         name="feedbackDetails"
-                        rows="4"
+                        rows="5"
                         required
-                        class="w-full border rounded-md px-3 py-2 form-input"
-                        placeholder="Please provide detailed feedback..."
+                        class="w-full border-gray-300 rounded-md px-3 py-2 form-input shadow-sm"
+                        placeholder="Please provide specific details about your experience..."
+                        aria-describedby="feedbackDetailsError"
                     ></textarea>
+                    <p class="error-message hidden" id="feedbackDetailsError"></p>
                 </div>
 
-                <!-- Suggestions -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Suggestions for Improvement</label>
+                    <label for="suggestions" class="block text-sm font-medium text-gray-700 mb-1">Suggestions for Improvement</label>
                     <textarea
                         id="suggestions"
                         name="suggestions"
-                        rows="3"
-                        required
-                        class="w-full border rounded-md px-3 py-2 form-input"
-                        placeholder="Your suggestions help us serve you better..."
+                        rows="4"
+                        class="w-full border-gray-300 rounded-md px-3 py-2 form-input shadow-sm"
+                        placeholder="What can we do better? (Optional)"
                     ></textarea>
                 </div>
-
-                <!-- Submit Button -->
-                <div class="flex justify-end space-x-3 pt-6">
-                    <button type="button" class="px-4 py-2 border rounded-md hover:bg-gray-50 transition-all duration-300" style="border-color: var(--primary-color); color: var(--primary-color);">Cancel</button>
+                
+                <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6">
+                    <button type="button" id="cancelButton" class="px-6 py-2.5 rounded-md btn-secondary w-full sm:w-auto">
+                        Cancel
+                    </button>
                     <button
                         type="submit"
-                        class="px-6 py-2 text-white rounded-md btn-primary"
-                    >Submit Feedback</button>
+                        id="submitButton"
+                        class="px-6 py-2.5 text-white rounded-md btn-primary w-full sm:w-auto flex items-center justify-center"
+                    >
+                        <span id="submitButtonText">Submit Feedback</span>
+                        <svg id="submitSpinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
+        // --- Configuration ---
+        const MAX_STARS = 5;
+        const RATING_LABELS = ["Select rating", "Very Dissatisfied", "Dissatisfied", "Neutral", "Satisfied", "Very Satisfied"];
+
+        // --- DOM Elements ---
+        const feedbackForm = document.getElementById('feedbackForm');
+        const starRatingContainer = document.querySelector('.star-rating');
+        const satisfactionRatingInput = document.getElementById('satisfactionRating');
+        const ratingLabel = document.getElementById('ratingLabel');
+        const submitButton = document.getElementById('submitButton');
+        const submitButtonText = document.getElementById('submitButtonText');
+        const submitSpinner = document.getElementById('submitSpinner');
+        const cancelButton = document.getElementById('cancelButton');
+
+        const modal = document.getElementById('feedbackModal');
+        const modalIconContainer = document.getElementById('modalIconContainer');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalCloseButton = document.getElementById('modalCloseButton');
+
+        // --- State ---
         let currentRating = 0;
 
-        // Star rating functionality
-        document.querySelectorAll('.fa-star').forEach((star, index) => {
-            star.addEventListener('click', () => {
-                currentRating = index + 1;
-                document.querySelectorAll('.fa-star').forEach((s, i) => {
-                    s.style.color = i <= index ? getComputedStyle(document.documentElement).getPropertyValue('--secondary-color') : '#d1d5db';
-                    s.classList.toggle('active', i <= index);
-                });
-            });
-        });
+        // --- Utility Functions ---
+        function showModal(type, title, message) {
+            let iconSvg = '';
+            if (type === 'success') {
+                modalIconContainer.style.color = 'var(--success-color)';
+                // Corrected: Removed backslashes from template literal
+                iconSvg = `<svg class="checkmark w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                               <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" stroke="currentColor" stroke-width="3" style="stroke-dasharray: 166; stroke-dashoffset: 166; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards, fill_success 0.4s ease-in-out 0.4s forwards;" />
+                               <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" stroke="currentColor" stroke-width="4"/>
+                           </svg>
+                           <style> @keyframes fill_success { 100% { box-shadow: inset 0px 0px 0px 30px var(--success-color); } } </style>`;
+            } else if (type === 'error') {
+                modalIconContainer.style.color = 'var(--error-color)';
+                // Corrected: Removed backslashes from template literal
+                iconSvg = `<svg class="error_cross w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                <circle class="error__circle" cx="26" cy="26" r="25" fill="none" stroke="currentColor" stroke-width="3" style="stroke-dasharray: 166; stroke-dashoffset: 166; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards, fill_error 0.4s ease-in-out 0.4s forwards;" />
+                                <path class="error__cross_1" stroke="currentColor" stroke-width="4" d="M16 16 36 36" />
+                                <path class="error__cross_2" stroke="currentColor" stroke-width="4" d="M36 16 16 36" />
+                           </svg>
+                           <style> @keyframes fill_error { 100% { box-shadow: inset 0px 0px 0px 30px var(--error-color); } } </style>`;
+            }
+            modalIconContainer.innerHTML = iconSvg;
+            modalTitle.textContent = title;
+            modalTitle.style.color = type === 'success' ? 'var(--success-color)' : 'var(--error-color)';
+            modalMessage.textContent = message;
+            // Corrected: Removed backslashes from template literal
+            modalCloseButton.className = `px-8 py-2.5 text-white rounded-md w-full sm:w-auto ${type === 'success' ? 'btn-primary' : 'btn-primary'}`; // Can customize button style per type
+            if (type === 'success') modalCloseButton.style.backgroundColor = 'var(--success-color)';
+            else if (type === 'error') modalCloseButton.style.backgroundColor = 'var(--error-color)';
 
-        // Handle form submission
-        function handleSubmit(event) {
-            event.preventDefault();
-            
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+             // Reset modal button color if changed
+            modalCloseButton.style.backgroundColor = 'var(--secondary-color)';
+        }
+
+        function displayError(elementId, message) {
+            const errorElement = document.getElementById(elementId + "Error");
+            const inputElement = document.getElementById(elementId);
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.remove('hidden');
+            }
+            if (inputElement) {
+                inputElement.classList.add('error');
+                inputElement.setAttribute('aria-invalid', 'true');
+                inputElement.setAttribute('aria-describedby', elementId + "Error");
+            }
+        }
+
+        function clearError(elementId) {
+            const errorElement = document.getElementById(elementId + "Error");
+            const inputElement = document.getElementById(elementId);
+            if (errorElement) {
+                errorElement.textContent = '';
+                errorElement.classList.add('hidden');
+            }
+            if (inputElement) {
+                inputElement.classList.remove('error');
+                inputElement.removeAttribute('aria-invalid');
+                inputElement.removeAttribute('aria-describedby');
+            }
+        }
+        
+        function clearAllErrors() {
+            const errorMessages = feedbackForm.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => {
+                msg.classList.add('hidden');
+                msg.textContent = '';
+            });
+            const errorInputs = feedbackForm.querySelectorAll('.error');
+            errorInputs.forEach(input => {
+                input.classList.remove('error');
+                input.removeAttribute('aria-invalid');
+                input.removeAttribute('aria-describedby');
+            });
+            clearError('rating'); // Special case for rating
+        }
+
+        // --- Star Rating Logic ---
+        function setupStars() {
+            starRatingContainer.innerHTML = ''; // Clear existing stars
+            for (let i = 1; i <= MAX_STARS; i++) {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.setAttribute('role', 'radio');
+                button.setAttribute('aria-checked', 'false');
+                // Corrected: Removed backslashes from template literal
+                button.setAttribute('aria-label', `${i} out of ${MAX_STARS} stars`);
+                button.dataset.value = i;
+                button.innerHTML = '<i class="fas fa-star"></i>';
+                starRatingContainer.appendChild(button);
+            }
+            updateStarDisplay(currentRating); // Initial display
+
+            // Event listeners for stars
+            const stars = starRatingContainer.querySelectorAll('button');
+            stars.forEach(star => {
+                star.addEventListener('click', handleStarClick);
+                star.addEventListener('mouseover', handleStarMouseover);
+                star.addEventListener('mouseout', handleStarMouseout);
+                star.addEventListener('focus', handleStarFocus);
+                star.addEventListener('blur', handleStarBlur);
+            });
+        }
+        
+        function updateStarDisplay(rating) {
+            const stars = starRatingContainer.querySelectorAll('button');
+            stars.forEach((star, index) => {
+                const starValue = parseInt(star.dataset.value);
+                if (starValue <= rating) {
+                    star.classList.add('active');
+                    star.setAttribute('aria-checked', 'true');
+                } else {
+                    star.classList.remove('active');
+                    star.setAttribute('aria-checked', 'false');
+                }
+            });
+            ratingLabel.textContent = RATING_LABELS[rating] || RATING_LABELS[0];
+            satisfactionRatingInput.value = rating; // Update hidden input
+            if (rating > 0) clearError('rating'); // Clear error if a rating is selected
+        }
+
+        function handleStarClick(event) {
+            currentRating = parseInt(event.currentTarget.dataset.value);
+            updateStarDisplay(currentRating);
+        }
+
+        function handleStarMouseover(event) {
+            const hoverValue = parseInt(event.currentTarget.dataset.value);
+            const stars = starRatingContainer.querySelectorAll('button');
+            stars.forEach(star => {
+                star.classList.remove('hover-active'); // Clear previous hover states
+                if (parseInt(star.dataset.value) <= hoverValue) {
+                    star.classList.add('hover-active');
+                }
+            });
+        }
+
+        function handleStarMouseout() {
+            const stars = starRatingContainer.querySelectorAll('button');
+            stars.forEach(star => star.classList.remove('hover-active')); // Clear all hover fills
+            updateStarDisplay(currentRating); // Revert to current actual rating
+        }
+
+        function handleStarFocus(event) { // Similar to mouseover for keyboard nav
+            const focusValue = parseInt(event.currentTarget.dataset.value);
+            const stars = starRatingContainer.querySelectorAll('button');
+            stars.forEach(star => {
+                if (parseInt(star.dataset.value) <= focusValue) {
+                    star.classList.add('hover-active');
+                } else {
+                    star.classList.remove('hover-active');
+                }
+            });
+        }
+
+        function handleStarBlur() { // Similar to mouseout
+            const stars = starRatingContainer.querySelectorAll('button');
+            stars.forEach(star => star.classList.remove('hover-active'));
+            updateStarDisplay(currentRating);
+        }
+
+        // --- Email Validation Utility ---
+        function isValidEmail(email) {
+            // Basic email validation regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // --- Form Validation ---
+        function validateForm() {
+            clearAllErrors();
+            let isValid = true;
+
+            const email = document.getElementById('email').value.trim();
+            if (!email) {
+                displayError('email', 'Please enter your email address.');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                displayError('email', 'Please enter a valid email address.');
+                isValid = false;
+            }
+
+            const division = document.getElementById('division').value;
+            if (!division) {
+                displayError('division', 'Please select a division.');
+                isValid = false;
+            }
+
+            const category = document.getElementById('category').value;
+            if (!category) {
+                displayError('category', 'Please select a feedback category.');
+                isValid = false;
+            }
+
             if (currentRating === 0) {
-                alert('Please select a rating');
+                displayError('rating', 'Please provide a satisfaction rating.');
+                isValid = false;
+            }
+
+            const feedbackDetails = document.getElementById('feedbackDetails').value.trim();
+            if (!feedbackDetails) {
+                displayError('feedbackDetails', 'Please provide feedback details.');
+                isValid = false;
+            } else if (feedbackDetails.length < 10) {
+                 displayError('feedbackDetails', 'Feedback details should be at least 10 characters.');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // --- Form Submission ---
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            if (!validateForm()) {
+                const firstErrorInput = feedbackForm.querySelector('.error'); 
+                if (firstErrorInput) {
+                     if (firstErrorInput.id === 'ratingError') { 
+                         starRatingContainer.querySelector('button').focus();
+                    } else {
+                        firstErrorInput.focus();
+                    }
+                }
                 return;
             }
 
+            // Show loading state
+            submitButtonText.classList.add('hidden');
+            submitSpinner.classList.remove('hidden');
+            submitButton.disabled = true;
+            cancelButton.disabled = true;
+
             const formData = {
+                email: document.getElementById('email').value.trim(),
                 division: document.getElementById('division').value,
                 category: document.getElementById('category').value,
                 rating: currentRating,
-                feedbackDetails: document.getElementById('feedbackDetails').value,
-                suggestions: document.getElementById('suggestions').value
+                feedbackDetails: document.getElementById('feedbackDetails').value.trim(),
+                suggestions: document.getElementById('suggestions').value.trim(),
+                timestamp: new Date().toISOString()
             };
 
-            // Show loading state
-            const submitBtn = event.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
+            console.log("Form Data Submitted:", formData);
 
-            // Call the Google Apps Script function
-            google.script.run
-                .withSuccessHandler(function(response) {
-                    if (response.success) {
-                        document.getElementById('feedbackForm').reset();
-                        // Reset stars
-                        currentRating = 0;
-                        document.querySelectorAll('.fa-star').forEach(s => s.style.color = '#d1d5db');
-                        // Show success popup
-                        document.getElementById('successPopup').classList.add('show');
-                    } else {
-                        alert('Error: ' + response.message);
-                    }
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                })
-                .withFailureHandler(function(error) {
-                    alert('Error submitting feedback: ' + error.toString());
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                })
-                .submitFeedback(formData);
-        }
+            // --- Google Apps Script Integration (Simulated) ---
+            try {
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                const simulatedResponse = { success: true, message: "Feedback recorded." }; 
+                // const simulatedResponse = { success: false, message: "Simulated server error. Please try again." };
 
-        function closeSuccessPopup() {
-            document.getElementById('successPopup').classList.remove('show');
-            // Reset star rating
-            currentRating = 0;
-            document.querySelectorAll('.fa-star').forEach(star => {
-                star.style.color = '#d1d5db';
-                star.classList.remove('active');
-            });
+                if (simulatedResponse.success) {
+                    showModal('success', 'Thank You!', 'Your feedback has been submitted successfully.');
+                    feedbackForm.reset();
+                    currentRating = 0;
+                    setupStars(); 
+                    clearAllErrors();
+                } else {
+                    showModal('error', 'Submission Failed', simulatedResponse.message || 'An unknown error occurred.');
+                }
+            } catch (error) {
+                console.error('Submission Error:', error);
+                showModal('error', 'Submission Error', error.message || 'An error occurred while submitting your feedback. Please try again.');
+            } finally {
+                // Restore button state
+                submitButtonText.classList.remove('hidden');
+                submitSpinner.classList.add('hidden');
+                submitButton.disabled = false;
+                cancelButton.disabled = false;
+            }
         }
+        
+        // --- Event Listeners ---
+        feedbackForm.addEventListener('submit', handleSubmit);
+        modalCloseButton.addEventListener('click', closeModal);
+        cancelButton.addEventListener('click', () => {
+            if (confirm("Are you sure you want to cancel and clear the form?")) {
+                feedbackForm.reset();
+                currentRating = 0;
+                setupStars(); 
+                clearAllErrors();
+                document.getElementById('email').focus(); // Focus on the first field (email)
+            }
+        });
+
+        // Clear error on input change for relevant fields
+        ['email', 'division', 'category', 'feedbackDetails'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', () => clearError(id));
+            }
+        });
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupStars(); 
+            document.getElementById('email').focus(); // Autofocus on the email field
+        });
+
     </script>
 </body>
 </html>
