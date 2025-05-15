@@ -6,47 +6,191 @@
     <title>Human Capital Policies - HiBank</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .policy-header {
-            background-color: #f8f9fa;
-            padding: 4rem 0;
-            margin-bottom: 2rem;
+        /* CSS Variables for Theme */
+        :root {
+            --theme-primary: #176980; /* Teal from original section titles */
+            --theme-primary-darker: #115063;
+            --theme-secondary: #6c757d;
+            --theme-light-bg: #f8f9fa;
+            --theme-white: #ffffff;
+            --theme-text-dark: #212529;
+            --theme-text-light: #495057;
+            --theme-border-color: #dee2e6;
+            --font-family-sans-serif: 'Inter', sans-serif;
         }
+
+        body {
+            font-family: var(--font-family-sans-serif);
+            background-color: var(--theme-white); /* Cleaner overall background */
+            color: var(--theme-text-dark);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: var(--theme-white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .navbar-brand {
+            color: var(--theme-primary);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .navbar-brand:hover {
+            color: var(--theme-primary-darker);
+        }
+        .nav-link {
+            color: var(--theme-text-light);
+            font-weight: 500;
+        }
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--theme-primary);
+        }
+        .navbar-toggler {
+            border-color: rgba(0,0,0,0.1);
+        }
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2823, 105, 128, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+
+        /* Header Section */
+        .policy-header {
+            background-color: var(--theme-light-bg);
+            padding: 4rem 1.5rem; 
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        .policy-header h1 {
+            color: var(--theme-primary-darker);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .policy-header .lead {
+            color: var(--theme-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Search Box */
+        .search-box {
+            max-width: 600px; 
+            margin: 2.5rem auto 0; 
+        }
+        .search-box .form-control {
+            border-radius: 0.375rem 0 0 0.375rem;
+            padding: 0.75rem 1rem;
+            border-color: var(--theme-border-color);
+        }
+        .search-box .form-control:focus {
+            border-color: var(--theme-primary);
+            box-shadow: 0 0 0 0.25rem rgba(23, 105, 128, 0.25);
+        }
+        .search-box .btn-primary { 
+            background-color: var(--theme-primary);
+            border-color: var(--theme-primary);
+            border-radius: 0 0.375rem 0.375rem 0;
+            padding: 0.75rem 1.25rem;
+        }
+        .search-box .btn-primary:hover {
+            background-color: var(--theme-primary-darker);
+            border-color: var(--theme-primary-darker);
+        }
+
+        /* Section Title */
+        .section-title {
+            color: var(--theme-primary);
+            font-size: 1.75rem; 
+            font-weight: 600; 
+            margin-bottom: 2rem; 
+            padding-bottom: 0.75rem; 
+            border-bottom: 3px solid var(--theme-primary); 
+            display: inline-block; 
+        }
+
+        /* Policy Card */
         .policy-card {
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: transform 0.2s, box-shadow 0.2s;
+            background-color: var(--theme-white);
+            border: 1px solid var(--theme-border-color);
+            border-left: 5px solid var(--theme-primary); 
+            border-radius: 8px; 
+            padding: 1.75rem; 
+            margin-bottom: 1.5rem; /* This margin is on the card itself, columns will have their own gutter */
+            transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
         }
         .policy-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 18px rgba(23, 105, 128, 0.15); 
+        }
+        .policy-card .policy-icon {
+            color: var(--theme-primary);
+            margin-right: 0.5rem;
+            font-size: 1.1em; 
         }
         .policy-category {
-            color: #6c757d;
-            font-size: 0.9rem;
+            color: var(--theme-primary); 
+            font-size: 0.85rem;
+            font-weight: 600; 
             margin-bottom: 0.5rem;
+            display: flex; 
+            align-items: center;
         }
         .policy-title {
-            color: #212529;
-            margin-bottom: 1rem;
+            color: var(--theme-text-dark);
+            font-size: 1.2rem; 
+            font-weight: 600;
+            margin-bottom: 0.75rem;
         }
         .policy-description {
-            color: #6c757d;
-            margin-bottom: 1rem;
+            color: var(--theme-text-light);
+            font-size: 0.95rem; 
+            margin-bottom: 1.25rem; 
+            line-height: 1.6;
+            flex-grow: 1; 
         }
-        .search-box {
-            max-width: 500px;
-            margin: 0 auto 3rem;
+        .policy-card .btn-primary {
+            background-color: var(--theme-primary);
+            border-color: var(--theme-primary);
+            font-weight: 500;
+            padding: 0.5rem 1.25rem; 
+            font-size: 0.9rem;
+            margin-top: auto; 
         }
-        .section-title {
-            color: #176980;
-            font-size: 1.75rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #e9ecef;
+        .policy-card .btn-primary:hover {
+            background-color: var(--theme-primary-darker);
+            border-color: var(--theme-primary-darker);
         }
+
+        .row {
+            align-items: stretch; 
+        }
+        .col-md-6.col-lg-4 {
+            display: flex; 
+            flex-direction: column; 
+        }
+
+
+        /* Footer */
+        footer.bg-light { 
+            background-color: var(--theme-text-dark) !important; 
+            color: var(--theme-light-bg);
+            padding: 2.5rem 0; 
+            margin-top: 3rem;
+        }
+        footer p {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        /* PDF Modal */
         .pdf-modal {
             display: none;
             position: fixed;
@@ -54,8 +198,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.65); 
+            z-index: 1050; 
+            overflow-y: auto; 
         }
         .pdf-modal.show {
             display: flex;
@@ -63,32 +208,57 @@
             align-items: center;
         }
         .pdf-container {
-            background: white;
-            padding: 20px;
+            background: var(--theme-white);
+            padding: 15px; 
             border-radius: 8px;
             width: 90%;
+            max-width: 1000px; 
             height: 90%;
+            max-height: 90vh; 
             position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: flex; 
+            flex-direction: column;
         }
         .pdf-close {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
+            top: -10px; 
+            right: -10px;
+            font-size: 1.5rem; 
             cursor: pointer;
-            color: #333;
-            z-index: 1001;
+            color: var(--theme-white);
+            background-color: var(--theme-primary);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            z-index: 1051;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s ease;
+        }
+        .pdf-close:hover {
+            background-color: var(--theme-primary-darker);
+            color: var(--theme-white);
         }
         .pdf-viewer {
             width: 100%;
-            height: 100%;
+            height: 100%; 
             border: none;
+            flex-grow: 1; 
         }
+
+        /* Utility for icons */
+        .icon-left {
+            margin-right: 8px;
+        }
+
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">HiBank</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -107,17 +277,15 @@
         </div>
     </nav>
 
-    <!-- Header Section -->
     <header class="policy-header">
-        <div class="container text-center">
-            <h1 class="mb-4">Human Capital Policies</h1>
-            <p class="lead">Access and learn about our comprehensive Human Capital policies and guidelines</p>
+        <div class="container">
+            <h1 class="mb-3">Human Capital Policies</h1>
+            <p class="lead mb-4">Access and learn about our comprehensive Human Capital policies and guidelines.</p>
             
-            <!-- Search Box -->
             <div class="search-box">
                 <div class="input-group">
-                    <input type="text" class="form-control" id="policySearch" placeholder="Search policies...">
-                    <button class="btn btn-primary" type="button">
+                    <input type="text" class="form-control" id="policySearch" placeholder="Search policies by title, description, or category...">
+                    <button class="btn btn-primary" type="button" aria-label="Search">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -125,192 +293,187 @@
         </div>
     </header>
 
-    <!-- Policy Categories Section -->
     <section class="container mb-5">
-        <div class="row">
-            <!-- Peraturan Perusahaan -->
-            <div class="col-12 mb-4">
+        <div class="row"> 
+            <div class="col-12 mb-5"> 
                 <h2 class="section-title">Peraturan Perusahaan</h2>
-                <div class="row">
-                    <div class="col-md-6 col-lg-4">
+                <div class="row"> 
+                    <div class="col-md-6 col-lg-4 mb-4"> 
                         <div class="policy-card">
-                            <!-- <div class="policy-category">Peraturan</div> -->
+                            <div class="policy-category"><i class="fas fa-book icon-left"></i>Peraturan</div>
                             <h3 class="policy-title">Peraturan Perusahaan Hibank</h3>
                             <p class="policy-description">Ketentuan dan prosedur tata tertib kerja karyawan.</p>
-                            <a href="https://drive.google.com/file/d/1Wu8XqbfQe0UsbD_gw_1Iz6kl-23rVrOg/view?usp=drive_link" class="btn btn-outline-primary">Lihat Detail</a>
+                            <a href="https://drive.google.com/file/d/1Wu8XqbfQe0UsbD_gw_1Iz6kl-23rVrOg/view?usp=drive_link" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Kebijakan Pengelolaan Organisasi -->
-            <div class="col-12 mb-4">
+            <div class="col-12 mb-5">
                 <h2 class="section-title">7.1.0.0 Kebijakan Pengelolaan Organisasi</h2>
                 <div class="row">
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.1.1.0.</div>
-                            <h3 class="policy-title">Prosedur </h3>
+                            <div class="policy-category"><i class="fas fa-sitemap icon-left"></i>7.1.1.0.</div>
+                            <h3 class="policy-title">Prosedur Struktur Organisasi</h3>
                             <p class="policy-description">Pedoman struktur dan hierarki organisasi.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.1.2.0.</div>
-                            <h3 class="policy-title">Prosedur </h3>
+                            <div class="policy-category"><i class="fas fa-chart-line icon-left"></i>7.1.2.0.</div>
+                            <h3 class="policy-title">Prosedur Kinerja Organisasi</h3>
                             <p class="policy-description">Sistem evaluasi dan pengembangan kinerja organisasi.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.1.3.0.</div>
-                            <h3 class="policy-title">Prosedur </h3>
+                            <div class="policy-category"><i class="fas fa-users-cog icon-left"></i>7.1.3.0.</div>
+                            <h3 class="policy-title">Prosedur Budaya Organisasi</h3>
                             <p class="policy-description">Nilai-nilai dan budaya kerja organisasi.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Kebijakan Pengelolaan Human Capital -->
-            <div class="col-12 mb-4">
+            <div class="col-12 mb-5">
                 <h2 class="section-title">7.2.0.0 Kebijakan Pengelolaan Human Capital</h2>
                 <div class="row">
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.1.0.</div>
+                            <div class="policy-category"><i class="fas fa-user-plus icon-left"></i>7.2.1.0.</div>
                             <h3 class="policy-title">Prosedur Rekrutmen</h3>
                             <p class="policy-description">Prosedur rekrutmen dan seleksi karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.2.0.</div>
+                            <div class="policy-category"><i class="fas fa-credit-card icon-left"></i>7.2.2.0.</div>
                             <h3 class="policy-title">Prosedur Kredit Karyawan</h3>
                             <p class="policy-description">Program pengembangan dan jenjang karir.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.3.0.</div>
+                             <div class="policy-category"><i class="fas fa-calendar-alt icon-left"></i>7.2.3.0.</div>
                             <h3 class="policy-title">Prosedur Kehadiran dan Pengelolaan Cuti</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <p class="policy-description">Manajemen kehadiran dan proses pengajuan cuti.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.6.0.</div>
+                            <div class="policy-category"><i class="fas fa-tasks icon-left"></i>7.2.6.0.</div>
                             <h3 class="policy-title">Prosedur Pengelolaan Kinerja</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <p class="policy-description">Sistem evaluasi dan pengembangan kinerja karyawan.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.7.0.</div>
+                            <div class="policy-category"><i class="fas fa-exclamation-triangle icon-left"></i>7.2.7.0.</div>
                             <h3 class="policy-title">Prosedur Manajemen Konsekuensi (PIP)</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <p class="policy-description">Penanganan kinerja dan rencana perbaikan individu.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.9.0.</div>
-                            <h3 class="policy-title">Prosedur Pembinaan Kedisiplinan dan Pemberian Sanksi</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <div class="policy-category"><i class="fas fa-gavel icon-left"></i>7.2.9.0.</div>
+                            <h3 class="policy-title">Prosedur Pembinaan Kedisiplinan dan Sanksi</h3>
+                            <p class="policy-description">Tata cara pembinaan dan penerapan sanksi disiplin.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.11.0.</div>
+                            <div class="policy-category"><i class="fas fa-graduation-cap icon-left"></i>7.2.11.0.</div>
                             <h3 class="policy-title">Prosedur Learning & Development</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <p class="policy-description">Program pelatihan dan pengembangan kompetensi.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.12.0.</div>
+                            <div class="policy-category"><i class="fas fa-certificate icon-left"></i>7.2.12.0.</div>
                             <h3 class="policy-title">Prosedur Sertifikasi</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <p class="policy-description">Proses sertifikasi keahlian dan profesionalisme.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.16.0.</div>
-                            <h3 class="policy-title">Prosedur Pengelolaan Talent & Mobilitas Talent (Rotasi, Detasering/Rotasi Jangka Pendek)</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <div class="policy-category"><i class="fas fa-users icon-left"></i>7.2.16.0.</div>
+                            <h3 class="policy-title">Prosedur Pengelolaan & Mobilitas Talent</h3>
+                            <p class="policy-description">Manajemen rotasi, detasering, dan mobilitas talent.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.17.0.</div>
-                            <h3 class="policy-title">Prosedur Promosi, Mutasi, Rotasi, dan Demosi</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <div class="policy-category"><i class="fas fa-exchange-alt icon-left"></i>7.2.17.0.</div>
+                            <h3 class="policy-title">Prosedur Promosi, Mutasi, Rotasi, Demosi</h3>
+                            <p class="policy-description">Aturan terkait perubahan posisi dan jabatan karyawan.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.18.0.</div>
+                            <div class="policy-category"><i class="fas fa-plane-departure icon-left"></i>7.2.18.0.</div>
                             <h3 class="policy-title">Prosedur Perjalanan Dinas</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <p class="policy-description">Ketentuan dan fasilitas perjalanan dinas karyawan.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.20.0.</div>
+                            <div class="policy-category"><i class="fas fa-money-bill-wave icon-left"></i>7.2.20.0.</div>
                             <h3 class="policy-title">Prosedur Sistem Penggajian (Pengupahan)</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <p class="policy-description">Mekanisme dan komponen sistem penggajian.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.22.0.</div>
-                            <h3 class="policy-title">Prosedur Remunerasi & Penghargaan Karyawan (Remuneration & Reward)</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <div class="policy-category"><i class="fas fa-award icon-left"></i>7.2.22.0.</div>
+                            <h3 class="policy-title">Prosedur Remunerasi & Penghargaan</h3>
+                            <p class="policy-description">Sistem remunerasi dan program penghargaan karyawan.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.2.25.0.</div>
-                            <h3 class="policy-title">Prosedur Pengajuan Resign dan Offboarding, Pemutusan Hubungan Kerja (PHK), Data Security, dan Non-Compete Disclaimer</h3>
-                            <p class="policy-description">Sistem remunerasi dan tunjangan karyawan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <div class="policy-category"><i class="fas fa-user-minus icon-left"></i>7.2.25.0.</div>
+                            <h3 class="policy-title">Prosedur Resign, Offboarding, PHK</h3>
+                            <p class="policy-description">Proses pengunduran diri, offboarding, dan PHK.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Kebijakan Kode Etik -->
-            <div class="col-12 mb-4">
+            <div class="col-12 mb-4"> 
                 <h2 class="section-title">7.3.0.0 Kebijakan Kode Etik, Perilaku, Tata Nilai, dan Budaya Kerja</h2>
                 <div class="row">
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.3.1.0.</div>
-                            <h3 class="policy-title">Prosedur Komitmen Karyawan terhadap Kode Etik (including KYE) dan Corporate Values AKHLAK</h3>
-                            <p class="policy-description">Pedoman etika dalam menjalankan bisnis.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <div class="policy-category"><i class="fas fa-balance-scale icon-left"></i>7.3.1.0.</div>
+                            <h3 class="policy-title">Prosedur Komitmen Kode Etik & AKHLAK</h3>
+                            <p class="policy-description">Pedoman etika dan komitmen terhadap nilai AKHLAK.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="policy-card">
-                            <div class="policy-category">7.3.4.0.</div>
+                            <div class="policy-category"><i class="fas fa-briefcase icon-left"></i>7.3.4.0.</div>
                             <h3 class="policy-title">Prosedur Pengaturan Kerja Adaptif</h3>
-                            <p class="policy-description">Aturan kepatuhan terhadap regulasi dan kebijakan.</p>
-                            <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                            <p class="policy-description">Aturan kerja fleksibel dan adaptif sesuai kebutuhan.</p>
+                            <a href="#" class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
                 </div>
@@ -318,18 +481,16 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-light py-4">
+    <footer class="bg-light py-4"> 
         <div class="container text-center">
-            <p class="mb-0">&copy; 2024 HiBank. All rights reserved.</p>
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> HiBank. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- PDF Modal -->
     <div class="pdf-modal" id="pdfModal">
         <div class="pdf-container">
-            <span class="pdf-close" onclick="closePdfModal()">&times;</span>
-            <iframe class="pdf-viewer" id="pdfViewer" src="" frameborder="0"></iframe>
+            <span class="pdf-close" onclick="closePdfModal()" aria-label="Close PDF Viewer">&times;</span>
+            <iframe class="pdf-viewer" id="pdfViewer" src="" frameborder="0" title="PDF Document Viewer"></iframe>
         </div>
     </div>
 
@@ -337,19 +498,44 @@
     <script>
         // Search functionality
         document.getElementById('policySearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const policyCards = document.querySelectorAll('.policy-card');
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const policyCardColumns = document.querySelectorAll('.col-md-6.col-lg-4'); // Get all policy card columns
 
-            policyCards.forEach(card => {
+            // Iterate over each policy card column to show/hide based on search term
+            policyCardColumns.forEach(column => {
+                const card = column.querySelector('.policy-card');
+                if (!card) return; // Skip if no card found in column
+
                 const title = card.querySelector('.policy-title').textContent.toLowerCase();
                 const description = card.querySelector('.policy-description').textContent.toLowerCase();
-                const category = card.querySelector('.policy-category');
-                const categoryText = category ? category.textContent.toLowerCase() : '';
-
+                const categoryElement = card.querySelector('.policy-category');
+                const categoryText = categoryElement ? categoryElement.textContent.toLowerCase() : '';
+                
+                // Check if card content matches search term
                 if (title.includes(searchTerm) || description.includes(searchTerm) || categoryText.includes(searchTerm)) {
-                    card.style.display = 'block';
+                    column.style.display = 'flex'; // Show column if it matches
                 } else {
-                    card.style.display = 'none';
+                    column.style.display = 'none'; // Hide column if it doesn't match
+                }
+            });
+
+            // Iterate over each section to show/hide based on visible cards within it
+            document.querySelectorAll('.col-12.mb-5, .col-12.mb-4').forEach(section => {
+                const columnsInSection = section.querySelectorAll('.col-md-6.col-lg-4');
+                let sectionHasVisibleCards = false;
+                // Check if any column in this section is currently visible
+                for (const col of columnsInSection) { // Use for...of for NodeList
+                    if (col.style.display !== 'none') {
+                        sectionHasVisibleCards = true;
+                        break; // Found a visible card, no need to check further for this section
+                    }
+                }
+
+                // Show section if it has visible cards OR if the search term is empty
+                if (sectionHasVisibleCards || searchTerm === "") {
+                    section.style.display = 'block';
+                } else { // Otherwise (no visible cards AND search term is not empty), hide the section
+                    section.style.display = 'none';
                 }
             });
         });
@@ -358,33 +544,47 @@
         function showPdfModal(pdfUrl) {
             const modal = document.getElementById('pdfModal');
             const pdfViewer = document.getElementById('pdfViewer');
+            // Adjust Google Drive links for embedding
+            if (pdfUrl.includes("drive.google.com") && pdfUrl.includes("/view")) {
+                pdfUrl = pdfUrl.replace("/view", "/preview");
+            }
             pdfViewer.src = pdfUrl;
             modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
         }
 
         function closePdfModal() {
             const modal = document.getElementById('pdfModal');
             const pdfViewer = document.getElementById('pdfViewer');
             modal.classList.remove('show');
-            pdfViewer.src = '';
-            document.body.style.overflow = 'auto';
+            pdfViewer.src = ''; // Clear src to stop video/audio
+            document.body.style.overflow = 'auto'; // Restore background scrolling
         }
 
         // Close modal when clicking outside the PDF container
         document.getElementById('pdfModal').addEventListener('click', function(e) {
-            if (e.target === this) {
+            if (e.target === this) { // 'this' refers to the modal itself
+                closePdfModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape" && document.getElementById('pdfModal').classList.contains('show')) {
                 closePdfModal();
             }
         });
 
-        // Add click handlers to all 'Lihat Detail' buttons
-        document.querySelectorAll('.btn-outline-primary').forEach(button => {
+        // Add click handlers to all 'Lihat Detail' buttons within policy cards
+        document.querySelectorAll('.policy-card .btn-primary').forEach(button => {
             button.addEventListener('click', function(e) {
-                e.preventDefault();
+                e.preventDefault(); // Prevent default anchor behavior
                 const pdfUrl = this.getAttribute('href');
-                if (pdfUrl) {
+                if (pdfUrl && pdfUrl !== '#') { // Ensure URL is valid
                     showPdfModal(pdfUrl);
+                } else {
+                    console.warn('No PDF URL provided for this policy.');
+                    // Optionally, display a user-friendly message here
                 }
             });
         });
