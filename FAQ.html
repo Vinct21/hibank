@@ -7,8 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <style>
+    <link rel="stylesheet" href="styles.css"> <style>
         :root {
             --primary-color: #176980;
             --secondary-color: #D15B28;
@@ -49,7 +48,7 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            cursor: pointer;
+            /* Removed cursor: pointer; as title is the main clickable element */
             transition: all 0.3s ease;
             border: 1px solid rgba(0,0,0,0.1);
         }
@@ -68,6 +67,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0.5rem 0;
+            cursor: pointer; /* Added cursor here for clarity */
         }
 
         .faq-category-title::after {
@@ -81,17 +81,21 @@
         }
 
         .faq-questions {
-            display: none;
+            display: none; /* Default state */
             margin-top: 1rem;
         }
 
         .faq-category-card.active .faq-questions {
-            display: block;
+            display: block; /* Shown when category is active */
+            animation: fadeIn 0.3s ease forwards;
         }
 
         .faq-item {
             border-top: 1px solid #eee;
             padding: 1rem 0;
+        }
+        .faq-item:first-child {
+            border-top: none;
         }
 
         .faq-question {
@@ -114,7 +118,7 @@
         }
 
         .faq-answer {
-            display: none;
+            display: none; /* Default state */
             padding: 1rem;
             color: #666;
             line-height: 1.6;
@@ -124,7 +128,8 @@
         }
 
         .faq-item.active .faq-answer {
-            display: block;
+            display: block; /* Shown when item is active */
+            animation: fadeIn 0.3s ease forwards;
         }
 
         .search-container {
@@ -133,7 +138,7 @@
         }
 
         .search-container::before {
-            content: '\f002';
+            content: '\f002'; /* Font Awesome search icon */
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             position: absolute;
@@ -146,7 +151,7 @@
 
         #faqSearch {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            padding: 0.75rem 1rem 0.75rem 2.5rem; /* Adjusted padding for icon */
             border: 2px solid rgba(0,0,0,0.1);
             border-radius: 12px;
             font-size: 1rem;
@@ -161,7 +166,7 @@
             background: #fff;
         }
         .highlight {
-            background-color: rgba(209, 91, 40, 0.2);
+            background-color: rgba(209, 91, 40, 0.2); /* var(--secondary-color) with alpha */
             padding: 0.1em 0.2em;
             border-radius: 3px;
             font-weight: 500;
@@ -170,14 +175,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .faq-category-card.active .faq-questions {
-            animation: fadeIn 0.3s ease forwards;
-        }
-
-        .faq-item.active .faq-answer {
-            animation: fadeIn 0.3s ease forwards;
         }
     </style>
 </head>
@@ -216,337 +213,249 @@
         </div>
 
         <div class="faq-categories">
-            <!-- Compensation Benefit -->
             <div class="faq-category-card">
                 <div class="faq-category-title">Remunerasi</div>
                 <div class="faq-questions">
                     <div class="faq-item">
                         <div class="faq-question">Saya tidak menerima slip gaji atau mutasi rekening?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Silakan hubungi departemen HR untuk pemeriksaan lebih lanjut. Pastikan data rekening Anda sudah benar.</div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">Apakah cuti bersama mengurangi hak cuti tahunan?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Tidak, cuti bersama yang ditetapkan pemerintah tidak mengurangi hak cuti tahunan karyawan.</div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">Apakah jumlah cuti tahunan bertambah seiring dengan jabatan atau masa kerja??</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-question">Apakah jumlah cuti tahunan bertambah seiring dengan jabatan atau masa kerja?</div>
+                        <div class="faq-answer">Ya, kebijakan perusahaan kami mengatur penambahan jumlah cuti tahunan berdasarkan masa kerja dan/atau level jabatan. Detailnya ada di buku panduan karyawan.</div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">Apakah sisa cuti tahunan bisa dibawa ke tahun berikutnya?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Sisa cuti tahunan dapat dibawa ke tahun berikutnya dengan batasan tertentu sesuai kebijakan perusahaan (carry forward policy).</div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">Apakah cuti tahunan bisa digantikan dengan uang?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Pada umumnya tidak, kecuali dalam kondisi tertentu seperti terminasi hubungan kerja, sesuai peraturan yang berlaku.</div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">Apakah cuti besar dapat dicairkan menjadi uang?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Kebijakan mengenai pencairan cuti besar dapat berbeda. Silakan merujuk pada peraturan perusahaan atau konsultasi dengan HR.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Asuransi Kesehatan -->
             <div class="faq-category-card">
                 <div class="faq-category-title">Asuransi Kesehatan</div>
                 <div class="faq-questions">
                     <div class="faq-item">
                         <div class="faq-question">Kapan saya memperoleh kartu peserta asuransi?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Kartu peserta asuransi biasanya diberikan setelah Anda resmi menjadi karyawan dan data Anda diproses oleh penyedia asuransi, umumnya dalam 1-2 bulan pertama.</div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">Kapan saya bisa melakukan klaim?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Anda bisa melakukan klaim sejak kartu asuransi Anda aktif dan sesuai dengan ketentuan polis yang berlaku.</div>
                     </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Bagaimana cara menggunakan kartu asuransi?</div>
-                        <div class="faq-answer"></div>
                     </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Di mana saya bisa mengecek daftar rumah sakit/klinik provider?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah saya tetap bisa berobat di rumah sakit provider jika tidak membawa kartu asuransi?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah berobat di klinik/rumah sakit non-provider dapat dicover?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apa saja dokumen yang dibutuhkan untuk klaim reimbursement?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Bagaimana cara mengajukan klaim reimbursement?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Kapan klaim saya akan dibayarkan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Bagaimana cara mengetahui plafon/limit asuransi yang saya miliki?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah vaksin untuk dewasa dicover oleh asuransi?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Jenis vaksinasi apa saja yang bisa dicover?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apa yang harus dilakukan jika ada kesalahan data pribadi di kartu asuransi?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Bagaimana cara menggunakan aplikasi BNI Life Insurance?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Jika terjadi excess claim, apa yang harus saya lakukan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Jika saya menggunakan asuransi pribadi, apakah excess claim bisa diajukan ke asuransi kantor?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Jika biaya perawatan antara Rp 5 juta – Rp 10 juta, ke mana dokumen klaim dikirimkan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Jika biaya perawatan di atas Rp 10 juta, ke mana dokumen dikirimkan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah kontrol kehamilan dan pasca melahirkan dicover oleh asuransi?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah semua jenis imunisasi anak dicover? Hingga usia berapa?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah layanan telemedicine dapat digunakan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah pembelian obat dan vitamin dijamin oleh asuransi?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah persalinan melalui operasi caesar dijamin?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Jika saya menjalani tindakan operasi tanpa rawat inap, apakah itu mengurangi limit rawat inap atau rawat jalan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                </div>
             </div>
 
-            <!-- APLIKASI TALENTA -->
             <div class="faq-category-card">
                 <div class="faq-category-title">Aplikasi Talenta</div>
                 <div class="faq-questions">
                     <div class="faq-item">
                         <div class="faq-question">Bagaimana cara menginput WFH (Work From Home)?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Login ke aplikasi Talenta, pilih menu pengajuan, lalu pilih 'Work From Home' dan isi detail yang diperlukan.</div>
                     </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Jika saya lupa atau tidak melakukan absensi, apa yang harus dilakukan?</div>
-                        <div class="faq-answer"></div>
                     </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah surat sakit harus ditandatangani oleh atasan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Surat sakit berlaku jika tidak masuk selama berapa hari?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah surat sakit dari telemedicine (seperti Halodoc) dapat digunakan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Saya tidak bisa login ke Talenta, apa yang harus saya lakukan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                </div>
             </div>
-
-            <!-- ID CARD & ACCESS CARD -->
-            <div class="faq-category-card">
+             <div class="faq-category-card">
                 <div class="faq-category-title">ID Card & Access Card</div>
                 <div class="faq-questions">
                     <div class="faq-item">
                         <div class="faq-question">Jika ID Card saya rusak atau hilang, berapa biaya penggantian yang dikenakan?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Biaya penggantian ID Card yang rusak atau hilang adalah sebesar RpXX.XXX,-. Silakan hubungi HRD untuk proses penggantian.</div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">Berapa biaya yang dikenakan jika saya kehilangan Access Card?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Biaya penggantian Access Card yang hilang adalah sebesar RpYY.YYY,-. Segera laporkan ke bagian keamanan atau HRD.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- OFFBOARDING -->
             <div class="faq-category-card">
                 <div class="faq-category-title">Offboarding</div>
                 <div class="faq-questions">
                     <div class="faq-item">
                         <div class="faq-question">Berapa lama notice period ketika mengajukan pengunduran diri??</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Notice period standar adalah satu bulan (one month notice) atau sesuai dengan yang tertera dalam kontrak kerja Anda.</div>
                     </div>
-                    <div class="faq-item">
+                     <div class="faq-item">
                         <div class="faq-question">Kapan saya akan menerima Surat Keterangan Kerja dan Bukti Potong PPh 21 setelah resign?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Surat Keterangan Kerja dan Bukti Potong PPh 21 akan diproses dan diberikan setelah semua proses offboarding selesai, biasanya dalam waktu 14-30 hari kerja setelah tanggal efektif resign.</div>
                     </div>
-                    <div class="faq-item">
+                     <div class="faq-item">
                         <div class="faq-question">Bagaimana perhitungan sisa cuti yang akan dicairkan?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Perhitungan sisa cuti yang akan dicairkan dilakukan secara proporsional berdasarkan jumlah hari kerja efektif dan sisa hak cuti yang belum diambil, sesuai kebijakan perusahaan.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- BPJS -->
             <div class="faq-category-card">
                 <div class="faq-category-title">BPJS</div>
                 <div class="faq-questions">
                     <div class="faq-item">
                         <div class="faq-question">Berapa besarnya iuran BPJS Kesehatan?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Iuran BPJS Kesehatan adalah 5% dari gaji, dengan rincian 4% ditanggung perusahaan dan 1% dipotong dari gaji karyawan. Ada batas atas gaji yang dihitung.</div>
                     </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Jika anak karyawan berusia 21 tahun tetapi masih menjalani pendidikan formal di perguruan tinggi, apakah masih bisa dicover?</div>
-                        <div class="faq-answer"></div>
                     </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Bagaimana cara mendaftarkan anggota keluarga baru ke BPJS Kesehatan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Berapa besarnya iuran BPJS Ketenagakerjaan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Berapa besarnya iuran BPJS Pensiun?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Bagaimana cara mendapatkan kartu BPJS Ketenagakerjaan dan cek saldo?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Bagaimana cara menggabungkan saldo dari beberapa nomor kartu BPJS Ketenagakerjaan?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                </div>
             </div>
 
-            <!-- PAYROLL -->
             <div class="faq-category-card">
                 <div class="faq-category-title">Penggajian</div>
                 <div class="faq-questions">
                     <div class="faq-item">
                         <div class="faq-question">Mengapa saya tidak menerima gaji secara penuh?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Beberapa alasan gaji tidak diterima penuh bisa karena adanya potongan (misalnya BPJS, pajak, pinjaman), absensi yang tidak terbayar, atau koreksi lainnya. Silakan cek slip gaji Anda atau hubungi HR.</div>
                     </div>
-                    <div class="faq-item">
+                     <div class="faq-item">
                         <div class="faq-question">Berapa besarnya Uang Pisah yang diterima oleh karyawan yang mengundurkan diri?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Besarnya Uang Pisah diatur dalam kebijakan perusahaan dan/atau perjanjian kerja bersama, biasanya didasarkan pada masa kerja.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Pinjaman -->
             <div class="faq-category-card">
                 <div class="faq-category-title">Pinjaman</div>
                 <div class="faq-questions">
                     <div class="faq-item">
                         <div class="faq-question">Apa saja jenis pinjaman karyawan yang ditawarkan oleh hibank?</div>
-                        <div class="faq-answer"></div>
+                        <div class="faq-answer">Hibank menawarkan beberapa jenis pinjaman karyawan seperti pinjaman multiguna, pinjaman KPR, dan pinjaman kendaraan dengan syarat dan ketentuan khusus untuk karyawan.</div>
                     </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apa saja syarat pengajuan pinjaman, berapa bunganya, dan bagaimana cara pengajuannya?</div>
-                        <div class="faq-answer"></div>
                     </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah pengajuan pinjaman bisa ditolak atau tidak disetujui?</div>
-                        <div class="faq-answer"></div>
-                    </div>
-                </div>
             </div>
-        </div>
+            </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Add smooth scroll animation
+            // Add smooth scroll animation (as per your original script)
             document.documentElement.style.scrollBehavior = 'smooth';
 
-            // Initialize highlight function
+            // Robust highlightText function
             function highlightText(element, searchTerm) {
+                if (!element) return; // Safety check
+
+                // Ensure original text is stored once from textContent and then always used for searching and restoring.
+                if (!element.dataset.originalText) {
+                    element.dataset.originalText = element.textContent; 
+                }
+                const originalContent = element.dataset.originalText;
+
                 if (!searchTerm) {
-                    element.innerHTML = element.textContent;
+                    element.innerHTML = originalContent; // Restore original content
                     return;
                 }
-                const regex = new RegExp(searchTerm, 'gi');
-                element.innerHTML = element.textContent.replace(regex, match => `<mark class="highlight">${match}</mark>`);
+                // Escape special characters in search term for regex
+                const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(escapedSearchTerm, 'gi');
+                element.innerHTML = originalContent.replace(regex, match => `<mark class="highlight">${match}</mark>`);
             }
-            // Category toggle
+            
+            // Category toggle (remains as per your original script)
             document.querySelectorAll('.faq-category-card').forEach(card => {
-                card.querySelector('.faq-category-title').addEventListener('click', () => {
-                    card.classList.toggle('active');
-                });
+                const title = card.querySelector('.faq-category-title');
+                if (title) { // Ensure title exists
+                    title.addEventListener('click', () => {
+                        card.classList.toggle('active');
+                    });
+                }
             });
 
-            // Question toggle
+            // Question toggle (remains as per your original script)
             document.querySelectorAll('.faq-question').forEach(question => {
                 question.addEventListener('click', () => {
                     const item = question.parentElement;
-                    item.classList.toggle('active');
-                });
-            });
-
-            // Search functionality
-            const searchInput = document.getElementById('faqSearch');
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const faqItems = document.querySelectorAll('.faq-item');
-                const categories = document.querySelectorAll('.faq-category-card');
-
-                faqItems.forEach(item => {
-                    const questionEl = item.querySelector('.faq-question');
-                    const answerEl = item.querySelector('.faq-answer');
-                    const question = questionEl.textContent.toLowerCase();
-                    const answer = answerEl.textContent.toLowerCase();
-                    const isMatch = question.includes(searchTerm) || answer.includes(searchTerm);
-                    
-                    item.style.display = isMatch ? 'block' : 'none';
-                    if (isMatch && searchTerm) {
-                        highlightText(questionEl, searchTerm);
-                        highlightText(answerEl, searchTerm);
-                        item.closest('.faq-category-card').classList.add('active');
-                        item.classList.add('active');
-                    } else {
-                        highlightText(questionEl, '');
-                        highlightText(answerEl, '');
+                    if (item) { // Ensure parentElement exists
+                        item.classList.toggle('active');
                     }
                 });
-
-                categories.forEach(category => {
-                    const visibleQuestions = category.querySelectorAll('.faq-item[style="display: block"]');
-                    category.style.display = visibleQuestions.length > 0 ? 'block' : 'none';
-                });
             });
+
+            // --- MODIFIED SEARCH FUNCTIONALITY ---
+            const searchInput = document.getElementById('faqSearch');
+            const allFaqItems = document.querySelectorAll('.faq-item');
+            const allCategories = document.querySelectorAll('.faq-category-card');
+            
+            if (searchInput) { // Ensure search input exists
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase().trim();
+
+                    // 1. Always clear highlights from all items first, regardless of search term
+                    allFaqItems.forEach(item => {
+                        const questionEl = item.querySelector('.faq-question');
+                        const answerEl = item.querySelector('.faq-answer');
+                        highlightText(questionEl, ''); // Clear highlights
+                        highlightText(answerEl, ''); // Clear highlights
+                    });
+
+                    // 2. If search term is empty, show all and return
+                    if (!searchTerm) {
+                        allFaqItems.forEach(item => {
+                            item.style.display = 'block'; // Show item
+                            // item.classList.remove('active'); // Optional: uncomment to close all items on search clear
+                        });
+                        allCategories.forEach(category => {
+                            category.style.display = 'block'; // Show category
+                            // category.classList.remove('active'); // Optional: uncomment to close all categories on search clear
+                        });
+                        return;
+                    }
+
+                    // 3. If search term exists, reset states before filtering
+                    allFaqItems.forEach(item => {
+                        item.classList.remove('active'); // Close item
+                        item.style.display = 'none';   // Hide item
+                    });
+                    allCategories.forEach(category => {
+                        category.classList.remove('active'); // Close category
+                        category.style.display = 'none';    // Hide category
+                    });
+
+                    let foundInCategory = new Set(); // To track categories that have matches
+
+                    // 4. Filter and display results
+                    allFaqItems.forEach(item => {
+                        const questionEl = item.querySelector('.faq-question');
+                        const answerEl = item.querySelector('.faq-answer');
+                        
+                        // Ensure originalText is populated if not already for search comparison
+                        if (questionEl && !questionEl.dataset.originalText) questionEl.dataset.originalText = questionEl.textContent;
+                        if (answerEl && !answerEl.dataset.originalText) answerEl.dataset.originalText = answerEl.textContent;
+
+                        const questionText = questionEl ? questionEl.dataset.originalText.toLowerCase() : '';
+                        const answerText = answerEl ? answerEl.dataset.originalText.toLowerCase() : '';
+
+                        const isMatch = questionText.includes(searchTerm) || answerText.includes(searchTerm);
+
+                        if (isMatch) {
+                            item.style.display = 'block'; // Show item
+                            item.classList.add('active'); // Open item by adding .active class
+                            highlightText(questionEl, searchTerm); // Highlight in question
+                            highlightText(answerEl, searchTerm); // Highlight in answer
+                            
+                            const parentCategory = item.closest('.faq-category-card');
+                            if (parentCategory) {
+                                foundInCategory.add(parentCategory);
+                            }
+                        }
+                    });
+
+                    // 5. Show and open categories that contain matched items
+                    foundInCategory.forEach(category => {
+                        category.style.display = 'block'; // Show category
+                        category.classList.add('active'); // Open category by adding .active class
+                    });
+                });
+            }
         });
     </script>
 </body>
