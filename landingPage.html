@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HiBank - Your Modern Banking Partner</title>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -32,9 +31,12 @@
             opacity: 0.8;
         }
 
-        .navbar {
+                .navbar {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding-top: 0.8rem; 
+            padding-bottom: 0.8rem; 
         }
 
         .navbar-brand {
@@ -44,39 +46,76 @@
         }
 
         .nav-link {
-            color: var(--primary-color);
+            color: #333; /* Default color for nav links */
             font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 0.5rem 1rem;
+            transition: color 0.3s ease;
+            padding-left: 0.8rem !important; 
+            padding-right: 0.8rem !important;
+            position: relative; /* Needed for the new span underline approach */
+        }
+        
+        .nav-link > span {
+            position: relative; /* For positioning the pseudo-element for underline */
+            display: inline-block;
         }
 
-        .nav-link.auth-btn {
-            background-color: transparent;
-            border-radius: 20px;
-            margin-left: 0.5rem;
-            padding: 0.5rem 1.5rem;
-            min-width: 100px;
-            text-align: center;
-        }
-
-        .nav-link:not(.auth-btn)::after {
+        /* Underline animation for nav links (excluding auth buttons if any) */
+        .nav-link:not(.auth-btn) > span::after {
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: 0;
+            bottom: -5px; /* Adjust this value to position the underline correctly below the text */
             left: 0;
             background-color: var(--secondary-color);
             transition: width 0.3s ease;
         }
 
-        .nav-link:not(.auth-btn):hover {
-            color: var(--secondary-color);
+        .nav-link:not(.auth-btn):hover > span::after {
+            width: 100%;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active { /* Style for active nav link and general hover */
+            color: var(--secondary-color) !important; /* Ensure hover color applies */
         }
 
-        .nav-link:not(.auth-btn):hover::after {
-            width: 100%;
+        .dropdown-item:hover {
+            color: var(--secondary-color); /* Hover color for dropdown items */
+        }
+
+
+        /* Custom styles for dropdown menu appearance */
+        .dropdown-menu {
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            border: 1px solid rgba(0,0,0,0.05);
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .dropdown-item {
+            font-weight: 500;
+            padding: 0.5rem 1.2rem; 
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(209, 91, 40, 0.05); 
+        }
+
+        /* Arrow indicator for dropdown toggle links */
+        .nav-item.dropdown > .nav-link.dropdown-toggle::after { /* Targets the ::after of the <a> tag */
+            content: '\f078'; /* Font Awesome caret down icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            display: inline-block;
+            margin-left: 0.35em;
+            vertical-align: 0.05em; 
+            border: none; /* Remove default Bootstrap arrow */
+            transition: transform 0.3s ease;
+        }
+         /* Rotate arrow when dropdown is open */
+        .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
+            transform: rotate(180deg);
         }
 
         .hero-section {
@@ -325,25 +364,55 @@
             position: relative;
             z-index: 1;
         }
+
+        .error-message {
+            color: #f8d7da; /* Light red for error text */
+            background-color: #721c24; /* Dark red background for visibility */
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block; /* Or block if you want it full width */
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
+            <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Bubble">
             <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="true">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-squad" target="_blank">HC Squad</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Feedback</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><span>Home</span></a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span>Services</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
+                            <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec">Loan Simulation</a></li>
+                            <!-- <li><a class="dropdown-item" href="#">eMeterai</a></li>
+                            <li><a class="dropdown-item" href="#">eKYC</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Electronic Stamps</a></li> -->
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><span>Feedback</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><span>Gallery</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><span>FAQ</span></a></li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <div id="user-greeting-status-area" style="padding-top: 70px; text-align: center; min-height: 60px; position: relative; z-index: 1000;">
+        <div class="container">
+             <span id="greetingContainer" style="font-size: 1.4rem; color: white; font-weight: 500;"></span><span id="typewriterCursor" style="font-size: 1.4rem; color: white; font-weight: 500; display: none;">|</span>
+             <p id="statusMessage" style="font-size: 0.9rem; color: #ffdddd; margin-top: 5px;"></p>
+             <button id="retryButton" class="btn btn-sm btn-outline-light mt-1" style="display:none;">Retry Authorization</button>
+        </div>
+    </div>
 
     <section class="hero-section">
         <div class="container">
@@ -519,7 +588,7 @@
                         <p>Efficient tools for managing and processing PDF documents.</p>
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" id="dataHubFeatureContainer" style="display: none;">
                     <a href="#" class="feature-card text-center">
                         <i class="fas fa-database feature-icon"></i>
                         <h3 class="feature-title">Data Hub</h3>
@@ -558,7 +627,6 @@
         });
     </script>
 
-    <!-- Javascript for Working Character Cards -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const workingCharacterGrid = document.getElementById('working-character-grid');
@@ -611,7 +679,6 @@
         });
     </script>
 
-    <!-- Javascript for Culture Cards -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cultureGrid = document.getElementById('culture-grid');
@@ -632,10 +699,9 @@
                         cultureGrid.classList.remove('expanded-view');
                     }
 
-                    // Reset animation flag after transition completes
                     setTimeout(() => {
                         isAnimating = false;
-                    }, 400); // Match the CSS transition duration
+                    }, 400); 
                 });
             }
 
@@ -666,7 +732,6 @@
 
     </script>
 
-    <!-- Javascript for Starr -->
     <script>
         let stars = [];
         let starCount = 50;
@@ -681,7 +746,7 @@
         }
 
         function draw() {
-            clear(); // Make canvas transparent
+            clear(); 
             for (let i = 0; i < stars.length; i++) {
                 stars[i].move();
                 stars[i].show();
@@ -766,6 +831,162 @@
     });
     </script>
 
+    <script>
+    // Ensure these elements are defined globally or within a scope accessible by fetchUserData and other functions that might use them.
+    const greetingContainerElement = document.getElementById('greetingContainer');
+    const typewriterCursorElement = document.getElementById('typewriterCursor');
+    const statusMessageElement = document.getElementById('statusMessage');
+    const retryButton = document.getElementById('retryButton');
+    let greetingInterval; // For managing the greeting animation
+
+    function stopGreetingCycle() {
+        if (greetingInterval) {
+            clearInterval(greetingInterval);
+            greetingInterval = null;
+        }
+        // Optionally hide cursor or reset text here if needed when cycle stops abruptly
+        if (typewriterCursorElement) typewriterCursorElement.style.display = 'none';
+    }
+    
+    // Dummy startGreetingCycle function - replace with your actual implementation if it exists
+    function startGreetingCycle(name) {
+        if (!greetingContainerElement || !typewriterCursorElement) {
+            console.warn("Greeting elements not found.");
+            return;
+        }
+        stopGreetingCycle(); // Stop any existing cycle
+
+        const greetings = [
+            `Hi, ${name}!`
+        ];
+        let currentGreetingIndex = 0;
+        let currentCharIndex = 0;
+        let isDeleting = false;
+        const typingSpeed = 100;
+        const deletingSpeed = 50;
+        const delayBetweenGreetings = 2000;
+
+        greetingContainerElement.textContent = ''; // Clear previous greeting
+        typewriterCursorElement.style.display = 'inline'; // Show cursor
+
+        function type() {
+            const currentText = greetings[currentGreetingIndex];
+            if (isDeleting) {
+                greetingContainerElement.textContent = currentText.substring(0, currentCharIndex - 1);
+                currentCharIndex--;
+            } else {
+                greetingContainerElement.textContent = currentText.substring(0, currentCharIndex + 1);
+                currentCharIndex++;
+            }
+
+            if (!isDeleting && currentCharIndex === currentText.length) {
+                setTimeout(() => isDeleting = true, delayBetweenGreetings);
+            } else if (isDeleting && currentCharIndex === 0) {
+                isDeleting = false;
+                currentGreetingIndex = (currentGreetingIndex + 1) % greetings.length;
+            }
+
+            const speed = isDeleting ? deletingSpeed : typingSpeed;
+            greetingInterval = setTimeout(type, speed);
+        }
+        type(); // Start the typing effect
+    }
+
+
+    function fetchUserData() {
+        if (!statusMessageElement || !retryButton || !greetingContainerElement || !typewriterCursorElement) {
+            console.error("One or more UI elements for user status are missing.");
+            return;
+        }
+
+        statusMessageElement.textContent = "Fetching your information, please wait...";
+        statusMessageElement.classList.remove("error-message"); // Use a consistent class name for errors
+        statusMessageElement.style.color = "#ffdddd"; // Reset color
+        retryButton.style.display = 'none';
+        stopGreetingCycle(); 
+
+        google.script.run
+        .withSuccessHandler(function(response) {
+            console.log("Response from server (getUserEmail):", response);
+
+            // Hide status message by default, show only on error or specific messages
+            statusMessageElement.style.display = 'none'; 
+            statusMessageElement.textContent = "";
+
+            if (response && response.isAuthorized && response.name) {
+                console.log("User Name:", response.name);
+                console.log("User Email:", response.email); 
+                console.log("Is Authorized:", response.isAuthorized);
+                console.log("Job Level:", response.joblevel); // Log job level
+
+                startGreetingCycle(response.name); 
+
+                // ---- START: Added code for Data Hub visibility ----
+                const dataHubFeatureContainer = document.getElementById('dataHubFeatureContainer');
+                if (dataHubFeatureContainer) {
+                    // Ensure joblevel is present and then check its value (case-insensitive)
+                    if (response.joblevel && response.joblevel.toLowerCase() === 'chief') {
+                        dataHubFeatureContainer.style.display = 'block'; // Or 'flex' or appropriate display type
+                    } else {
+                        dataHubFeatureContainer.style.display = 'none'; // Explicitly hide if not chief or jobLevel is missing
+                    }
+                } else {
+                    console.warn("Data Hub feature container ('dataHubFeatureContainer') not found in the DOM.");
+                }
+                // ---- END: Added code for Data Hub visibility ----
+
+            } else if (response && response.error) {
+                greetingContainerElement.style.display = 'none';
+                typewriterCursorElement.style.display = 'none';
+                statusMessageElement.textContent = "Error: " + response.error;
+                statusMessageElement.classList.add("error-message"); // Ensure this class is defined in your CSS for error styling
+                statusMessageElement.style.color = "#721c24"; // Example error color
+                statusMessageElement.style.display = 'block';
+                retryButton.style.display = 'block';
+                console.error("Server error details:", response.error);
+            } else { 
+                greetingContainerElement.style.display = 'none';
+                typewriterCursorElement.style.display = 'none';
+                let message = "An unexpected response was received or access was denied.";
+                if(response && !response.isAuthorized && response.error) {
+                    message = response.error;
+                } else if (response && response.isAuthorized && !response.name) {
+                    message = "Could not retrieve your name, though you are authorized.";
+                }
+                statusMessageElement.textContent = message;
+                statusMessageElement.classList.add("error-message");
+                statusMessageElement.style.color = "#721c24";
+                statusMessageElement.style.display = 'block';
+                retryButton.style.display = 'block';
+                console.warn("Authorization/data issue or unexpected response:", response);
+            }
+        })
+        .withFailureHandler(function(error) {
+            stopGreetingCycle();
+            if (greetingContainerElement) greetingContainerElement.style.display = 'none';
+            if (typewriterCursorElement) typewriterCursorElement.style.display = 'none';
+            
+            if (statusMessageElement) {
+                statusMessageElement.textContent = "Failed to communicate with the server: " + error.message + ". You may need to authorize the script.";
+                statusMessageElement.classList.add("error-message");
+                statusMessageElement.style.color = "#721c24";
+                statusMessageElement.style.display = 'block';
+            }
+            if (retryButton) retryButton.style.display = 'block';
+            console.error("Client-side error calling server (google.script.run):", error);
+        })
+        .getUserEmail(); // This still calls the getUserEmail function in Code.gs
+    }
+
+    window.onload = function() {
+        fetchUserData(); 
+        // Initialize retry button functionality if it exists
+        if (retryButton) {
+            retryButton.addEventListener('click', fetchUserData);
+        }
+    };
+    </script>
+
 
 </body>
 <footer class="bg-white py-5">
@@ -797,12 +1018,12 @@
                         <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Data Hub</a></li>
                     </ul>
                 </div>
-    
+        
             </div>
             <hr class="my-4">
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0 text-muted">© 2025 HiBank-Human Capital. All rights reserved.</p>
+                    <p class="mb-0 text-muted">© 2025 Human Capital. All rights reserved.</p>
                 </div>
             </div>
         </div>
