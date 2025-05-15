@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Human Capital Feedback Form - HiBank</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         :root {
             --primary-color: #176980; /* Deep teal */
@@ -15,106 +14,214 @@
             --accent-color: #FBBF24; /* Amber for stars */
             --success-color: #10B981; /* Emerald */
             --error-color: #EF4444; /* Red */
-            --light-gray: #f3f4f6;
-            --medium-gray: #9ca3af;
+            --light-gray: #f3f4f6; /* Tailwind gray-100 */
+            --medium-gray: #9ca3af; /* Tailwind gray-400 */
+            --dark-gray: #4b5563; /* Tailwind gray-600 for text */
+            --border-gray: #d1d5db; /* Tailwind gray-300 for borders */
         }
 
         body {
             font-family: 'Jost', sans-serif;
-            background: linear-gradient(135deg, var(--light-gray), #e5e7eb); /* Slightly adjusted gradient */
+            background: linear-gradient(135deg, var(--light-gray), #e5e7eb);
+            /* padding-top: 70px; /* REMOVED: This was causing the blank space */
+            margin: 0; /* Reset default margin */
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale; 
         }
 
-        /* Custom focus style for better visibility, Tailwind's ring is also good */
-        .form-input:focus, .form-select:focus {
-            border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 3px rgba(23, 105, 128, 0.3) !important;
-            outline: none;
-        }
+        /* --- Custom Styles to Replace Tailwind --- */
 
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
+        /* Layout & Sizing */
+        .min-h-screen-custom { min-height: 100vh; }
+        .w-full-custom { width: 100%; }
+        .max-w-2xl-custom { max-width: 42rem; }
+        .mx-auto-custom { margin-left: auto; margin-right: auto; }
+        .w-20-custom { width: 5rem; }
+        .h-20-custom { height: 5rem; }
+        .h-5-custom { height: 1.25rem; }
+        .w-5-custom { width: 1.25rem; }
+
+
+        /* Flexbox & Grid */
+        .flex-custom { display: flex; }
+        .items-center-custom { align-items: center; }
+        .justify-center-custom { justify-content: center; }
+        .justify-end-custom { justify-content: flex-end; }
+        .flex-col-custom { flex-direction: column; }
+        
+
+        /* Spacing */
+        .py-12-custom { padding-top: 3rem; padding-bottom: 3rem; }
+        .px-4-custom { padding-left: 1rem; padding-right: 1rem; }
+        .p-6-custom { padding: 1.5rem; }
+        .mb-1-custom { margin-bottom: 0.25rem; }
+        .mb-2-custom { margin-bottom: 0.5rem; }
+        .mb-5-custom { margin-bottom: 1.25rem; }
+        .mb-6-custom { margin-bottom: 1.5rem; }
+        .mb-8-custom { margin-bottom: 2rem; }
+        .mt-2-custom { margin-top: 0.5rem; }
+        .ml-3-custom { margin-left: 0.75rem; }
+        .pt-6-custom { padding-top: 1.5rem; }
+        .px-3-custom { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .py-2-5-custom { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+        .px-6-custom { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .px-8-custom { padding-left: 2rem; padding-right: 2rem; }
+
+        .space-y-6-custom > * + * { margin-top: 1.5rem; }
+        .space-y-3-custom > * + * { margin-top: 0.75rem; }
+        
+        /* Typography */
+        .text-sm-custom { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-md-custom { font-size: 1rem; line-height: 1.5rem; }
+        .text-lg-custom { font-size: 1.125rem; line-height: 1.75rem; }
+        .text-xl-custom { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-2xl-custom { font-size: 1.5rem; line-height: 2rem; }
+        .text-3xl-custom { font-size: 1.875rem; line-height: 2.25rem; }
+        .text-gray-600-custom { color: var(--dark-gray); }
+        .text-gray-700-custom { color: #374151; }
+        .text-red-500-custom { color: var(--error-color); }
+        .text-white-custom { color: #fff; }
+        .font-medium-custom { font-weight: 500; }
+        .font-semibold-custom { font-weight: 600; }
+        .font-bold-custom { font-weight: 700; }
+        .text-center-custom { text-align: center; }
+        .block-custom { display: block; }
+
+        /* Backgrounds */
+        .bg-white-custom { background-color: #fff; }
+
+        /* Borders */
+        .rounded-md-custom { border-radius: 0.375rem; }
+        .rounded-lg-custom { border-radius: 0.5rem; }
+        .rounded-xl-custom { border-radius: 0.75rem; }
+        .border-gray-300-custom { border-color: var(--border-gray); }
+        .border-custom { border-width: 1px; border-style: solid; }
+
+        /* Effects */
+        .shadow-sm-custom { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .shadow-2xl-custom { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .transition-all-custom { transition-property: all; }
+        .duration-300-custom { transition-duration: 300ms; }
+        .hover-shadow-3xl-custom:hover { box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3); }
+
+        /* Interactivity */
+        .cursor-pointer-custom { cursor: pointer; }
+        .cursor-not-allowed-custom { cursor: not-allowed; }
+
+        /* Visibility */
+        .hidden-custom { display: none; }
+
+        /* SVG Specific */
+        .animate-spin-custom { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .svg-text-white-custom { fill: white; }
+        .svg-ml-neg-1-custom { margin-left: -0.25rem; }
+        .svg-mr-3-custom { margin-right: 0.75rem; }
+
+        /* Responsive Design Replacements */
+        @media (min-width: 640px) { /* sm */
+            .sm-w-auto-custom { width: auto; }
+            .sm-flex-row-custom { flex-direction: row; }
+            .sm-space-y-0-custom > * + * { margin-top: 0; }
+            .sm-space-x-4-custom > * + * { margin-left: 1rem; }
+            .sm-text-4xl-custom { font-size: 2.25rem; line-height: 2.5rem; }
+            .sm-py-12-custom { padding-top: 3rem; padding-bottom: 3rem; }
+            .sm-px-6-custom { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .sm-p-10-custom { padding: 2.5rem; }
+        }
+        @media (min-width: 1024px) { /* lg */
+            .lg-px-8-custom { padding-left: 2rem; padding-right: 2rem; }
+        }
+        /* --- End of Custom Styles to Replace Tailwind --- */
+
+        /* Navbar Styles */
+        .navbar { 
+            background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding-top: 0.8rem; 
-            padding-bottom: 0.8rem; 
+            /* padding-top/bottom are handled by Bootstrap or can be adjusted here if needed */
         }
 
-        .navbar-brand {
-            color: var(--primary-color);
+        .navbar-brand-custom-wrapper { 
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        .navbar-brand-custom-wrapper img {
+            height: 35px; 
+            width: auto;
+            margin-right: 0.75rem;
+        }
+        .navbar-brand-custom-wrapper .navbar-brand-text {
+            color: var(--primary-color) !important;
             font-weight: 600;
-            font-size: 1.5rem;
+            font-size: 1.15rem; 
+            line-height: 1.2;
         }
 
-        .nav-link {
-            color: #333; /* Default color for nav links */
+        .navbar-nav .nav-link {
+            color: #333 !important; 
             font-weight: 500;
             transition: color 0.3s ease;
             padding-left: 0.8rem !important; 
             padding-right: 0.8rem !important;
-            position: relative; /* Needed for the new span underline approach */
+            position: relative; 
         }
         
-        .nav-link > span {
-            position: relative; /* For positioning the pseudo-element for underline */
+        .navbar-nav .nav-link > span {
+            position: relative; 
             display: inline-block;
         }
 
-        /* Underline animation for nav links (excluding auth buttons if any) */
-        .nav-link:not(.auth-btn) > span::after {
+        .navbar-nav .nav-link:not(.auth-btn) > span::after {
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: -5px; /* Adjust this value to position the underline correctly below the text */
+            bottom: -5px; 
             left: 0;
             background-color: var(--secondary-color);
             transition: width 0.3s ease;
         }
 
-        .nav-link:not(.auth-btn):hover > span::after {
+        .navbar-nav .nav-link:not(.auth-btn):hover > span::after {
             width: 100%;
         }
         
-        .nav-link:hover,
-        .nav-link.active { /* Style for active nav link and general hover */
-            color: var(--secondary-color) !important; /* Ensure hover color applies */
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active { 
+            color: var(--secondary-color) !important; 
         }
 
-        .dropdown-item:hover {
-            color: var(--secondary-color); /* Hover color for dropdown items */
+        .navbar-nav .dropdown-item:hover { 
+            color: var(--secondary-color) !important; 
+            background-color: rgba(209, 91, 40, 0.05) !important; 
         }
 
-
-        /* Custom styles for dropdown menu appearance */
-        .dropdown-menu {
+        .navbar-nav .dropdown-menu { 
             border-radius: 8px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
             border: 1px solid rgba(0,0,0,0.05);
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
         }
-        .dropdown-item {
+        .navbar-nav .dropdown-item { 
             font-weight: 500;
             padding: 0.5rem 1.2rem; 
             transition: background-color 0.2s ease, color 0.2s ease;
         }
-        .dropdown-item:hover {
-            background-color: rgba(209, 91, 40, 0.05); 
-        }
 
-        /* Arrow indicator for dropdown toggle links */
-        .nav-item.dropdown > .nav-link.dropdown-toggle::after { /* Targets the ::after of the <a> tag */
-            content: '\f078'; /* Font Awesome caret down icon */
+        .navbar-nav .nav-item.dropdown > .nav-link.dropdown-toggle::after { 
+            content: '\f078'; 
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             display: inline-block;
             margin-left: 0.35em;
             vertical-align: 0.05em; 
-            border: none; /* Remove default Bootstrap arrow */
+            border: none; 
             transition: transform 0.3s ease;
         }
-         /* Rotate arrow when dropdown is open */
-        .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
+        .navbar-nav .nav-item.dropdown.show > .nav-link.dropdown-toggle::after { 
             transform: rotate(180deg);
         }
 
@@ -123,9 +230,12 @@
             color: white;
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0.625rem 1.5rem; 
+            border-radius: 0.375rem; 
+            font-weight: 500; 
         }
         .btn-primary:hover {
-            background-color: #b94d22 !important; /* Darker shade for hover */
+            background-color: #b94d22 !important; 
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
@@ -134,7 +244,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .btn-primary:disabled {
-            background-color: #e0a992 !important; /* Lighter, desaturated for disabled */
+            background-color: #e0a992 !important; 
             cursor: not-allowed;
             transform: translateY(0);
             box-shadow: none;
@@ -145,138 +255,128 @@
             border: 1px solid var(--primary-color);
             color: var(--primary-color);
             transition: all 0.3s ease;
+            padding: 0.625rem 1.5rem; 
+            border-radius: 0.375rem; 
         }
         .btn-secondary:hover {
             background-color: rgba(23, 105, 128, 0.1);
             transform: translateY(-1px);
         }
 
-
-        /* Star Rating Enhancements */
-        .star-rating-container {
-            display: flex;
-            align-items: center;
-        }
+        .star-rating-container { display: flex; align-items: center; }
         .star-rating button {
-            color: var(--medium-gray); /* Default star color */
+            color: var(--medium-gray); 
             transition: transform 0.2s ease, color 0.2s ease;
-            font-size: 1.75rem; /* Larger stars */
+            font-size: 1.75rem; 
             padding: 0.25rem;
-            background: none;
-            border: none;
-            cursor: pointer;
+            background: none; border: none; cursor: pointer;
         }
-        .star-rating button:hover,
-        .star-rating button:focus {
-            transform: scale(1.2);
-            outline: none;
-        }
-        .star-rating button.active { /* Filled star */
-            color: var(--accent-color) !important;
-        }
-        .star-rating button.hover-active { /* For hover effect on unselected stars */
-             color: #fde68a !important; /* Lighter amber for hover fill */
-        }
+        .star-rating button:hover, .star-rating button:focus { transform: scale(1.2); outline: none; }
+        .star-rating button.active { color: var(--accent-color) !important; }
+        .star-rating button.hover-active { color: #fde68a !important; }
 
-
-        /* Success/Error Popup (Modal) */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
             z-index: 1000;
         }
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
         .modal-content {
-            background: white;
-            padding: 2rem; /* More padding */
-            border-radius: 1rem; /* Larger radius */
+            background: white; padding: 2rem; border-radius: 1rem; 
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-            text-align: center;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-            width: 90%;
-            max-width: 450px; /* Max width for modal */
+            text-align: center; transform: scale(0.9); transition: transform 0.3s ease;
+            width: 90%; max-width: 450px; 
         }
-        .modal-overlay.show .modal-content {
-            transform: scale(1);
-        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
 
-        .modal-icon .checkmark__check {
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: stroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards;
-        }
-        .modal-icon .error__cross_1 {
-            stroke-dasharray: 30;
-            stroke-dashoffset: 30;
-            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards;
-        }
-         .modal-icon .error__cross_2 {
-            stroke-dasharray: 30;
-            stroke-dashoffset: 30;
-            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.3s forwards;
-        }
+        .modal-icon .checkmark__check { stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards; }
+        .modal-icon .error__cross_1 { stroke-dasharray: 30; stroke-dashoffset: 30; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards; }
+        .modal-icon .error__cross_2 { stroke-dasharray: 30; stroke-dashoffset: 30; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.3s forwards; }
+        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
 
-        @keyframes stroke {
-            100% { stroke-dashoffset: 0; }
+        .form-input-custom, .form-select-custom {
+            width: 100%; border: 1px solid var(--border-gray); 
+            border-radius: 0.375rem; padding: 0.625rem 0.75rem; 
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); 
         }
-
-        /* Input error styling */
-        .form-input.error, .form-select.error {
+        .form-input-custom:focus, .form-select-custom:focus { 
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 3px rgba(23, 105, 128, 0.3) !important;
+            outline: none;
+        }
+        .form-input-custom.error, .form-select-custom.error { 
             border-color: var(--error-color) !important;
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3) !important;
         }
-        .error-message {
-            color: var(--error-color);
-            font-size: 0.875rem; /* text-sm */
-            margin-top: 0.25rem; /* mt-1 */
-        }
 
-        /* HiBank Logo Placeholder */
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem; /* mb-6 */
-        }
+        .error-message { color: var(--error-color); font-size: 0.875rem; margin-top: 0.25rem; }
+        .error-message.hidden-custom { display: none; }
+
+        .logo-container { display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
         .logo-placeholder {
-            width: 50px; /* Adjust as needed */
-            height: 50px;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.5rem; /* rounded-lg */
-            font-weight: 600; /* font-semibold */
-            font-size: 1.5rem; /* text-2xl */
+            width: 50px; height: 50px; background-color: var(--primary-color);
+            color: white; display: flex; align-items: center; justify-content: center;
+            border-radius: 0.5rem; font-weight: 600; font-size: 1.5rem; 
+        }
+        
+        .page-container {
+            min-height: 100vh;
+            padding-top: 3rem; padding-bottom: 3rem; 
+            padding-left: 1rem; padding-right: 1rem; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        @media (min-width: 640px) { 
+            .page-container {
+                padding-left: 1.5rem; padding-right: 1.5rem; 
+            }
+        }
+        @media (min-width: 1024px) { 
+            .page-container {
+                padding-left: 2rem; padding-right: 2rem; 
+            }
         }
 
+        .form-card {
+            max-width: 42rem; width: 100%;
+            margin-left: auto; margin-right: auto;
+            background-color: #fff; border-radius: 0.75rem; 
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); 
+            padding: 1.5rem; 
+            transition: box-shadow 300ms ease-in-out;
+        }
+        .form-card:hover { box-shadow: 0 30px 60px -15px rgba(0,0,0,0.25); }
+        @media (min-width: 640px) { 
+            .form-card { padding: 2.5rem; }
+        }
+        
+        .form-buttons-container {
+            display: flex; flex-direction: column;
+            justify-content: flex-end; padding-top: 1.5rem; 
+        }
+        .form-buttons-container > * + * { margin-top: 0.75rem; }
+
+        @media (min-width: 640px) { 
+            .form-buttons-container { flex-direction: row; }
+            .form-buttons-container > * + * { margin-top: 0; margin-left: 1rem; }
+            .sm-w-auto-custom { width: auto; } 
+        }
     </style>
 </head>
-<body class="antialiased">
-
+<body> 
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-            <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Bubble">
-            <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="true">
+            <a class="navbar-brand-custom-wrapper" href="#">
+                <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="HiBank Logo" 
+                     onerror="this.style.display='none'; this.nextElementSibling.classList.add('ms-0');"> 
+                <span class="navbar-brand-text">Human Capital Innovation Hub</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="#"><span>Home</span></a></li>
                     <li class="nav-item dropdown">
@@ -285,7 +385,6 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
                             <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec">Loan Simulation</a></li>
-                            <!-- <li><hr class="dropdown-divider"></li> -->
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
@@ -297,52 +396,36 @@
         </div>
     </nav>
     
-    <div id="feedbackModal" class="modal-overlay">
-        <div class="modal-content">
-            <div id="modalIconContainer" class="modal-icon w-20 h-20 mx-auto mb-5">
-                </div>
-            <h3 id="modalTitle" class="text-2xl font-semibold mb-2"></h3>
-            <p id="modalMessage" class="text-gray-600 mb-6"></p>
-            <button id="modalCloseButton" class="px-8 py-2.5 text-white rounded-md btn-primary w-full sm:w-auto">Close</button>
+    <div id="feedbackModal" class="modal-overlay"> 
+        <div class="modal-content"> 
+            <div id="modalIconContainer" class="modal-icon w-20-custom h-20-custom mx-auto-custom mb-5-custom"></div>
+            <h3 id="modalTitle" class="text-2xl-custom font-semibold-custom mb-2-custom"></h3>
+            <p id="modalMessage" class="text-gray-600-custom mb-6-custom"></p>
+            <button id="modalCloseButton" class="btn-primary w-full-custom sm-w-auto-custom">Close</button> 
         </div>
     </div>
 
-    <div class="min-h-screen py-8 sm:py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-        <div class="max-w-2xl w-full mx-auto bg-white rounded-xl shadow-2xl p-6 sm:p-10 transition-all duration-300 hover:shadow-3xl">
-            
+    <div class="page-container"> 
+        <div class="form-card"> 
             <div class="logo-container">
                 <div class="logo-placeholder">HB</div>
             </div>
 
-            <div class="text-center mb-8">
-                <h1 class="text-3xl sm:text-4xl font-bold" style="color: var(--primary-color);">Human Capital Feedback</h1>
-                <p class="mt-2 text-md" style="color: var(--secondary-color);">Your insights help us improve our services.</p>
+            <div class="text-center-custom mb-8-custom">
+                <h1 class="text-3xl-custom sm-text-4xl-custom font-bold-custom" style="color: var(--primary-color);">Human Capital Feedback</h1>
+                <p class="mt-2-custom text-md-custom" style="color: var(--secondary-color);">Your insights help us improve our services.</p>
             </div>
 
-            <form id="feedbackForm" class="space-y-6" novalidate>
+            <form id="feedbackForm" class="space-y-6-custom" novalidate>
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Your Email <span class="text-red-500">*</span></label>
-                    <input type="email" id="email" name="email" required class="w-full border-gray-300 rounded-md px-3 py-2.5 form-input shadow-sm" placeholder="you@example.com">
-                    <p class="error-message hidden" id="emailError"></p>
+                    <label for="email" class="block-custom text-sm-custom font-medium-custom text-gray-700-custom mb-1-custom">Your Email <span class="text-red-500-custom">*</span></label>
+                    <input type="email" id="email" name="email" required class="form-input-custom" placeholder="you@example.com">
+                    <p class="error-message hidden-custom" id="emailError"></p>
                 </div>
 
                 <div>
-                    <label for="division" class="block text-sm font-medium text-gray-700 mb-1">Division <span class="text-red-500">*</span></label>
-                    <select id="division" name="division" required class="w-full border-gray-300 rounded-md px-3 py-2.5 form-select shadow-sm">
-                        <option value="">Select Division</option>
-                        <option value="hr">Human Resources</option>
-                        <option value="finance">Finance</option>
-                        <option value="it">Information Technology</option>
-                        <option value="operations">Operations</option>
-                        <option value="marketing">Marketing</option>
-                        <option value="legal">Legal</option>
-                    </select>
-                    <p class="error-message hidden" id="divisionError"></p>
-                </div>
-
-                <div>
-                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Feedback Category <span class="text-red-500">*</span></label>
-                    <select id="category" name="category" required class="w-full border-gray-300 rounded-md px-3 py-2.5 form-select shadow-sm">
+                    <label for="category" class="block-custom text-sm-custom font-medium-custom text-gray-700-custom mb-1-custom">Feedback Category <span class="text-red-500-custom">*</span></label>
+                    <select id="category" name="category" required class="form-select-custom">
                         <option value="">Select Category</option>
                         <option value="service_quality">Service Quality</option>
                         <option value="process_improvement">Process Improvement</option>
@@ -352,56 +435,35 @@
                         <option value="technology_tools">Technology & Tools</option>
                         <option value="other">Other</option>
                     </select>
-                    <p class="error-message hidden" id="categoryError"></p>
+                    <p class="error-message hidden-custom" id="categoryError"></p>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Overall Satisfaction <span class="text-red-500">*</span></label>
+                    <label class="block-custom text-sm-custom font-medium-custom text-gray-700-custom mb-2-custom">Overall Satisfaction <span class="text-red-500-custom">*</span></label>
                     <div class="star-rating-container">
-                        <div class="star-rating" role="radiogroup" aria-label="Overall Satisfaction Rating">
-                            </div>
-                        <span id="ratingLabel" class="ml-3 text-sm text-gray-600 font-medium"></span>
+                        <div class="star-rating" role="radiogroup" aria-label="Overall Satisfaction Rating"></div>
+                        <span id="ratingLabel" class="ml-3-custom text-sm-custom text-gray-600-custom font-medium-custom"></span>
                     </div>
                      <input type="hidden" id="satisfactionRating" name="satisfactionRating" value="0">
-                    <p class="error-message hidden" id="ratingError"></p>
+                    <p class="error-message hidden-custom" id="ratingError"></p>
                 </div>
 
                 <div>
-                    <label for="feedbackDetails" class="block text-sm font-medium text-gray-700 mb-1">Feedback Details <span class="text-red-500">*</span></label>
-                    <textarea
-                        id="feedbackDetails"
-                        name="feedbackDetails"
-                        rows="5"
-                        required
-                        class="w-full border-gray-300 rounded-md px-3 py-2 form-input shadow-sm"
-                        placeholder="Please provide specific details about your experience..."
-                        aria-describedby="feedbackDetailsError"
-                    ></textarea>
-                    <p class="error-message hidden" id="feedbackDetailsError"></p>
+                    <label for="feedbackDetails" class="block-custom text-sm-custom font-medium-custom text-gray-700-custom mb-1-custom">Feedback Details <span class="text-red-500-custom">*</span></label>
+                    <textarea id="feedbackDetails" name="feedbackDetails" rows="5" required class="form-input-custom" placeholder="Please provide specific details about your experience..." aria-describedby="feedbackDetailsError"></textarea>
+                    <p class="error-message hidden-custom" id="feedbackDetailsError"></p>
                 </div>
 
                 <div>
-                    <label for="suggestions" class="block text-sm font-medium text-gray-700 mb-1">Suggestions for Improvement</label>
-                    <textarea
-                        id="suggestions"
-                        name="suggestions"
-                        rows="4"
-                        class="w-full border-gray-300 rounded-md px-3 py-2 form-input shadow-sm"
-                        placeholder="What can we do better? (Optional)"
-                    ></textarea>
+                    <label for="suggestions" class="block-custom text-sm-custom font-medium-custom text-gray-700-custom mb-1-custom">Suggestions for Improvement</label>
+                    <textarea id="suggestions" name="suggestions" rows="4" class="form-input-custom" placeholder="What can we do better? (Optional)"></textarea>
                 </div>
                 
-                <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6">
-                    <button type="button" id="cancelButton" class="px-6 py-2.5 rounded-md btn-secondary w-full sm:w-auto">
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        id="submitButton"
-                        class="px-6 py-2.5 text-white rounded-md btn-primary w-full sm:w-auto flex items-center justify-center"
-                    >
+                <div class="form-buttons-container"> 
+                    <button type="button" id="cancelButton" class="btn-secondary w-full-custom sm-w-auto-custom">Cancel</button>
+                    <button type="submit" id="submitButton" class="btn-primary w-full-custom sm-w-auto-custom flex-custom items-center-custom justify-center-custom">
                         <span id="submitButtonText">Submit Feedback</span>
-                        <svg id="submitSpinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg id="submitSpinner" class="animate-spin-custom svg-ml-neg-1-custom svg-mr-3-custom h-5-custom w-5-custom svg-text-white-custom hidden-custom" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -410,6 +472,33 @@
             </form>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Custom JavaScript for Navbar Toggler (Bootstrap 5 compatible)
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+
+            if (navbarToggler && navbarCollapse) {
+                document.addEventListener('click', function(event) {
+                    const isClickInsideNav = navbarCollapse.contains(event.target);
+                    const isToggler = navbarToggler.contains(event.target);
+                    
+                    if (!isClickInsideNav && !isToggler && navbarCollapse.classList.contains('show')) {
+                        const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                        if (bsCollapse) {
+                            bsCollapse.hide();
+                        } else {
+                            new bootstrap.Collapse(navbarCollapse, { toggle: false }).hide();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 
     <script>
         // --- Configuration ---
@@ -440,37 +529,35 @@
             let iconSvg = '';
             if (type === 'success') {
                 modalIconContainer.style.color = 'var(--success-color)';
-                // Corrected: Removed backslashes from template literal
-                iconSvg = `<svg class="checkmark w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                               <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" stroke="currentColor" stroke-width="3" style="stroke-dasharray: 166; stroke-dashoffset: 166; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards, fill_success 0.4s ease-in-out 0.4s forwards;" />
-                               <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" stroke="currentColor" stroke-width="4"/>
-                           </svg>
-                           <style> @keyframes fill_success { 100% { box-shadow: inset 0px 0px 0px 30px var(--success-color); } } </style>`;
+                iconSvg = `<svg class="checkmark w-full-custom h-full-custom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" stroke="currentColor" stroke-width="3" style="stroke-dasharray: 166; stroke-dashoffset: 166; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards, fill_success 0.4s ease-in-out 0.4s forwards;" />
+                                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" stroke="currentColor" stroke-width="4"/>
+                            </svg>
+                            <style> @keyframes fill_success { 100% { box-shadow: inset 0px 0px 0px 30px var(--success-color); } } </style>`;
             } else if (type === 'error') {
                 modalIconContainer.style.color = 'var(--error-color)';
-                // Corrected: Removed backslashes from template literal
-                iconSvg = `<svg class="error_cross w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                iconSvg = `<svg class="error_cross w-full-custom h-full-custom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
                                 <circle class="error__circle" cx="26" cy="26" r="25" fill="none" stroke="currentColor" stroke-width="3" style="stroke-dasharray: 166; stroke-dashoffset: 166; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards, fill_error 0.4s ease-in-out 0.4s forwards;" />
                                 <path class="error__cross_1" stroke="currentColor" stroke-width="4" d="M16 16 36 36" />
                                 <path class="error__cross_2" stroke="currentColor" stroke-width="4" d="M36 16 16 36" />
-                           </svg>
-                           <style> @keyframes fill_error { 100% { box-shadow: inset 0px 0px 0px 30px var(--error-color); } } </style>`;
+                            </svg>
+                            <style> @keyframes fill_error { 100% { box-shadow: inset 0px 0px 0px 30px var(--error-color); } } </style>`;
             }
             modalIconContainer.innerHTML = iconSvg;
             modalTitle.textContent = title;
             modalTitle.style.color = type === 'success' ? 'var(--success-color)' : 'var(--error-color)';
             modalMessage.textContent = message;
-            // Corrected: Removed backslashes from template literal
-            modalCloseButton.className = `px-8 py-2.5 text-white rounded-md w-full sm:w-auto ${type === 'success' ? 'btn-primary' : 'btn-primary'}`; // Can customize button style per type
+            modalCloseButton.className = `btn-primary w-full-custom sm-w-auto-custom`; // Simplified, color handled by style below
             if (type === 'success') modalCloseButton.style.backgroundColor = 'var(--success-color)';
             else if (type === 'error') modalCloseButton.style.backgroundColor = 'var(--error-color)';
+            else modalCloseButton.style.backgroundColor = 'var(--secondary-color)';
+
 
             modal.classList.add('show');
         }
 
         function closeModal() {
             modal.classList.remove('show');
-             // Reset modal button color if changed
             modalCloseButton.style.backgroundColor = 'var(--secondary-color)';
         }
 
@@ -479,12 +566,14 @@
             const inputElement = document.getElementById(elementId);
             if (errorElement) {
                 errorElement.textContent = message;
-                errorElement.classList.remove('hidden');
+                errorElement.classList.remove('hidden-custom');
             }
-            if (inputElement) {
+            if (inputElement && (inputElement.classList.contains('form-input-custom') || inputElement.classList.contains('form-select-custom'))) { 
                 inputElement.classList.add('error');
                 inputElement.setAttribute('aria-invalid', 'true');
                 inputElement.setAttribute('aria-describedby', elementId + "Error");
+            } else if (elementId === 'rating' && errorElement) { 
+                // Special handling for rating, no direct input to style with 'error' class
             }
         }
 
@@ -493,9 +582,9 @@
             const inputElement = document.getElementById(elementId);
             if (errorElement) {
                 errorElement.textContent = '';
-                errorElement.classList.add('hidden');
+                errorElement.classList.add('hidden-custom');
             }
-            if (inputElement) {
+            if (inputElement && (inputElement.classList.contains('form-input-custom') || inputElement.classList.contains('form-select-custom'))) {
                 inputElement.classList.remove('error');
                 inputElement.removeAttribute('aria-invalid');
                 inputElement.removeAttribute('aria-describedby');
@@ -505,35 +594,33 @@
         function clearAllErrors() {
             const errorMessages = feedbackForm.querySelectorAll('.error-message');
             errorMessages.forEach(msg => {
-                msg.classList.add('hidden');
+                msg.classList.add('hidden-custom');
                 msg.textContent = '';
             });
-            const errorInputs = feedbackForm.querySelectorAll('.error');
+            const errorInputs = feedbackForm.querySelectorAll('.form-input-custom.error, .form-select-custom.error');
             errorInputs.forEach(input => {
                 input.classList.remove('error');
                 input.removeAttribute('aria-invalid');
                 input.removeAttribute('aria-describedby');
             });
-            clearError('rating'); // Special case for rating
+            clearError('rating'); 
         }
 
-        // --- Star Rating Logic ---
         function setupStars() {
-            starRatingContainer.innerHTML = ''; // Clear existing stars
+            if (!starRatingContainer) return; 
+            starRatingContainer.innerHTML = ''; 
             for (let i = 1; i <= MAX_STARS; i++) {
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.setAttribute('role', 'radio');
                 button.setAttribute('aria-checked', 'false');
-                // Corrected: Removed backslashes from template literal
                 button.setAttribute('aria-label', `${i} out of ${MAX_STARS} stars`);
                 button.dataset.value = i;
                 button.innerHTML = '<i class="fas fa-star"></i>';
                 starRatingContainer.appendChild(button);
             }
-            updateStarDisplay(currentRating); // Initial display
+            updateStarDisplay(currentRating); 
 
-            // Event listeners for stars
             const stars = starRatingContainer.querySelectorAll('button');
             stars.forEach(star => {
                 star.addEventListener('click', handleStarClick);
@@ -545,6 +632,7 @@
         }
         
         function updateStarDisplay(rating) {
+            if (!starRatingContainer || !ratingLabel || !satisfactionRatingInput) return; 
             const stars = starRatingContainer.querySelectorAll('button');
             stars.forEach((star, index) => {
                 const starValue = parseInt(star.dataset.value);
@@ -557,8 +645,8 @@
                 }
             });
             ratingLabel.textContent = RATING_LABELS[rating] || RATING_LABELS[0];
-            satisfactionRatingInput.value = rating; // Update hidden input
-            if (rating > 0) clearError('rating'); // Clear error if a rating is selected
+            satisfactionRatingInput.value = rating; 
+            if (rating > 0) clearError('rating'); 
         }
 
         function handleStarClick(event) {
@@ -567,10 +655,11 @@
         }
 
         function handleStarMouseover(event) {
+            if (!starRatingContainer) return;
             const hoverValue = parseInt(event.currentTarget.dataset.value);
             const stars = starRatingContainer.querySelectorAll('button');
             stars.forEach(star => {
-                star.classList.remove('hover-active'); // Clear previous hover states
+                star.classList.remove('hover-active'); 
                 if (parseInt(star.dataset.value) <= hoverValue) {
                     star.classList.add('hover-active');
                 }
@@ -578,12 +667,14 @@
         }
 
         function handleStarMouseout() {
+            if (!starRatingContainer) return;
             const stars = starRatingContainer.querySelectorAll('button');
-            stars.forEach(star => star.classList.remove('hover-active')); // Clear all hover fills
-            updateStarDisplay(currentRating); // Revert to current actual rating
+            stars.forEach(star => star.classList.remove('hover-active')); 
+            updateStarDisplay(currentRating); 
         }
 
-        function handleStarFocus(event) { // Similar to mouseover for keyboard nav
+        function handleStarFocus(event) { 
+            if (!starRatingContainer) return;
             const focusValue = parseInt(event.currentTarget.dataset.value);
             const stars = starRatingContainer.querySelectorAll('button');
             stars.forEach(star => {
@@ -595,149 +686,175 @@
             });
         }
 
-        function handleStarBlur() { // Similar to mouseout
+        function handleStarBlur() { 
+            if (!starRatingContainer) return;
             const stars = starRatingContainer.querySelectorAll('button');
             stars.forEach(star => star.classList.remove('hover-active'));
             updateStarDisplay(currentRating);
         }
 
-        // --- Email Validation Utility ---
         function isValidEmail(email) {
-            // Basic email validation regex
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);
         }
 
-        // --- Form Validation ---
         function validateForm() {
             clearAllErrors();
             let isValid = true;
 
-            const email = document.getElementById('email').value.trim();
-            if (!email) {
-                displayError('email', 'Please enter your email address.');
-                isValid = false;
-            } else if (!isValidEmail(email)) {
-                displayError('email', 'Please enter a valid email address.');
-                isValid = false;
+            const emailInput = document.getElementById('email');
+            if (emailInput){
+                const email = emailInput.value.trim();
+                if (!email) {
+                    displayError('email', 'Please enter your email address.');
+                    isValid = false;
+                } else if (!isValidEmail(email)) {
+                    displayError('email', 'Please enter a valid email address.');
+                    isValid = false;
+                }
             }
 
-            const division = document.getElementById('division').value;
-            if (!division) {
-                displayError('division', 'Please select a division.');
-                isValid = false;
+            const categorySelect = document.getElementById('category');
+            if(categorySelect){
+                const category = categorySelect.value;
+                if (!category) {
+                    displayError('category', 'Please select a feedback category.');
+                    isValid = false;
+                }
             }
 
-            const category = document.getElementById('category').value;
-            if (!category) {
-                displayError('category', 'Please select a feedback category.');
-                isValid = false;
-            }
 
             if (currentRating === 0) {
                 displayError('rating', 'Please provide a satisfaction rating.');
                 isValid = false;
             }
 
-            const feedbackDetails = document.getElementById('feedbackDetails').value.trim();
-            if (!feedbackDetails) {
-                displayError('feedbackDetails', 'Please provide feedback details.');
-                isValid = false;
-            } else if (feedbackDetails.length < 10) {
-                 displayError('feedbackDetails', 'Feedback details should be at least 10 characters.');
-                isValid = false;
+            const feedbackDetailsTextarea = document.getElementById('feedbackDetails');
+            if(feedbackDetailsTextarea){
+                const feedbackDetails = feedbackDetailsTextarea.value.trim();
+                if (!feedbackDetails) {
+                    displayError('feedbackDetails', 'Please provide feedback details.');
+                    isValid = false;
+                } else if (feedbackDetails.length < 10) {
+                    displayError('feedbackDetails', 'Feedback details should be at least 10 characters.');
+                    isValid = false;
+                }
             }
             
             return isValid;
         }
 
-        // --- Form Submission ---
-        async function handleSubmit(event) {
+        function handleSubmit(event) { // Removed async as we're not using await for simulated call directly here
             event.preventDefault();
 
             if (!validateForm()) {
-                const firstErrorInput = feedbackForm.querySelector('.error'); 
-                if (firstErrorInput) {
-                     if (firstErrorInput.id === 'ratingError') { 
-                         starRatingContainer.querySelector('button').focus();
+                const firstErrorElement = feedbackForm.querySelector('.error, .error-message:not(.hidden-custom)');
+                if (firstErrorElement) {
+                    if (firstErrorElement.id === 'ratingError') {
+                       if(starRatingContainer) starRatingContainer.querySelector('button').focus(); 
                     } else {
-                        firstErrorInput.focus();
+                        const inputId = firstErrorElement.id.replace('Error', '');
+                        const inputToFocus = document.getElementById(inputId);
+                        if (inputToFocus && typeof inputToFocus.focus === 'function') {
+                            inputToFocus.focus();
+                        } else if (firstErrorElement.classList.contains('error') && typeof firstErrorElement.focus === 'function') {
+                            firstErrorElement.focus();
+                        }
                     }
                 }
                 return;
             }
 
-            // Show loading state
-            submitButtonText.classList.add('hidden');
-            submitSpinner.classList.remove('hidden');
+            submitButtonText.classList.add('hidden-custom');
+            submitSpinner.classList.remove('hidden-custom');
             submitButton.disabled = true;
             cancelButton.disabled = true;
 
-            const formData = {
-                email: document.getElementById('email').value.trim(),
-                division: document.getElementById('division').value,
-                category: document.getElementById('category').value,
+            const formDataToSubmit = {
+                email: document.getElementById('email')?.value.trim() || '',
+                category: document.getElementById('category')?.value || '',
                 rating: currentRating,
-                feedbackDetails: document.getElementById('feedbackDetails').value.trim(),
-                suggestions: document.getElementById('suggestions').value.trim(),
+                feedbackDetails: document.getElementById('feedbackDetails')?.value.trim() || '',
+                suggestions: document.getElementById('suggestions')?.value.trim() || '',
                 timestamp: new Date().toISOString()
             };
 
-            console.log("Form Data Submitted:", formData);
+            console.log("Form Data Being Sent to Apps Script:", formDataToSubmit);
 
-            // --- Google Apps Script Integration (Simulated) ---
-            try {
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                const simulatedResponse = { success: true, message: "Feedback recorded." }; 
-                // const simulatedResponse = { success: false, message: "Simulated server error. Please try again." };
-
-                if (simulatedResponse.success) {
-                    showModal('success', 'Thank You!', 'Your feedback has been submitted successfully.');
-                    feedbackForm.reset();
-                    currentRating = 0;
-                    setupStars(); 
-                    clearAllErrors();
-                } else {
-                    showModal('error', 'Submission Failed', simulatedResponse.message || 'An unknown error occurred.');
-                }
-            } catch (error) {
-                console.error('Submission Error:', error);
-                showModal('error', 'Submission Error', error.message || 'An error occurred while submitting your feedback. Please try again.');
-            } finally {
-                // Restore button state
-                submitButtonText.classList.remove('hidden');
-                submitSpinner.classList.add('hidden');
-                submitButton.disabled = false;
-                cancelButton.disabled = false;
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                google.script.run
+                    .withSuccessHandler(function(response) {
+                        console.log("Apps Script Success Handler Response:", response); 
+                        if (response && response.success) { // Check for response object itself
+                            showModal('success', 'Thank You!', response.message || 'Your feedback has been submitted successfully.');
+                            feedbackForm.reset();
+                            currentRating = 0;
+                            setupStars(); 
+                            clearAllErrors();
+                        } else {
+                             showModal('error', 'Submission Failed', (response && response.message) ? response.message : 'An unknown error occurred.');
+                        }
+                        submitButtonText.classList.remove('hidden-custom');
+                        submitSpinner.classList.add('hidden-custom');
+                        submitButton.disabled = false;
+                        cancelButton.disabled = false;
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error("Apps Script Failure Handler Error:", error); 
+                        showModal('error', 'Submission Error', 'Failed to communicate with the server: ' + error.message);
+                        submitButtonText.classList.remove('hidden-custom');
+                        submitSpinner.classList.add('hidden-custom');
+                        submitButton.disabled = false;
+                        cancelButton.disabled = false;
+                    })
+                    .submitFeedback(formDataToSubmit); // Make sure this function name matches your Code.gs
+            } else {
+                console.warn("google.script.run is not available. Simulating API call for local development.");
+                setTimeout(() => {
+                    const simulatedResponse = { success: true, message: "Feedback recorded (Simulated)." };
+                    if (simulatedResponse.success) {
+                        showModal('success', 'Thank You! (Simulated)', simulatedResponse.message);
+                        if(feedbackForm) feedbackForm.reset();
+                        currentRating = 0;
+                        setupStars();
+                        clearAllErrors();
+                    } else {
+                        showModal('error', 'Submission Failed (Simulated)', simulatedResponse.message);
+                    }
+                    if(submitButtonText) submitButtonText.classList.remove('hidden-custom');
+                    if(submitSpinner) submitSpinner.classList.add('hidden-custom');
+                    if(submitButton) submitButton.disabled = false;
+                    if(cancelButton) cancelButton.disabled = false;
+                }, 2000);
             }
         }
         
-        // --- Event Listeners ---
-        feedbackForm.addEventListener('submit', handleSubmit);
-        modalCloseButton.addEventListener('click', closeModal);
-        cancelButton.addEventListener('click', () => {
-            if (confirm("Are you sure you want to cancel and clear the form?")) {
-                feedbackForm.reset();
-                currentRating = 0;
-                setupStars(); 
-                clearAllErrors();
-                document.getElementById('email').focus(); // Focus on the first field (email)
-            }
-        });
+        if(feedbackForm) feedbackForm.addEventListener('submit', handleSubmit);
+        if(modalCloseButton) modalCloseButton.addEventListener('click', closeModal);
+        if(cancelButton) {
+            cancelButton.addEventListener('click', () => {
+                if (confirm("Are you sure you want to cancel and clear the form?")) {
+                    if(feedbackForm) feedbackForm.reset();
+                    currentRating = 0;
+                    setupStars(); 
+                    clearAllErrors();
+                    const emailEl = document.getElementById('email');
+                    if(emailEl) emailEl.focus();
+                }
+            });
+        }
 
-        // Clear error on input change for relevant fields
-        ['email', 'division', 'category', 'feedbackDetails'].forEach(id => {
+        ['email', 'category', 'feedbackDetails'].forEach(id => { 
             const el = document.getElementById(id);
             if (el) {
                 el.addEventListener('input', () => clearError(id));
             }
         });
 
-        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             setupStars(); 
-            document.getElementById('email').focus(); // Autofocus on the email field
+            const emailEl = document.getElementById('email');
+            if(emailEl) emailEl.focus(); 
         });
 
     </script>
