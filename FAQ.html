@@ -21,43 +21,43 @@
             background: var(--bg-gradient);
             min-height: 100vh;
             color: #333;
+            padding-top: 50px; /* Adjusted to match navbar height potentially */
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding-top: 0.8rem; 
-            padding-bottom: 0.8rem; 
+            padding-top: 0.8rem;
+            padding-bottom: 0.8rem;
         }
 
         .navbar-brand {
             color: var(--primary-color);
             font-weight: 600;
-            font-size: 1.5rem;
+            font-size: 1.5rem; /* Responsive font size */
         }
 
         .nav-link {
-            color: #333; /* Default color for nav links */
+            color: var(--primary-color);
             font-weight: 500;
             transition: color 0.3s ease;
-            padding-left: 0.8rem !important; 
+            padding-left: 0.8rem !important;
             padding-right: 0.8rem !important;
-            position: relative; /* Needed for the new span underline approach */
+            position: relative;
         }
-        
+
         .nav-link > span {
-            position: relative; /* For positioning the pseudo-element for underline */
+            position: relative;
             display: inline-block;
         }
 
-        /* Underline animation for nav links (excluding auth buttons if any) */
         .nav-link:not(.auth-btn) > span::after {
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: -5px; /* Adjust this value to position the underline correctly below the text */
+            bottom: -5px;
             left: 0;
             background-color: var(--secondary-color);
             transition: width 0.3s ease;
@@ -66,50 +66,45 @@
         .nav-link:not(.auth-btn):hover > span::after {
             width: 100%;
         }
-        
+
         .nav-link:hover,
-        .nav-link.active { /* Style for active nav link and general hover */
-            color: var(--secondary-color) !important; /* Ensure hover color applies */
+        .nav-link.active {
+            color: var(--secondary-color) !important;
         }
 
         .dropdown-item:hover {
-            color: var(--secondary-color); /* Hover color for dropdown items */
+            color: var(--secondary-color);
         }
 
-
-        /* Custom styles for dropdown menu appearance */
         .dropdown-menu {
-            border-radius: 8px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 1px solid rgba(0,0,0,0.05);
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
         }
         .dropdown-item {
             font-weight: 500;
-            padding: 0.5rem 1.2rem; 
+            padding: 0.5rem 1.2rem;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
         .dropdown-item:hover {
-            background-color: rgba(209, 91, 40, 0.05); 
+            background-color: rgba(209, 91, 40, 0.05); /* Light orange tint on hover */
         }
 
-        /* Arrow indicator for dropdown toggle links */
-        .nav-item.dropdown > .nav-link.dropdown-toggle::after { /* Targets the ::after of the <a> tag */
-            content: '\f078'; /* Font Awesome caret down icon */
+        .nav-item.dropdown > .nav-link.dropdown-toggle::after {
+            content: '\f078'; /* Font Awesome caret down */
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             display: inline-block;
             margin-left: 0.35em;
-            vertical-align: 0.05em; 
+            vertical-align: 0.05em;
             border: none; /* Remove default Bootstrap arrow */
             transition: transform 0.3s ease;
         }
-         /* Rotate arrow when dropdown is open */
         .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
-            transform: rotate(180deg);
+            transform: rotate(180deg); /* Rotate arrow when dropdown is open */
         }
-
 
         .faq-category-card {
             background: white;
@@ -343,17 +338,90 @@
         }
         /* --- End Floating Chat Icon --- */
 
+        /* Footer Styling */
+        footer.bg-white {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            border-top: 1px solid #e9ecef; /* Subtle top border */
+        }
+        footer h5, footer h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        footer .text-muted {
+            color: #6c757d !important; /* Bootstrap's muted color */
+            font-size: 0.9rem;
+        }
+        footer .social-links a {
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+        footer .social-links a:hover {
+            color: var(--secondary-color);
+        }
+        footer .list-unstyled a.text-muted:hover {
+            color: var(--secondary-color) !important;
+            text-decoration: underline !important;
+        }
+        /* Added padding for fixed top navbar */
+        body {
+            padding-top: 80px; /* Adjust this value based on your navbar's height */
+        }
+        .navbar-brand img.logo-main {
+             width: 150px; /* Adjust as needed */
+             height: auto;
+             margin-right: 15px;
+        }
+        .navbar-brand img.logo-bubble {
+            width: 40px; /* Adjust as needed */
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .navbar-brand .brand-text {
+            font-size: 1.2rem; /* Adjust as needed */
+            vertical-align: middle;
+        }
+        /* Ensure navbar content is vertically aligned */
+        .navbar .container {
+            display: flex;
+            align-items: center;
+        }
+        .faq-contact-hira { /* Style for the moved HIRA contact message */
+            text-align: center;
+            margin-top: 2rem; /* Spacing above this message */
+            margin-bottom: 1rem; /* Spacing below this message */
+            padding: 1rem;
+            background-color: rgba(23, 105, 128, 0.03); /* Very light primary color background */
+            border-radius: 8px;
+            font-weight: 500;
+            color: var(--primary-color); 
+        }
+        .faq-contact-hira a {
+            color: var(--secondary-color); 
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        .faq-contact-hira a:hover {
+            color: var(--primary-color); 
+        }
+
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Bubble">
-            <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="true">
+            <a class="navbar-brand d-flex align-items-center mb-0" href="#">
+                <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Hibank Logo" class="logo-main"
+                     onerror="this.onerror=null; this.src='https://placehold.co/150x40/176980/FFFFFF?text=Hibank';">
+                <img src="https://placehold.co/40x40/176980/FFFFFF?text=HCIH" alt="HCIH Bubble Logo" class="logo-bubble"
+                     onerror="this.onerror=null; this.src='https://placehold.co/40x40/CCCCCC/000000?text=Logo';">
+                <span class="brand-text">Human Capital Innovation Hub</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzU2GpKE9GqagMJT_EdTNRSXhWwNg5tA-GSxry13G32QEPzFeM8IkRMa0TYvq-y_y6Hmw/exec"><span>Home</span></a></li>
                     <li class="nav-item dropdown">
@@ -362,13 +430,12 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
                             <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec">Loan Simulation</a></li>
-                            <!-- <li><hr class="dropdown-divider"></li> -->
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" target="_blank"><span>Gallery</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec"><span>Feedback</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><span>FAQ</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#"><span>FAQ</span></a></li>
                 </ul>
             </div>
         </div>
@@ -376,141 +443,144 @@
 
     <div class="container py-5">
         <div class="bg-white rounded-4 shadow p-4 p-md-5">
-        <h1 class="text-center mb-5">Frequently Asked Questions</h1>
-        
-        <div class="search-container">
-            <input type="text" id="faqSearch" placeholder="Search for questions..." class="form-control">
-        </div>
+            <h1 class="text-center mb-5">Frequently Asked Questions</h1>
+            
+            <div class="search-container">
+                <input type="text" id="faqSearch" placeholder="Search for questions..." class="form-control">
+            </div>
 
-        <div class="faq-categories">
-            <div class="faq-category-card">
-                <div class="faq-category-title">Remunerasi</div>
-                <div class="faq-questions">
-                    <div class="faq-item">
-                        <div class="faq-question">Saya tidak menerima slip gaji atau mutasi rekening?</div>
-                        <div class="faq-answer">Silakan hubungi departemen HR untuk pemeriksaan lebih lanjut. Pastikan data rekening Anda sudah benar.</div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah cuti bersama mengurangi hak cuti tahunan?</div>
-                        <div class="faq-answer">Tidak, cuti bersama yang ditetapkan pemerintah tidak mengurangi hak cuti tahunan karyawan.</div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah jumlah cuti tahunan bertambah seiring dengan jabatan atau masa kerja??</div>
-                        <div class="faq-answer">Ya, kebijakan perusahaan kami mengatur penambahan jumlah cuti tahunan berdasarkan masa kerja dan/atau level jabatan. Detailnya ada di buku panduan karyawan.</div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah sisa cuti tahunan bisa dibawa ke tahun berikutnya?</div>
-                        <div class="faq-answer">Sisa cuti tahunan dapat dibawa ke tahun berikutnya dengan batasan tertentu sesuai kebijakan perusahaan (carry forward policy).</div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah cuti tahunan bisa digantikan dengan uang?</div>
-                        <div class="faq-answer">Pada umumnya tidak, kecuali dalam kondisi tertentu seperti terminasi hubungan kerja, sesuai peraturan yang berlaku.</div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Apakah cuti besar dapat dicairkan menjadi uang?</div>
-                        <div class="faq-answer">Kebijakan mengenai pencairan cuti besar dapat berbeda. Silakan merujuk pada peraturan perusahaan atau konsultasi dengan HR.</div>
+            <div class="faq-categories">
+                <div class="faq-category-card">
+                    <div class="faq-category-title">Remunerasi</div>
+                    <div class="faq-questions">
+                        <div class="faq-item">
+                            <div class="faq-question">Saya tidak menerima slip gaji atau mutasi rekening?</div>
+                            <div class="faq-answer">Silakan hubungi departemen HR untuk pemeriksaan lebih lanjut. Pastikan data rekening Anda sudah benar.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Apakah cuti bersama mengurangi hak cuti tahunan?</div>
+                            <div class="faq-answer">Tidak, cuti bersama yang ditetapkan pemerintah tidak mengurangi hak cuti tahunan karyawan.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Apakah jumlah cuti tahunan bertambah seiring dengan jabatan atau masa kerja??</div>
+                            <div class="faq-answer">Ya, kebijakan perusahaan kami mengatur penambahan jumlah cuti tahunan berdasarkan masa kerja dan/atau level jabatan. Detailnya ada di buku panduan karyawan.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Apakah sisa cuti tahunan bisa dibawa ke tahun berikutnya?</div>
+                            <div class="faq-answer">Sisa cuti tahunan dapat dibawa ke tahun berikutnya dengan batasan tertentu sesuai kebijakan perusahaan (carry forward policy).</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Apakah cuti tahunan bisa digantikan dengan uang?</div>
+                            <div class="faq-answer">Pada umumnya tidak, kecuali dalam kondisi tertentu seperti terminasi hubungan kerja, sesuai peraturan yang berlaku.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Apakah cuti besar dapat dicairkan menjadi uang?</div>
+                            <div class="faq-answer">Kebijakan mengenai pencairan cuti besar dapat berbeda. Silakan merujuk pada peraturan perusahaan atau konsultasi dengan HR.</div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="faq-category-card">
-                <div class="faq-category-title">Asuransi Kesehatan</div>
-                <div class="faq-questions">
-                    <div class="faq-item">
-                        <div class="faq-question">Kapan saya memperoleh kartu peserta asuransi?</div>
-                        <div class="faq-answer">Kartu peserta asuransi biasanya diberikan setelah Anda resmi menjadi karyawan dan data Anda diproses oleh penyedia asuransi, umumnya dalam 1-2 bulan pertama.</div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Kapan saya bisa melakukan klaim?</div>
-                        <div class="faq-answer">Anda bisa melakukan klaim sejak kartu asuransi Anda aktif dan sesuai dengan ketentuan polis yang berlaku.</div>
-                    </div>
-                    </div>
-            </div>
-
-            <div class="faq-category-card">
-                <div class="faq-category-title">Aplikasi Talenta</div>
-                <div class="faq-questions">
-                    <div class="faq-item">
-                        <div class="faq-question">Bagaimana cara menginput WFH (Work From Home)?</div>
-                        <div class="faq-answer">Login ke aplikasi Talenta, pilih menu pengajuan, lalu pilih 'Work From Home' dan isi detail yang diperlukan.</div>
-                    </div>
-                    </div>
-            </div>
-             <div class="faq-category-card">
-                <div class="faq-category-title">ID Card & Access Card</div>
-                <div class="faq-questions">
-                    <div class="faq-item">
-                        <div class="faq-question">Jika ID Card saya rusak atau hilang, berapa biaya penggantian yang dikenakan?</div>
-                        <div class="faq-answer">Biaya penggantian ID Card yang rusak atau hilang adalah sebesar RpXX.XXX,-. Silakan hubungi HRD untuk proses penggantian.</div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">Berapa biaya yang dikenakan jika saya kehilangan Access Card?</div>
-                        <div class="faq-answer">Biaya penggantian Access Card yang hilang adalah sebesar RpYY.YYY,-. Segera laporkan ke bagian keamanan atau HRD.</div>
+                <div class="faq-category-card">
+                    <div class="faq-category-title">Asuransi Kesehatan</div>
+                    <div class="faq-questions">
+                        <div class="faq-item">
+                            <div class="faq-question">Kapan saya memperoleh kartu peserta asuransi?</div>
+                            <div class="faq-answer">Kartu peserta asuransi biasanya diberikan setelah Anda resmi menjadi karyawan dan data Anda diproses oleh penyedia asuransi, umumnya dalam 1-2 bulan pertama.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Kapan saya bisa melakukan klaim?</div>
+                            <div class="faq-answer">Anda bisa melakukan klaim sejak kartu asuransi Anda aktif dan sesuai dengan ketentuan polis yang berlaku.</div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="faq-category-card">
-                <div class="faq-category-title">Offboarding</div>
-                <div class="faq-questions">
-                    <div class="faq-item">
-                        <div class="faq-question">Berapa lama notice period ketika mengajukan pengunduran diri??</div>
-                        <div class="faq-answer">Notice period standar adalah satu bulan (one month notice) atau sesuai dengan yang tertera dalam kontrak kerja Anda.</div>
-                    </div>
-                     <div class="faq-item">
-                        <div class="faq-question">Kapan saya akan menerima Surat Keterangan Kerja dan Bukti Potong PPh 21 setelah resign?</div>
-                        <div class="faq-answer">Surat Keterangan Kerja dan Bukti Potong PPh 21 akan diproses dan diberikan setelah semua proses offboarding selesai, biasanya dalam waktu 14-30 hari kerja setelah tanggal efektif resign.</div>
-                    </div>
-                     <div class="faq-item">
-                        <div class="faq-question">Bagaimana perhitungan sisa cuti yang akan dicairkan?</div>
-                        <div class="faq-answer">Perhitungan sisa cuti yang akan dicairkan dilakukan secara proporsional berdasarkan jumlah hari kerja efektif dan sisa hak cuti yang belum diambil, sesuai kebijakan perusahaan.</div>
+                <div class="faq-category-card">
+                    <div class="faq-category-title">Aplikasi Talenta</div>
+                    <div class="faq-questions">
+                        <div class="faq-item">
+                            <div class="faq-question">Bagaimana cara menginput WFH (Work From Home)?</div>
+                            <div class="faq-answer">Login ke aplikasi Talenta, pilih menu pengajuan, lalu pilih 'Work From Home' dan isi detail yang diperlukan.</div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="faq-category-card">
-                <div class="faq-category-title">BPJS</div>
-                <div class="faq-questions">
-                    <div class="faq-item">
-                        <div class="faq-question">Berapa besarnya iuran BPJS Kesehatan?</div>
-                        <div class="faq-answer">Iuran BPJS Kesehatan adalah 5% dari gaji, dengan rincian 4% ditanggung perusahaan dan 1% dipotong dari gaji karyawan. Ada batas atas gaji yang dihitung.</div>
-                    </div>
-                    </div>
-            </div>
-
-            <div class="faq-category-card">
-                <div class="faq-category-title">Penggajian</div>
-                <div class="faq-questions">
-                    <div class="faq-item">
-                        <div class="faq-question">Mengapa saya tidak menerima gaji secara penuh?</div>
-                        <div class="faq-answer">Beberapa alasan gaji tidak diterima penuh bisa karena adanya potongan (misalnya BPJS, pajak, pinjaman), absensi yang tidak terbayar, atau koreksi lainnya. Silakan cek slip gaji Anda atau hubungi HR.</div>
-                    </div>
-                     <div class="faq-item">
-                        <div class="faq-question">Berapa besarnya Uang Pisah yang diterima oleh karyawan yang mengundurkan diri?</div>
-                        <div class="faq-answer">Besarnya Uang Pisah diatur dalam kebijakan perusahaan dan/atau perjanjian kerja bersama, biasanya didasarkan pada masa kerja.</div>
+                <div class="faq-category-card">
+                    <div class="faq-category-title">ID Card & Access Card</div>
+                    <div class="faq-questions">
+                        <div class="faq-item">
+                            <div class="faq-question">Jika ID Card saya rusak atau hilang, berapa biaya penggantian yang dikenakan?</div>
+                            <div class="faq-answer">Biaya penggantian ID Card yang rusak atau hilang adalah sebesar RpXX.XXX,-. Silakan hubungi HRD untuk proses penggantian.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Berapa biaya yang dikenakan jika saya kehilangan Access Card?</div>
+                            <div class="faq-answer">Biaya penggantian Access Card yang hilang adalah sebesar RpYY.YYY,-. Segera laporkan ke bagian keamanan atau HRD.</div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="faq-category-card">
-                <div class="faq-category-title">Pinjaman</div>
-                <div class="faq-questions">
-                    <div class="faq-item">
-                        <div class="faq-question">Apa saja jenis pinjaman karyawan yang ditawarkan oleh hibank?</div>
-                        <div class="faq-answer">Hibank menawarkan beberapa jenis pinjaman karyawan seperti pinjaman multiguna, pinjaman KPR, dan pinjaman kendaraan dengan syarat dan ketentuan khusus untuk karyawan.</div>
+                <div class="faq-category-card">
+                    <div class="faq-category-title">Offboarding</div>
+                    <div class="faq-questions">
+                        <div class="faq-item">
+                            <div class="faq-question">Berapa lama notice period ketika mengajukan pengunduran diri??</div>
+                            <div class="faq-answer">Notice period standar adalah satu bulan (one month notice) atau sesuai dengan yang tertera dalam kontrak kerja Anda.</div>
+                        </div>
+                         <div class="faq-item">
+                            <div class="faq-question">Kapan saya akan menerima Surat Keterangan Kerja dan Bukti Potong PPh 21 setelah resign?</div>
+                            <div class="faq-answer">Surat Keterangan Kerja dan Bukti Potong PPh 21 akan diproses dan diberikan setelah semua proses offboarding selesai, biasanya dalam waktu 14-30 hari kerja setelah tanggal efektif resign.</div>
+                        </div>
+                         <div class="faq-item">
+                            <div class="faq-question">Bagaimana perhitungan sisa cuti yang akan dicairkan?</div>
+                            <div class="faq-answer">Perhitungan sisa cuti yang akan dicairkan dilakukan secara proporsional berdasarkan jumlah hari kerja efektif dan sisa hak cuti yang belum diambil, sesuai kebijakan perusahaan.</div>
+                        </div>
                     </div>
+                </div>
+
+                <div class="faq-category-card">
+                    <div class="faq-category-title">BPJS</div>
+                    <div class="faq-questions">
+                        <div class="faq-item">
+                            <div class="faq-question">Berapa besarnya iuran BPJS Kesehatan?</div>
+                            <div class="faq-answer">Iuran BPJS Kesehatan adalah 5% dari gaji, dengan rincian 4% ditanggung perusahaan dan 1% dipotong dari gaji karyawan. Ada batas atas gaji yang dihitung.</div>
+                        </div>
                     </div>
+                </div>
+
+                <div class="faq-category-card">
+                    <div class="faq-category-title">Penggajian</div>
+                    <div class="faq-questions">
+                        <div class="faq-item">
+                            <div class="faq-question">Mengapa saya tidak menerima gaji secara penuh?</div>
+                            <div class="faq-answer">Beberapa alasan gaji tidak diterima penuh bisa karena adanya potongan (misalnya BPJS, pajak, pinjaman), absensi yang tidak terbayar, atau koreksi lainnya. Silakan cek slip gaji Anda atau hubungi HR.</div>
+                        </div>
+                         <div class="faq-item">
+                            <div class="faq-question">Berapa besarnya Uang Pisah yang diterima oleh karyawan yang mengundurkan diri?</div>
+                            <div class="faq-answer">Besarnya Uang Pisah diatur dalam kebijakan perusahaan dan/atau perjanjian kerja bersama, biasanya didasarkan pada masa kerja.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-category-card">
+                    <div class="faq-category-title">Pinjaman</div>
+                    <div class="faq-questions">
+                        <div class="faq-item">
+                            <div class="faq-question">Apa saja jenis pinjaman karyawan yang ditawarkan oleh hibank?</div>
+                            <div class="faq-answer">Hibank menawarkan beberapa jenis pinjaman karyawan seperti pinjaman multiguna, pinjaman KPR, dan pinjaman kendaraan dengan syarat dan ketentuan khusus untuk karyawan.</div>
+                        </div>
+                    </div>
+                </div>
+            </div> <div class="faq-contact-hira">
+                Apakah masih ada pertanyaan? Ayo Hubungi <a href="https://wa.me/6281229909659" target="_blank">HIRA</a>!
             </div>
-            </div>
-    </div>
-    <a href="https://wa.me/6281229909659" target="_blank" id="floating-chat-icon" aria-label="Chat on WhatsApp">
+            </div> </div> </div> <a href="https://wa.me/6281229909659" target="_blank" id="floating-chat-icon" aria-label="Chat on WhatsApp">
         <span class="chat-icon-text">Mau bertemu dengan HIRA?</span>
         <span class="chat-icon-main"><i class="fab fa-whatsapp"></i></span>
     </a>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Smooth scroll for the entire document
-            document.documentElement.style.scrollBehavior = 'smooth';
+            // document.documentElement.style.scrollBehavior = 'smooth'; // Can cause issues with search focusing, enable if preferred
 
             // Function to highlight search terms in an element
             function highlightText(element, searchTerm) {
@@ -577,9 +647,11 @@
                     if (!searchTerm) {
                         allFaqItems.forEach(item => {
                             item.style.display = 'block'; // Show item
+                            item.classList.remove('active'); // Deactivate item
                         });
                         allCategories.forEach(category => {
                             category.style.display = 'block'; // Show category
+                            category.classList.remove('active'); // Deactivate category
                         });
                         return; // Exit search function
                     }
@@ -591,7 +663,7 @@
                     });
                     allCategories.forEach(category => {
                         category.classList.remove('active'); // Deactivate category
-                        category.style.display = 'none';    // Hide category
+                        category.style.display = 'none';     // Hide category
                     });
 
                     let foundInCategory = new Set(); // To keep track of categories with matches
@@ -633,5 +705,47 @@
             }
         });
     </script>
-    </body>
+
+    <footer class="bg-white py-5">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-3 col-md-6"> <h5 class="mb-3">Human Capital Innovation Hub</h5>
+                    <p class="text-muted mb-3">Pioneering digital solutions for human capital development and management.</p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" class="me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="mb-3 fw-bold">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" class="text-muted text-decoration-none" target="_blank">HC hiro</a></li>
+                        <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" class="text-muted text-decoration-none" target="_blank">Gallery</a></li>
+                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" class="text-muted text-decoration-none">Feedback</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">FAQ</a></li> </ul>
+                </div>
+                <div class="col-lg-3 col-md-6"> <h6 class="mb-3 fw-bold">Our Services</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" class="text-muted text-decoration-none">Loan Simulation</a>
+                        </li>
+                        </ul>
+                </div>
+                <div class="col-lg-4 col-md-6"> <h6 class="mb-3 fw-bold">Contact Us</h6>
+                    <ul class="list-unstyled text-muted">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>PT Bank Hibank Indonesia <br>Rajawali Place, Lantai 22-23
+                            Jl. H.R. Rasuna Said Kav. B.4
+                            Setiabudi, Jakarta Selatan - 12910</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i><a href="mailto:humancapital@hibank.co.id" class="text-muted text-decoration-none">humancapital@hibank.co.id</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center text-muted">
+                <p>&copy; <script>document.write(new Date().getFullYear());</script> Hibank - Human Capital Innovation Hub. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
 </html>

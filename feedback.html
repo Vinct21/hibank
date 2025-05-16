@@ -23,7 +23,7 @@
         body {
             font-family: 'Jost', sans-serif;
             background: linear-gradient(135deg, var(--light-gray), #e5e7eb);
-            /* padding-top: 70px; /* REMOVED: This was causing the blank space */
+            padding-top: 50px; /* REMOVED: This was causing the blank space
             margin: 0; /* Reset default margin */
             -webkit-font-smoothing: antialiased; 
             -moz-osx-font-smoothing: grayscale; 
@@ -135,94 +135,86 @@
         /* --- End of Custom Styles to Replace Tailwind --- */
 
         /* Navbar Styles */
-        .navbar { 
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px);
+        .navbar {
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            /* padding-top/bottom are handled by Bootstrap or can be adjusted here if needed */
+            padding-top: 0.8rem;
+            padding-bottom: 0.8rem;
         }
 
-        .navbar-brand-custom-wrapper { 
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
-        .navbar-brand-custom-wrapper img {
-            height: 35px; 
-            width: auto;
-            margin-right: 0.75rem;
-        }
-        .navbar-brand-custom-wrapper .navbar-brand-text {
-            color: var(--primary-color) !important;
+        .navbar-brand {
+            color: var(--primary-color);
             font-weight: 600;
-            font-size: 1.15rem; 
-            line-height: 1.2;
+            font-size: 1.5rem; /* Responsive font size */
         }
 
-        .navbar-nav .nav-link {
-            color: #333 !important; 
+        .nav-link {
+            color: var(--primary-color);
             font-weight: 500;
             transition: color 0.3s ease;
-            padding-left: 0.8rem !important; 
+            padding-left: 0.8rem !important;
             padding-right: 0.8rem !important;
-            position: relative; 
+            position: relative;
         }
-        
-        .navbar-nav .nav-link > span {
-            position: relative; 
+
+        .nav-link > span {
+            position: relative;
             display: inline-block;
         }
 
-        .navbar-nav .nav-link:not(.auth-btn) > span::after {
+        .nav-link:not(.auth-btn) > span::after {
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: -5px; 
+            bottom: -5px;
             left: 0;
             background-color: var(--secondary-color);
             transition: width 0.3s ease;
         }
 
-        .navbar-nav .nav-link:not(.auth-btn):hover > span::after {
+        .nav-link:not(.auth-btn):hover > span::after {
             width: 100%;
         }
-        
-        .navbar-nav .nav-link:hover,
-        .navbar-nav .nav-link.active { 
-            color: var(--secondary-color) !important; 
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--secondary-color) !important;
         }
 
-        .navbar-nav .dropdown-item:hover { 
-            color: var(--secondary-color) !important; 
-            background-color: rgba(209, 91, 40, 0.05) !important; 
+        .dropdown-item:hover {
+            color: var(--secondary-color);
         }
 
-        .navbar-nav .dropdown-menu { 
-            border-radius: 8px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 1px solid rgba(0,0,0,0.05);
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
         }
-        .navbar-nav .dropdown-item { 
+        .dropdown-item {
             font-weight: 500;
-            padding: 0.5rem 1.2rem; 
+            padding: 0.5rem 1.2rem;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
+        .dropdown-item:hover {
+            background-color: rgba(209, 91, 40, 0.05); /* Light orange tint on hover */
+        }
 
-        .navbar-nav .nav-item.dropdown > .nav-link.dropdown-toggle::after { 
-            content: '\f078'; 
+        .nav-item.dropdown > .nav-link.dropdown-toggle::after {
+            content: '\f078'; /* Font Awesome caret down */
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             display: inline-block;
             margin-left: 0.35em;
-            vertical-align: 0.05em; 
-            border: none; 
+            vertical-align: 0.05em;
+            border: none; /* Remove default Bootstrap arrow */
             transition: transform 0.3s ease;
         }
-        .navbar-nav .nav-item.dropdown.show > .nav-link.dropdown-toggle::after { 
-            transform: rotate(180deg);
+        .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
+            transform: rotate(180deg); /* Rotate arrow when dropdown is open */
         }
 
         .btn-primary {
@@ -366,13 +358,12 @@
     </style>
 </head>
 <body> 
-    <nav class="navbar navbar-expand-lg sticky-top">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand-custom-wrapper" href="#">
-                <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="HiBank Logo" 
-                     onerror="this.style.display='none'; this.nextElementSibling.classList.add('ms-0');"> 
-                <span class="navbar-brand-text">Human Capital Innovation Hub</span>
-            </a>
+            <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Logo" loading="lazy" style="width: 200px;">
+            <img src="https://placehold.co/40x40/176980/FFFFFF?text=HCIH" alt="Bubble Logo" style="border-radius: 50%; margin-right: 10px;"
+                 onerror="this.onerror=null; this.src='https://placehold.co/40x40/CCCCCC/000000?text=Logo';">
+            <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -385,11 +376,11 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
                             <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec">Loan Simulation</a></li>
-                        </ul>
+                            </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" target="_blank"><span>Gallery</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><span>Feedback</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#"><span>Feedback</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec"><span>FAQ</span></a></li>
                 </ul>
             </div>
