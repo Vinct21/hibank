@@ -11,7 +11,7 @@
         :root {
             --primary-color: #176980;
             --secondary-color: #D15B28;
-            --bg-gradient: #176980;
+            --bg-gradient: #176980; /* Background for the body and hero section */
         }
 
         body {
@@ -19,53 +19,54 @@
             overflow-x: hidden;
             margin: 0;
             padding: 0;
-            background: var(--bg-gradient);
+            background: var(--bg-gradient); /* Ensure body background is set */
         }
 
         #canvas-background {
             position: fixed;
             top: 0;
             left: 0;
-            z-index: -1;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Ensure it's behind all content */
             filter: blur(2px);
             opacity: 0.8;
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding-top: 0.8rem; 
-            padding-bottom: 0.8rem; 
+            padding-top: 0.8rem;
+            padding-bottom: 0.8rem;
         }
 
         .navbar-brand {
             color: var(--primary-color);
             font-weight: 600;
-            font-size: 1.5rem;
+            font-size: 1.5rem; /* Responsive font size */
         }
 
         .nav-link {
-            color: var(--primary-color); /* Default color for nav links */
+            color: var(--primary-color);
             font-weight: 500;
             transition: color 0.3s ease;
-            padding-left: 0.8rem !important; 
+            padding-left: 0.8rem !important;
             padding-right: 0.8rem !important;
-            position: relative; /* Needed for the new span underline approach */
+            position: relative;
         }
-        
+
         .nav-link > span {
-            position: relative; /* For positioning the pseudo-element for underline */
+            position: relative;
             display: inline-block;
         }
 
-        /* Underline animation for nav links (excluding auth buttons if any) */
         .nav-link:not(.auth-btn) > span::after {
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: -5px; /* Adjust this value to position the underline correctly below the text */
+            bottom: -5px;
             left: 0;
             background-color: var(--secondary-color);
             transition: width 0.3s ease;
@@ -74,77 +75,151 @@
         .nav-link:not(.auth-btn):hover > span::after {
             width: 100%;
         }
-        
+
         .nav-link:hover,
-        .nav-link.active { /* Style for active nav link and general hover */
-            color: var(--secondary-color) !important; /* Ensure hover color applies */
+        .nav-link.active {
+            color: var(--secondary-color) !important;
         }
 
         .dropdown-item:hover {
-            color: var(--secondary-color); /* Hover color for dropdown items */
+            color: var(--secondary-color);
         }
 
-
-        /* Custom styles for dropdown menu appearance */
         .dropdown-menu {
-            border-radius: 8px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 1px solid rgba(0,0,0,0.05);
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
         }
         .dropdown-item {
             font-weight: 500;
-            padding: 0.5rem 1.2rem; 
+            padding: 0.5rem 1.2rem;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
         .dropdown-item:hover {
-            background-color: rgba(209, 91, 40, 0.05); 
+            background-color: rgba(209, 91, 40, 0.05); /* Light orange tint on hover */
         }
 
-        /* Arrow indicator for dropdown toggle links */
-        .nav-item.dropdown > .nav-link.dropdown-toggle::after { /* Targets the ::after of the <a> tag */
-            content: '\f078'; /* Font Awesome caret down icon */
+        .nav-item.dropdown > .nav-link.dropdown-toggle::after {
+            content: '\f078'; /* Font Awesome caret down */
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             display: inline-block;
             margin-left: 0.35em;
-            vertical-align: 0.05em; 
+            vertical-align: 0.05em;
             border: none; /* Remove default Bootstrap arrow */
             transition: transform 0.3s ease;
         }
-         /* Rotate arrow when dropdown is open */
         .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
-            transform: rotate(180deg);
+            transform: rotate(180deg); /* Rotate arrow when dropdown is open */
         }
 
         .hero-section {
-            min-height: 100vh;
+            min-height: 100vh; /* Full viewport height */
+            padding-top: 100px; /* Increased padding to avoid overlap with navbar and provide space */
+            padding-bottom: 40px; /* Padding at the bottom */
             display: flex;
-            align-items: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            background: transparent;
+            align-items: center; /* Vertically center content */
+            color: white; /* Text color for hero section */
+            position: relative; /* For z-index stacking if needed */
+            overflow: hidden; /* Prevent content from spilling */
+            background: transparent; /* Hero section itself is transparent, body provides gradient */
         }
 
         .hero-content {
-            position: relative;
-            z-index: 2;
+            position: relative; /* For z-index context if needed */
+            z-index: 2; /* Ensure hero content is above background canvas */
+            /* text-align: center; /* Uncomment to center hero content including greeting */
+        }
+
+        /* Styles for the user greeting area in its new position */
+        #user-greeting-status-area {
+            /* padding-top: 70px; /* Removed as it's no longer directly under fixed navbar */
+            /* text-align: center; /* Default is left in hero-content, adjust if needed */
+            min-height: 50px; /* Adjusted min-height */
+            position: relative; /* Keep relative positioning */
+            z-index: 2; /* Ensure it's above p5 canvas */
+            margin-bottom: 1rem; /* Space below greeting, before title */
+        }
+
+        /* Container within greeting area - adjust if it causes layout issues */
+        #user-greeting-status-area .container {
+             padding-left: 0; /* Align with hero content if hero-content is not centered */
+             padding-right: 0;
+        }
+
+        #greetingContainer, #typewriterCursor {
+            font-size: 1.6rem; /* Adjusted font size for greeting */
+            color: white;
+            font-weight: 500;
+            /* text-align: left; /* Ensure alignment matches hero-title if not centered */
+        }
+         #statusMessage {
+            font-size: 0.9rem;
+            color: #ffdddd; /* Light color for status messages */
+            margin-top: 5px;
+            /* text-align: left; /* Match alignment */
         }
 
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 3.2rem; /* Responsive font size */
             font-weight: 600;
             margin-bottom: 1.5rem;
         }
 
-        @media (max-width: 768px) {
+        .hero-text {
+            font-size: 1.2rem; /* Responsive font size */
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px; /* Added rounded corners */
+        }
+
+        .btn-primary:hover {
+            background-color: #b94f23; /* Darker shade on hover */
+            border-color: #b94f23;
+            transform: translateY(-2px); /* Slight lift effect */
+            box-shadow: 0 5px 15px rgba(209, 91, 40, 0.3); /* Softer shadow */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) { /* Medium devices (tablets, less than 992px) */
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
+            }
+            #greetingContainer, #typewriterCursor {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 768px) { /* Small devices (landscape phones, less than 768px) */
+            .hero-section {
+                padding-top: 80px; /* Adjust padding for smaller screens */
+                text-align: center; /* Center text for smaller screens */
+            }
+            .hero-content {
+                 text-align: center; /* Center hero content, including greeting */
+            }
+            #user-greeting-status-area .container {
+                 padding-left: 15px; /* Bootstrap default container padding */
+                 padding-right: 15px;
+            }
+            .hero-title {
+                font-size: 2.2rem;
             }
             .hero-text {
                 font-size: 1.1rem;
+            }
+            #greetingContainer, #typewriterCursor {
+                font-size: 1.3rem;
             }
             .value-card {
                 min-height: 120px;
@@ -169,56 +244,49 @@
                 margin-bottom: 1.5rem;
             }
             .navbar-nav {
-                margin-top: 1rem;
+                margin-top: 1rem; /* Space for collapsed navbar items */
             }
-            .nav-link.auth-btn {
+            .nav-link.auth-btn { /* Example for auth buttons if they were present */
                 margin: 0.5rem 0;
                 width: 100%;
             }
         }
 
-        .hero-text {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
+        @media (max-width: 576px) { /* Extra small devices (portrait phones, less than 576px) */
+             .hero-title {
+                font-size: 1.8rem;
+            }
+            .hero-text {
+                font-size: 1rem;
+            }
+            #greetingContainer, #typewriterCursor {
+                font-size: 1.2rem;
+            }
         }
 
-        .btn-primary {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-            padding: 0.75rem 2rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #b94f23;
-            border-color: #b94f23;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(209, 91, 40, 0.3);
-        }
 
         .features-section {
             padding: 5rem 0;
-            background: #f8f9fa;
+            background: #f8f9fa; /* Light grey background */
         }
 
         .feature-card {
-            display: block;
+            display: block; /* Make the whole card clickable */
             text-decoration: none;
             background: white;
             padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            color: inherit;
+            border-radius: 15px; /* More pronounced rounded corners */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Softer shadow */
+            transition: all 0.3s ease-in-out;
+            color: inherit; /* Inherit text color */
+            height: 100%; /* Ensure cards in a row have same height */
         }
 
         .feature-card:hover {
             transform: translateY(-10px);
             text-decoration: none;
             color: inherit;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12); /* Enhanced shadow on hover */
         }
 
         .feature-icon {
@@ -230,19 +298,20 @@
         .feature-title {
             color: var(--primary-color);
             font-weight: 600;
+            font-size: 1.25rem; /* Slightly larger feature title */
             margin-bottom: 1rem;
         }
 
-        #culture-grid {
+        #culture-grid, #working-character-grid {
             transition: all 0.5s ease;
         }
 
         .value-card {
-            background: rgba(23, 105, 128, 0.1);
+            background: rgba(255, 255, 255, 0.8); /* Lighter background for cards on white section */
             border-radius: 15px;
             padding: 1rem;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 1px solid rgba(23, 105, 128, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1); /* Softer border */
             height: 100%;
             cursor: pointer;
             position: relative;
@@ -254,12 +323,13 @@
             justify-content: center;
             text-align: center;
             will-change: transform, opacity;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Subtle shadow for cards */
         }
 
         .value-card:hover:not(.expanded) {
             transform: translateY(-5px) scale(1.02);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95); /* Slightly more opaque on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
         .value-letter-box {
@@ -267,7 +337,7 @@
             font-weight: 600;
             color: var(--secondary-color);
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Softer text shadow */
             transition: all 0.5s ease;
         }
 
@@ -276,7 +346,7 @@
         }
 
         .value-card h4 {
-            color: #333;
+            color: #333; /* Darker text for better readability */
             font-size: 1rem;
             margin: 0;
             font-weight: 500;
@@ -284,9 +354,9 @@
         }
 
         .value-description {
-            display: none; /* Hidden by default */
+            display: none;
             opacity: 0;
-            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s; /* Slightly faster with less delay */
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
             text-align: left;
             margin-top: 0.5rem;
             font-size: 0.9rem;
@@ -295,10 +365,9 @@
             will-change: opacity, transform;
         }
 
-        /* Styles when a card is expanded */
         .value-card.expanded {
             position: absolute;
-            left: 2.5%;
+            left: 2.5%; /* Centering expanded card */
             width: 95%;
             max-width: none;
             margin: 0;
@@ -306,11 +375,11 @@
             align-items: stretch;
             justify-content: flex-start;
             padding: 0;
-            background: #f0f0f0;
-            border: 1px solid #ccc;
+            background: #fdfdfd; /* Slightly off-white for expanded card */
+            border: 1px solid #ddd; /* Clearer border for expanded */
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            height: auto;
-            min-height: 100px;
+            height: auto; /* Auto height based on content */
+            min-height: 120px; /* Minimum height */
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10;
             transform-origin: center center;
@@ -320,12 +389,12 @@
             font-size: 3.5rem;
             padding: 2.5rem;
             margin-bottom: 0;
-            border-right: 1px solid #ccc;
-            background: #e9ecef;
+            border-right: 1px solid #ddd;
+            background: #e9ecef; /* Light grey for letter box */
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 150px; /* Increased width for letter box */
+            width: 150px;
             flex-shrink: 0;
         }
 
@@ -333,99 +402,133 @@
             padding: 2.5rem;
             text-align: left;
             flex-grow: 1;
-            width: calc(100% - 150px); /* Adjusted width calculation */
+            width: calc(100% - 150px);
         }
 
         .value-card.expanded h4 {
-            font-size: 1.5rem; /* Larger title */
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem; /* More space below title */
             color: var(--primary-color);
         }
 
         .value-card.expanded .value-description {
-            display: block; /* Show description */
+            display: block;
             opacity: 1;
+            transform: translateY(0); /* Reset transform */
         }
 
-        /* Styles to hide non-expanded cards */
-        #culture-grid.expanded-view .value-card:not(.expanded) {
+        #culture-grid.expanded-view .value-card:not(.expanded),
+        #working-character-grid.expanded-view .value-card:not(.expanded) {
             opacity: 0;
             transform: scale(0.8);
             pointer-events: none;
             visibility: hidden;
         }
 
-        #culture-grid.expanded-view {
-            min-height: 200px;
-            position: relative;
+        #culture-grid.expanded-view,
+        #working-character-grid.expanded-view {
+            min-height: 200px; /* Ensure container has height when a card is expanded */
+            position: relative; /* Needed for absolute positioning of expanded card */
         }
 
         .culture-section, .working-character-section {
-            position: relative;
-            z-index: 1;
+            position: relative; /* For z-index context if needed */
+            z-index: 1; /* Ensure these sections are above the p5 canvas if it overlaps */
+            padding: 5rem 0; /* Standard padding */
+            background-color: white; /* Explicit white background */
+        }
+        .culture-section h2, .working-character-section h2 {
+            color: #333; /* Darker heading color */
         }
 
+
         .error-message {
-            color: #f8d7da; /* Light red for error text */
-            background-color: #721c24; /* Dark red background for visibility */
-            padding: 5px 10px;
+            color: #f8d7da;
+            background-color: #721c24;
+            padding: 8px 12px; /* More padding */
             border-radius: 5px;
-            display: inline-block; /* Or block if you want it full width */
+            display: inline-block;
+            font-size: 0.9rem; /* Consistent font size */
         }
+
+        /* Footer Styling */
+        footer.bg-white {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            border-top: 1px solid #e9ecef; /* Subtle top border */
+        }
+        footer h5, footer h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        footer .text-muted {
+            color: #6c757d !important; /* Bootstrap's muted color */
+            font-size: 0.9rem;
+        }
+        footer .social-links a {
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+        footer .social-links a:hover {
+            color: var(--secondary-color);
+        }
+        footer .list-unstyled a.text-muted:hover {
+            color: var(--secondary-color) !important;
+            text-decoration: underline !important;
+        }
+
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Bubble">
+            <img src="https://placehold.co/40x40/176980/FFFFFF?text=HCIH" alt="Bubble Logo" style="border-radius: 50%; margin-right: 10px;"
+                 onerror="this.onerror=null; this.src='https://placehold.co/40x40/CCCCCC/000000?text=Logo';">
             <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="true">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#"><span>Home</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#"><span>Home</span></a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span>Services</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
-                            <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec">Loan Simulation</a></li>
-                            <!-- <li><hr class="dropdown-divider"></li> -->
-                        </ul>
+                            <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_blank">Loan Simulation</a></li>
+                            </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" target="_blank"><span>Gallery</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec"><span>Feedback</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec"><span>FAQ</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" target="_blank"><span>Feedback</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_blank"><span>FAQ</span></a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div id="user-greeting-status-area" style="padding-top: 70px; text-align: center; min-height: 60px; position: relative; z-index: 1000;">
-        <div class="container">
-             <span id="greetingContainer" style="font-size: 1.4rem; color: white; font-weight: 500;"></span><span id="typewriterCursor" style="font-size: 1.4rem; color: white; font-weight: 500; display: none;">|</span>
-             <p id="statusMessage" style="font-size: 0.9rem; color: #ffdddd; margin-top: 5px;"></p>
-             <button id="retryButton" class="btn btn-sm btn-outline-light mt-1" style="display:none;">Retry Authorization</button>
-        </div>
-    </div>
-
     <section class="hero-section">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6 hero-content">
+                <div class="col-lg-7 hero-content"> <div id="user-greeting-status-area">
+                        <div class="container"> <span id="greetingContainer"></span><span id="typewriterCursor" style="display: none;">|</span>
+                             <p id="statusMessage"></p>
+                             <button id="retryButton" class="btn btn-sm btn-outline-light mt-1" style="display:none;">Retry Authorization</button>
+                        </div>
+                    </div>
+
                     <h1 class="hero-title">Human Capital Innovation Hub</h1>
                     <p class="hero-text">Your centralized platform for managing and developing human capital. We streamline employee management, facilitate career growth, and optimize workforce potential through innovative digital solutions.</p>
-                    <a href="#services" class="btn btn-primary btn-lg">Get Started</a>
+                    <a href="#services" class="btn btn-primary btn-lg">Discover Services</a>
                 </div>
-            </div>
+                </div>
         </div>
     </section>
 
-    <section class="culture-section py-5" style="background-color: white;">
+    <section class="culture-section">
         <div class="container">
-            <h2 class="text-center text-dark mb-5">Our Culture</h2>
+            <h2 class="text-center mb-5">Our Culture (AKHLAK)</h2>
             <div class="row g-4 justify-content-center" id="culture-grid">
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="value-card" data-value="amanah">
@@ -434,6 +537,11 @@
                             <h4>Amanah</h4>
                             <div class="value-description">
                                 <p>Memegang teguh kepercayaan yang diberikan.</p>
+                                <ul>
+                                    <li>Memenuhi janji dan komitmen.</li>
+                                    <li>Bertanggung jawab atas tugas, keputusan, dan tindakan yang dilakukan.</li>
+                                    <li>Berpegang teguh kepada nilai moral dan etika.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -445,6 +553,11 @@
                             <h4>Kompeten</h4>
                             <div class="value-description">
                                 <p>Terus belajar dan mengembangkan kapabilitas.</p>
+                                <ul>
+                                    <li>Meningkatkan kompetensi diri untuk menjawab tantangan yang selalu berubah.</li>
+                                    <li>Membantu orang lain belajar.</li>
+                                    <li>Menyelesaikan tugas dengan kualitas terbaik.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -456,6 +569,11 @@
                             <h4>Harmonis</h4>
                             <div class="value-description">
                                 <p>Saling peduli dan menghargai perbedaan.</p>
+                                <ul>
+                                    <li>Menghargai setiap orang apapun latar belakangnya.</li>
+                                    <li>Suka menolong orang lain.</li>
+                                    <li>Membangun lingkungan kerja yang kondusif.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -466,7 +584,12 @@
                         <div class="value-content-box">
                             <h4>Loyal</h4>
                             <div class="value-description">
-                                <p>Berdedikasi dan mengutamakan kepentingan Bangsa dan Negara</p>
+                                <p>Berdedikasi dan mengutamakan kepentingan Bangsa dan Negara.</p>
+                                <ul>
+                                    <li>Menjaga nama baik sesama karyawan, pimpinan, BUMN, dan Negara.</li>
+                                    <li>Rela berkorban untuk mencapai tujuan yang lebih besar.</li>
+                                    <li>Patuh kepada pimpinan sepanjang tidak bertentangan dengan hukum dan etika.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -477,7 +600,12 @@
                         <div class="value-content-box">
                             <h4>Adaptif</h4>
                             <div class="value-description">
-                                <p>Terus berinovasi dan antusias dalam menggerakan ataupun menghadapi perubahan.</p>
+                                <p>Terus berinovasi dan antusias dalam menggerakkan ataupun menghadapi perubahan.</p>
+                                <ul>
+                                    <li>Cepat menyesuaikan diri menjadi lebih baik.</li>
+                                    <li>Terus menerus melakukan perbaikan mengikuti perkembangan teknologi.</li>
+                                    <li>Bertindak proaktif.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -489,6 +617,11 @@
                             <h4>Kolaboratif</h4>
                             <div class="value-description">
                                 <p>Membangun kerjasama yang sinergis.</p>
+                                <ul>
+                                    <li>Memberi kesempatan kepada berbagai pihak untuk berkontribusi.</li>
+                                    <li>Terbuka dalam bekerja sama untuk menghasilkan nilai tambah.</li>
+                                    <li>Menggerakkan pemanfaatan berbagai sumber daya untuk tujuan bersama.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -497,15 +630,14 @@
         </div>
     </section>
 
-    <section class="working-character-section py-5" style="background-color: white;">
+    <section class="working-character-section">
         <div class="container">
-            <h2 class="text-center text-dark mb-5">Our Working Character</h2>
+            <h2 class="text-center mb-5">Our Working Character (FIRST)</h2>
             <div class="row g-4 justify-content-center" id="working-character-grid">
-                <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="fast">
-                        <div class="value-letter-box">F</div>
+                 <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="fast"> <div class="value-letter-box">F</div>
                         <div class="value-content-box">
-                            <h4>Digital First</h4>
+                            <h4>Digital <strong>F</strong>irst</h4>
                             <div class="value-description">
                                 <p>Mengedepankan proses dan produk berbasis digital dalam upaya untuk meningkatkan pengalaman pelanggan dengan Bank.</p>
                             </div>
@@ -516,7 +648,7 @@
                     <div class="value-card" data-value="innovative">
                         <div class="value-letter-box">I</div>
                         <div class="value-content-box">
-                            <h4>Innovative</h4>
+                            <h4><strong>I</strong>nnovative</h4>
                             <div class="value-description">
                                 <p>Adaptif, kreatif, ulet dan berorientasi pada solusi dalam berinovasi.</p>
                             </div>
@@ -524,10 +656,9 @@
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="reliable">
-                        <div class="value-letter-box">R</div>
+                    <div class="value-card" data-value="reliable"> <div class="value-letter-box">R</div>
                         <div class="value-content-box">
-                            <h4>Relationship-Building & Customer Centric</h4>
+                            <h4><strong>R</strong>elationship-Building & Customer Centric</h4>
                             <div class="value-description">
                                 <p>Berorientasi pada membina hubungan yang baik dengan pelanggan dengan terus berupaya menyediakan produk, proses, dan layanan terbaik bagi pelanggan.</p>
                             </div>
@@ -535,10 +666,9 @@
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="synergy">
-                        <div class="value-letter-box">S</div>
+                    <div class="value-card" data-value="synergy"> <div class="value-letter-box">S</div>
                         <div class="value-content-box">
-                            <h4>Strategic Focus</h4>
+                            <h4><strong>S</strong>trategic Focus</h4>
                             <div class="value-description">
                                 <p>Fokus pada pemikiran yang strategis dan selangkah lebih maju untuk memastikan keberhasilan inovasi yang diterapkan terhadap kepuasan pelanggan.</p>
                             </div>
@@ -546,10 +676,9 @@
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="trustworthy">
-                        <div class="value-letter-box">T</div>
+                    <div class="value-card" data-value="trustworthy"> <div class="value-letter-box">T</div>
                         <div class="value-content-box">
-                            <h4>Trust, Respect, & Accountable</h4>
+                            <h4><strong>T</strong>rust, Respect, & Accountable</h4>
                             <div class="value-description">
                                 <p>Menunjukan sikap yang dapat dipertanggungjawabkan dalam bekerja, saling percaya dan saling menghormati antar individu.</p>
                             </div>
@@ -564,44 +693,39 @@
         <div class="container">
             <h2 class="text-center text-dark mb-5">Our Services</h2>
             <div class="row g-4">
-                <div class="col-md-4">
+                <div class="col-md-4 d-flex align-items-stretch">
                     <a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_blank" class="feature-card text-center">
                         <i class="fas fa-calculator feature-icon"></i>
                         <h3 class="feature-title">Loan Simulation</h3>
                         <p>Calculate and plan your loan with our advanced simulation tools.</p>
                     </a>
                 </div>
-                <div class="col-md-4">
-                    <a href="#" class="feature-card text-center">
-                        <i class="fas fa-exchange-alt feature-icon"></i>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="#" class="feature-card text-center"> <i class="fas fa-exchange-alt feature-icon"></i>
                         <h3 class="feature-title">Internal Mobility Hub</h3>
                         <p>Quick and secure employee transfers across departments.</p>
                     </a>
                 </div>
-                <div class="col-md-4">
-                    <a href="#" class="feature-card text-center">
-                        <i class="fas fa-file-pdf feature-icon"></i>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="#" class="feature-card text-center"> <i class="fas fa-file-pdf feature-icon"></i>
                         <h3 class="feature-title">PDF Tools</h3>
                         <p>Efficient tools for managing and processing PDF documents.</p>
                     </a>
                 </div>
-                <div class="col-md-4" id="dataHubFeatureContainer" style="display: none;">
-                    <a href="#" class="feature-card text-center">
-                        <i class="fas fa-database feature-icon"></i>
+                <div class="col-md-4 d-flex align-items-stretch" id="dataHubFeatureContainer" style="display: none;">
+                    <a href="#" class="feature-card text-center"> <i class="fas fa-database feature-icon"></i>
                         <h3 class="feature-title">Data Hub</h3>
-                        <p>Self-service platform for employee data access and export.</p>
+                        <p>Self-service platform for employee data access and export (for authorized personnel).</p>
                     </a>
                 </div>
-                <div class="col-md-4">
-                    <a href="#" class="feature-card text-center">
-                        <i class="fas fa-tasks feature-icon"></i>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="#" class="feature-card text-center"> <i class="fas fa-tasks feature-icon"></i>
                         <h3 class="feature-title">Request Center</h3>
                         <p>One system for managing all HC-related forms and requests.</p>
                     </a>
                 </div>
-                <div class="col-md-4">
-                    <a href="#" class="feature-card text-center">
-                        <i class="fas fa-briefcase feature-icon"></i>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="#" class="feature-card text-center"> <i class="fas fa-briefcase feature-icon"></i>
                         <h3 class="feature-title">Internal Job Board</h3>
                         <p>Explore and apply for internal career opportunities across the organization.</p>
                     </a>
@@ -610,6 +734,55 @@
         </div>
     </section>
 
+    <footer class="bg-white py-5">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="mb-3">Human Capital Innovation Hub</h5>
+                    <p class="text-muted mb-3">Pioneering digital solutions for human capital development and management.</p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" class="me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="mb-3 fw-bold">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" class="text-muted text-decoration-none" target="_blank">HC hiro</a></li>
+                        <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" class="text-muted text-decoration-none" target="_blank">Gallery</a></li>
+                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" class="text-muted text-decoration-none" target="_blank">Feedback</a></li>
+                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" class="text-muted text-decoration-none" target="_blank">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="mb-3 fw-bold">Our Services</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" class="text-muted text-decoration-none" target="_blank">Loan Simulation</a></li>
+                        <!-- <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">Internal Mobility</a></li>
+                        <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">PDF Tools</a></li>
+                        <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">Data Hub</a></li> -->
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                     <h6 class="mb-3 fw-bold">Contact Us</h6>
+                     <p class="text-muted mb-1">PT Bank Hibank Indonesia</p>
+                     <p class="text-muted mb-1">Rajawali Place, Lantai 22-23
+                                                Jl. H.R. Rasuna Said Kav. B.4
+                                                Setiabudi, Jakarta Selatan - 12910</p>
+                     <p class="text-muted">Email: <a href="mailto:humancapital@hibank.co.id" class="text-muted text-decoration-none">humancapital@hibank.co.id</a></p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 text-muted">&copy; <span id="currentYear"></span> Human Capital Innovation Hub. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    </div>
+            </div>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -617,133 +790,40 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const workingCharacterGrid = document.getElementById('working-character-grid');
-            const workingCharacterCards = workingCharacterGrid.querySelectorAll('.value-card');
-            let currentlyExpandedWorkingChar = null;
-            let isAnimatingWorkingChar = false;
-
-            function toggleWorkingCharacterCard(card, expand) {
-                if (isAnimatingWorkingChar) return;
-                isAnimatingWorkingChar = true;
-
-                requestAnimationFrame(() => {
-                    if (expand) {
-                        card.classList.add('expanded');
-                        workingCharacterGrid.classList.add('expanded-view');
-                    } else {
-                        card.classList.remove('expanded');
-                        workingCharacterGrid.classList.remove('expanded-view');
-                    }
-
-                    setTimeout(() => {
-                        isAnimatingWorkingChar = false;
-                    }, 400);
-                });
-            }
-
-            workingCharacterCards.forEach(card => {
-                card.addEventListener('click', function(event) {
-                    event.stopPropagation();
-
-                    if (currentlyExpandedWorkingChar === this) {
-                        toggleWorkingCharacterCard(this, false);
-                        currentlyExpandedWorkingChar = null;
-                    } else {
-                        if (currentlyExpandedWorkingChar) {
-                            toggleWorkingCharacterCard(currentlyExpandedWorkingChar, false);
-                        }
-                        toggleWorkingCharacterCard(this, true);
-                        currentlyExpandedWorkingChar = this;
-                    }
-                }, { passive: true });
-            });
-
-            document.addEventListener('click', function(event) {
-                if (currentlyExpandedWorkingChar && !workingCharacterGrid.contains(event.target)) {
-                    toggleWorkingCharacterCard(currentlyExpandedWorkingChar, false);
-                    currentlyExpandedWorkingChar = null;
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 }
-            }, { passive: true });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const cultureGrid = document.getElementById('culture-grid');
-            const valueCards = cultureGrid.querySelectorAll('.value-card');
-            let currentlyExpanded = null;
-            let isAnimating = false;
-
-            function toggleCard(card, expand) {
-                if (isAnimating) return;
-                isAnimating = true;
-
-                requestAnimationFrame(() => {
-                    if (expand) {
-                        card.classList.add('expanded');
-                        cultureGrid.classList.add('expanded-view');
-                    } else {
-                        card.classList.remove('expanded');
-                        cultureGrid.classList.remove('expanded-view');
-                    }
-
-                    setTimeout(() => {
-                        isAnimating = false;
-                    }, 400); 
-                });
-            }
-
-            valueCards.forEach(card => {
-                card.addEventListener('click', function(event) {
-                    event.stopPropagation();
-
-                    if (currentlyExpanded === this) {
-                        toggleCard(this, false);
-                        currentlyExpanded = null;
-                    } else {
-                        if (currentlyExpanded) {
-                            toggleCard(currentlyExpanded, false);
-                        }
-                        toggleCard(this, true);
-                        currentlyExpanded = this;
-                    }
-                }, { passive: true });
             });
-
-            document.addEventListener('click', function(event) {
-                if (currentlyExpanded && !cultureGrid.contains(event.target)) {
-                    toggleCard(currentlyExpanded, false);
-                    currentlyExpanded = null;
-                }
-            }, { passive: true });
         });
 
-    </script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-    <script>
+        // p5.js sketch for background animation
         let stars = [];
-        let starCount = 50;
-        let maxDistance = 150;
+        let starCount = 70; // Increased star count for denser field
+        let maxDistance = 120; // Adjusted connection distance
 
         function setup() {
             let canvas = createCanvas(windowWidth, windowHeight);
-            canvas.id('canvas-background');
+            canvas.parent(document.body); // Attach canvas directly to body
+            canvas.id('canvas-background'); // Assign ID for CSS styling
             for (let i = 0; i < starCount; i++) {
                 stars.push(new Star(random(width), random(height)));
             }
+            // Ensure p5 canvas is behind other content
+            select('#canvas-background').style('z-index', '-1');
+            select('#canvas-background').style('position', 'fixed'); // Make sure it covers the viewport
+            select('#canvas-background').style('top', '0');
+            select('#canvas-background').style('left', '0');
+
         }
 
         function draw() {
-            clear(); 
+            clear(); // Use clear() instead of background() for transparency
             for (let i = 0; i < stars.length; i++) {
                 stars[i].move();
                 stars[i].show();
@@ -755,51 +835,44 @@
             constructor(x, y) {
                 this.x = x;
                 this.y = y;
-
-                if (random(1) < 0.2) {
-                    this.vx = random(-4, 4);
-                    this.vy = random(-4, 4);
-                } else {
-                    this.vx = random(-2, 2);
-                    this.vy = random(-2, 2);
-                }
+                this.vx = random(-0.5, 0.5); // Slower movement
+                this.vy = random(-0.5, 0.5);
+                this.radius = random(1, 3); // Varied star size
             }
 
             move() {
                 this.x += this.vx;
                 this.y += this.vy;
 
-                if (this.x > width || this.x < 0) {
-                    this.vx *= -1;
-                }
-                if (this.y > height || this.y < 0) {
-                    this.vy *= -1;
-                }
+                // Wrap around edges
+                if (this.x < -this.radius) this.x = width + this.radius;
+                if (this.y < -this.radius) this.y = height + this.radius;
+                if (this.x > width + this.radius) this.x = -this.radius;
+                if (this.y > height + this.radius) this.y = -this.radius;
             }
 
             show() {
                 noStroke();
-                fill(255);
-                ellipse(this.x, this.y, 5, 5);
+                fill(255, 255, 255, 150); // White stars with some transparency
+                ellipse(this.x, this.y, this.radius * 2, this.radius * 2);
             }
 
-            connect(stars) {
-                for (let i = 0; i < stars.length; i++) {
-                    let other = stars[i];
+            connect(others) {
+                for (let other of others) {
+                    if (other === this) continue;
                     let d = dist(this.x, this.y, other.x, other.y);
-
                     if (d < maxDistance) {
-                        let opacity = map(d, 0, maxDistance, 255, 0);
+                        let opacity = map(d, 0, maxDistance, 100, 0); // Lines are more transparent
                         stroke(255, 255, 255, opacity);
                         line(this.x, this.y, other.x, other.y);
                     }
-
-                    let dToCursor = dist(this.x, this.y, mouseX, mouseY);
-                    if (dToCursor < maxDistance) {
-                        let cursorOpacity = map(dToCursor, 0, maxDistance, 255, 0);
-                        stroke(255, 255, 255, cursorOpacity);
-                        line(this.x, this.y, mouseX, mouseY);
-                    }
+                }
+                 // Connect to cursor
+                let dToCursor = dist(this.x, this.y, mouseX, mouseY);
+                if (dToCursor < maxDistance + 50) { // Slightly larger range for cursor
+                    let cursorOpacity = map(dToCursor, 0, maxDistance + 50, 80, 0);
+                    stroke(255, 255, 255, cursorOpacity);
+                    line(this.x, this.y, mouseX, mouseY);
                 }
             }
         }
@@ -807,223 +880,247 @@
         function windowResized() {
             resizeCanvas(windowWidth, windowHeight);
         }
-    </script>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const navbarToggler = document.querySelector('.navbar-toggler');
-        const navbarCollapse = document.querySelector('.navbar-collapse');
 
-        navbarToggler.addEventListener('click', function() {
-            navbarCollapse.classList.toggle('show');
-        });
+        // Card expansion logic for Culture and Working Character sections
+        function initializeCardExpansion(gridId) {
+            const grid = document.getElementById(gridId);
+            if (!grid) return;
 
-        
-        document.addEventListener('click', function(event) {
-            const isClickInside = navbarCollapse.contains(event.target) || navbarToggler.contains(event.target);
-            if (!isClickInside && navbarCollapse.classList.contains('show')) {
-                navbarCollapse.classList.remove('show');
+            const cards = grid.querySelectorAll('.value-card');
+            let currentlyExpandedCard = null;
+            let isAnimating = false;
+
+            function toggleCard(card, expand) {
+                if (isAnimating) return;
+                isAnimating = true;
+
+                // Force reflow / repaint before adding class for transition
+                void card.offsetWidth;
+
+                requestAnimationFrame(() => {
+                    if (expand) {
+                        card.classList.add('expanded');
+                        grid.classList.add('expanded-view');
+                    } else {
+                        card.classList.remove('expanded');
+                        grid.classList.remove('expanded-view');
+                    }
+                    // Event listener for transition end to set isAnimating to false
+                    card.addEventListener('transitionend', function onTransitionEnd() {
+                        isAnimating = false;
+                        card.removeEventListener('transitionend', onTransitionEnd);
+                    });
+                });
             }
-        });
-    });
-    </script>
 
-    <script>
-    // Ensure these elements are defined globally or within a scope accessible by fetchUserData and other functions that might use them.
-    const greetingContainerElement = document.getElementById('greetingContainer');
-    const typewriterCursorElement = document.getElementById('typewriterCursor');
-    const statusMessageElement = document.getElementById('statusMessage');
-    const retryButton = document.getElementById('retryButton');
-    let greetingInterval; // For managing the greeting animation
+            cards.forEach(card => {
+                card.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent click from bubbling to document
 
-    function stopGreetingCycle() {
-        if (greetingInterval) {
-            clearInterval(greetingInterval);
-            greetingInterval = null;
+                    if (currentlyExpandedCard === this) { // Clicked on already expanded card
+                        toggleCard(this, false);
+                        currentlyExpandedCard = null;
+                    } else { // Clicked on a new card or no card was expanded
+                        if (currentlyExpandedCard) { // Another card is already expanded
+                            toggleCard(currentlyExpandedCard, false);
+                        }
+                        toggleCard(this, true);
+                        currentlyExpandedCard = this;
+                    }
+                });
+            });
+
+            // Close expanded card if clicking outside
+            document.addEventListener('click', function(event) {
+                if (currentlyExpandedCard && !grid.contains(event.target)) {
+                    toggleCard(currentlyExpandedCard, false);
+                    currentlyExpandedCard = null;
+                }
+            }, { passive: true });
         }
-        // Optionally hide cursor or reset text here if needed when cycle stops abruptly
-        if (typewriterCursorElement) typewriterCursorElement.style.display = 'none';
-    }
-    
-    // Dummy startGreetingCycle function - replace with your actual implementation if it exists
-    function startGreetingCycle(name) {
-        if (!greetingContainerElement || !typewriterCursorElement) {
-            console.warn("Greeting elements not found.");
-            return;
+
+        // User Greeting and Data Fetching Logic
+        const greetingContainerElement = document.getElementById('greetingContainer');
+        const typewriterCursorElement = document.getElementById('typewriterCursor');
+        const statusMessageElement = document.getElementById('statusMessage');
+        const retryButton = document.getElementById('retryButton');
+        let greetingInterval;
+
+        function stopGreetingCycle() {
+            if (greetingInterval) {
+                clearInterval(greetingInterval);
+                greetingInterval = null;
+            }
+            if (typewriterCursorElement) typewriterCursorElement.style.display = 'none';
         }
-        stopGreetingCycle(); // Stop any existing cycle
 
-        const greetings = [
-            `Hi, ${name}!`
-        ];
-        let currentGreetingIndex = 0;
-        let currentCharIndex = 0;
-        let isDeleting = false;
-        const typingSpeed = 100;
-        const deletingSpeed = 50;
-        const delayBetweenGreetings = 2000;
+        function startGreetingCycle(name) {
+            if (!greetingContainerElement || !typewriterCursorElement) {
+                console.warn("Greeting elements not found.");
+                return;
+            }
+            stopGreetingCycle();
 
-        greetingContainerElement.textContent = ''; // Clear previous greeting
-        typewriterCursorElement.style.display = 'inline'; // Show cursor
+            const greetings = [`hi, ${name}!`]; // Simplified to one greeting
+            let currentGreetingIndex = 0;
+            let currentCharIndex = 0;
+            const typingSpeed = 80; // Adjusted speed
+            // const deletingSpeed = 50; // Not used if not deleting
+            // const delayBetweenGreetings = 2000; // Not used if not cycling
 
-        function type() {
-            const currentText = greetings[currentGreetingIndex];
-            if (isDeleting) {
-                greetingContainerElement.textContent = currentText.substring(0, currentCharIndex - 1);
-                currentCharIndex--;
-            } else {
+            greetingContainerElement.textContent = '';
+            typewriterCursorElement.style.display = 'inline';
+
+            function type() {
+                const currentText = greetings[currentGreetingIndex];
                 greetingContainerElement.textContent = currentText.substring(0, currentCharIndex + 1);
                 currentCharIndex++;
+
+                if (currentCharIndex === currentText.length) {
+                    typewriterCursorElement.style.display = 'none'; // Hide cursor after typing
+                    // No deletion, no cycling. Greeting stays.
+                    return;
+                }
+                greetingInterval = setTimeout(type, typingSpeed);
             }
-
-            if (!isDeleting && currentCharIndex === currentText.length) {
-                setTimeout(() => isDeleting = true, delayBetweenGreetings);
-            } else if (isDeleting && currentCharIndex === 0) {
-                isDeleting = false;
-                currentGreetingIndex = (currentGreetingIndex + 1) % greetings.length;
-            }
-
-            const speed = isDeleting ? deletingSpeed : typingSpeed;
-            greetingInterval = setTimeout(type, speed);
-        }
-        type(); // Start the typing effect
-    }
-
-
-    function fetchUserData() {
-        if (!statusMessageElement || !retryButton || !greetingContainerElement || !typewriterCursorElement) {
-            console.error("One or more UI elements for user status are missing.");
-            return;
+            type();
         }
 
-        statusMessageElement.textContent = "Fetching your information, please wait...";
-        statusMessageElement.classList.remove("error-message"); // Use a consistent class name for errors
-        statusMessageElement.style.color = "#ffdddd"; // Reset color
-        retryButton.style.display = 'none';
-        stopGreetingCycle(); 
-
-        google.script.run
-        .withSuccessHandler(function(response) {
-            console.log("Response from server (getUserEmail):", response);
-
-            // Hide status message by default, show only on error or specific messages
-            statusMessageElement.style.display = 'none'; 
-            statusMessageElement.textContent = "";
-
-            if (response && response.isAuthorized && response.name) {
-                console.log("User Name:", response.name);
-                console.log("User Email:", response.email); 
-                console.log("Is Authorized:", response.isAuthorized);
-                console.log("Job Level:", response.joblevel); // Log job level
-
-                startGreetingCycle(response.name); 
-
-                // ---- START: Added code for Data Hub visibility ----
-                const dataHubFeatureContainer = document.getElementById('dataHubFeatureContainer');
-                if (dataHubFeatureContainer) {
-                    // Ensure joblevel is present and then check its value (case-insensitive)
-                    if (response.joblevel && response.joblevel.toLowerCase() === 'chief') {
-                        dataHubFeatureContainer.style.display = 'block'; // Or 'flex' or appropriate display type
-                    } else {
-                        dataHubFeatureContainer.style.display = 'none'; // Explicitly hide if not chief or jobLevel is missing
-                    }
-                } else {
-                    console.warn("Data Hub feature container ('dataHubFeatureContainer') not found in the DOM.");
-                }
-                // ---- END: Added code for Data Hub visibility ----
-
-            } else if (response && response.error) {
-                greetingContainerElement.style.display = 'none';
-                typewriterCursorElement.style.display = 'none';
-                statusMessageElement.textContent = "Error: " + response.error;
-                statusMessageElement.classList.add("error-message"); // Ensure this class is defined in your CSS for error styling
-                statusMessageElement.style.color = "#721c24"; // Example error color
-                statusMessageElement.style.display = 'block';
-                retryButton.style.display = 'block';
-                console.error("Server error details:", response.error);
-            } else { 
-                greetingContainerElement.style.display = 'none';
-                typewriterCursorElement.style.display = 'none';
-                let message = "An unexpected response was received or access was denied.";
-                if(response && !response.isAuthorized && response.error) {
-                    message = response.error;
-                } else if (response && response.isAuthorized && !response.name) {
-                    message = "Could not retrieve your name, though you are authorized.";
-                }
-                statusMessageElement.textContent = message;
-                statusMessageElement.classList.add("error-message");
-                statusMessageElement.style.color = "#721c24";
-                statusMessageElement.style.display = 'block';
-                retryButton.style.display = 'block';
-                console.warn("Authorization/data issue or unexpected response:", response);
+        function fetchUserData() {
+            if (!statusMessageElement || !retryButton || !greetingContainerElement || !typewriterCursorElement) {
+                console.error("One or more UI elements for user status are missing.");
+                return;
             }
-        })
-        .withFailureHandler(function(error) {
+
+            statusMessageElement.textContent = "Fetching your information...";
+            statusMessageElement.className = ""; // Reset classes
+            statusMessageElement.style.color = "#ffdddd";
+            statusMessageElement.style.display = 'block'; // Show status while fetching
+            retryButton.style.display = 'none';
+            greetingContainerElement.style.display = 'none'; // Hide greeting while fetching
+            typewriterCursorElement.style.display = 'none';
             stopGreetingCycle();
-            if (greetingContainerElement) greetingContainerElement.style.display = 'none';
-            if (typewriterCursorElement) typewriterCursorElement.style.display = 'none';
-            
-            if (statusMessageElement) {
-                statusMessageElement.textContent = "Failed to communicate with the server: " + error.message + ". You may need to authorize the script.";
-                statusMessageElement.classList.add("error-message");
-                statusMessageElement.style.color = "#721c24";
-                statusMessageElement.style.display = 'block';
+
+            // --- MOCK google.script.run for local testing ---
+            // Remove or comment this out when deploying to Google Apps Script
+            if (typeof google === 'undefined' || typeof google.script === 'undefined') {
+                console.warn("Google Apps Script environment not found. Using mock data.");
+                window.google = {
+                    script: {
+                        run: {
+                            withSuccessHandler: function(callback) {
+                                this.successCallback = callback;
+                                return this;
+                            },
+                            withFailureHandler: function(callback) {
+                                this.failureCallback = callback;
+                                return this;
+                            },
+                            getUserEmail: function() {
+                                // Simulate a successful response
+                                setTimeout(() => {
+                                    this.successCallback({
+                                        isAuthorized: true,
+                                        name: "Guest User", // Mock name
+                                        email: "guest@example.com",
+                                        joblevel: "Staff" // or "Chief" to test Data Hub
+                                    });
+                                }, 1000);
+
+                                // Simulate a failure response (uncomment to test)
+                                // setTimeout(() => {
+                                //    this.failureCallback({ message: "Mock server communication error." });
+                                // }, 1000);
+
+                                 // Simulate an unauthorized response (uncomment to test)
+                                // setTimeout(() => {
+                                //     this.successCallback({ isAuthorized: false, error: "Authorization denied by mock." });
+                                // }, 1000);
+                            }
+                        }
+                    }
+                };
             }
-            if (retryButton) retryButton.style.display = 'block';
-            console.error("Client-side error calling server (google.script.run):", error);
-        })
-        .getUserEmail(); // This still calls the getUserEmail function in Code.gs
-    }
+            // --- END MOCK ---
 
-    window.onload = function() {
-        fetchUserData(); 
-        // Initialize retry button functionality if it exists
-        if (retryButton) {
-            retryButton.addEventListener('click', fetchUserData);
+
+            google.script.run
+            .withSuccessHandler(function(response) {
+                statusMessageElement.style.display = 'none'; // Hide status message by default
+                statusMessageElement.textContent = "";
+
+                if (response && response.isAuthorized && response.name) {
+                    greetingContainerElement.style.display = 'inline'; // Show greeting container
+                    startGreetingCycle(response.name);
+
+                    const dataHubFeatureContainer = document.getElementById('dataHubFeatureContainer');
+                    if (dataHubFeatureContainer) {
+                        if (response.joblevel && response.joblevel.toLowerCase() === 'chief') {
+                            dataHubFeatureContainer.style.display = 'flex'; // Use flex to align with other cards
+                        } else {
+                            dataHubFeatureContainer.style.display = 'none';
+                        }
+                    }
+                } else { // Handle errors or unauthorized access
+                    greetingContainerElement.style.display = 'none';
+                    typewriterCursorElement.style.display = 'none';
+                    let message = "Access denied or user information not available.";
+                    if (response && response.error) {
+                        message = response.error;
+                    }
+                    statusMessageElement.textContent = message;
+                    statusMessageElement.className = "error-message"; // Apply error styling
+                    statusMessageElement.style.display = 'block';
+                    retryButton.style.display = 'inline-block'; // Show retry button
+                }
+            })
+            .withFailureHandler(function(error) {
+                stopGreetingCycle();
+                greetingContainerElement.style.display = 'none';
+                typewriterCursorElement.style.display = 'none';
+                statusMessageElement.textContent = "Error: " + error.message + ". Please try again or authorize the script.";
+                statusMessageElement.className = "error-message";
+                statusMessageElement.style.display = 'block';
+                retryButton.style.display = 'inline-block';
+            })
+            .getUserEmail();
         }
-    };
+
+
+        // DOMContentLoaded to initialize scripts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize card expansions
+            initializeCardExpansion('culture-grid');
+            initializeCardExpansion('working-character-grid');
+
+            // Fetch user data
+            fetchUserData();
+
+            // Retry button event listener
+            if (retryButton) {
+                retryButton.addEventListener('click', fetchUserData);
+            }
+
+            // Navbar toggler for mobile
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+            if (navbarToggler && navbarCollapse) {
+                navbarToggler.addEventListener('click', function() {
+                    navbarCollapse.classList.toggle('show');
+                });
+
+                // Close navbar when clicking outside on mobile
+                document.addEventListener('click', function(event) {
+                    const isClickInsideNav = navbarCollapse.contains(event.target);
+                    const isToggler = navbarToggler.contains(event.target);
+                    if (!isClickInsideNav && !isToggler && navbarCollapse.classList.contains('show')) {
+                        navbarCollapse.classList.remove('show');
+                    }
+                });
+            }
+        });
+
     </script>
-
-
 </body>
-<footer class="bg-white py-5">
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-lg-4 col-md-6">
-                    <h5 class="mb-4" style="color: var(--primary-color); font-weight: 600;">Human Capital Innovation Hub</h5>
-                    <p class="text-muted mb-4">Your centralized platform for managing and developing human capital. We streamline employee management and facilitate career growth.</p>
-                    <div class="social-links mb-4">
-                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" class="me-3" style="color: var(--primary-color);"><i class="fab fa-linkedin fa-lg"></i></a>
-                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" class="me-3" style="color: var(--primary-color);"><i class="fab fa-instagram fa-lg"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6">
-                    <h6 class="mb-4 fw-bold">Quick Links</h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" class="text-muted text-decoration-none" target="_blank">HC Squad</a></li>
-                        <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" class="text-muted text-decoration-none" target="_blank">Gallery</a></li>
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" class="text-muted text-decoration-none">Feedback</a></li>
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" class="text-muted text-decoration-none">FAQ</a></li>
-                        <!-- <li class="mb-2"><a href="#" class="text-muted text-decoration-none">-</a></li> -->
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-6">
-                    <h6 class="mb-4 fw-bold">Services</h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" class="text-muted text-decoration-none">Loan Simulation</a></li>
-                        <!-- <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Internal Mobility</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">PDF Tools</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Data Hub</a></li> -->
-                    </ul>
-                </div>
-        
-            </div>
-            <hr class="my-4">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0 text-muted">© 2025 Human Capital. All rights reserved.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
 </html>
