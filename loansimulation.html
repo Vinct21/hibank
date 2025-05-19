@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   
@@ -1312,7 +1313,17 @@ function genHitung() {
 
   // PDF Download Functionality
   document.getElementById('downloadPdfButton').addEventListener('click', function() {
+    // Ensure jsPDF and autoTable are loaded
+    if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+        showAlert("Error PDF", "jsPDF library is not loaded. Cannot generate PDF.");
+        return;
+    }
     const { jsPDF } = window.jspdf; // Destructure from window.jspdf
+    
+    // Check for autoTable specifically, as it's a plugin
+    const hasAutoTable = typeof jsPDF.API.autoTable === 'function' || (typeofjspdf.jsPDF.API !== 'undefined' && typeof jspdf.jsPDF.API.autoTable === 'function');
+
+
     const doc = new jsPDF();
     const form = document.getElementById('loanForm');
     const resultsDiv = document.getElementById('result');
@@ -1328,23 +1339,47 @@ function genHitung() {
       return;
     }
 
+    // Get current date and time
+    const now = new Date();
+    const dateTimeString = now.toLocaleString('id-ID', { 
+        day: '2-digit', 
+        month: 'long', 
+        year: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false // Use 24-hour format
+    }) + ' WIB'; // Adding timezone, adjust if needed
+
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
     doc.text("Simulasi Pinjaman Karyawan - hibank", 14, 20);
+    
+    doc.setFontSize(9); // Smaller font for date-time
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(100); // Grey color for subtitles
+    doc.setTextColor(100); // Grey color
+    doc.text(`Dicetak pada: ${dateTimeString}`, 14, 26); // Position below title
+    
+    doc.setFontSize(10); // Reset font size for subsequent text
+    doc.setTextColor(0); // Reset text color to black
 
-    let yPos = 30;
+    let yPos = 35;
     const addText = (label, value, isBold = false) => {
       if (yPos > 275) { // Check for page break
         doc.addPage();
         yPos = 20; // Reset Y position for new page
       }
+      const labelX = 14;    // X for the start of the label text
+      const colonAlignX = 65; // X for the alignment of the colon character (Adjusted for more space for label)
+      const valueAlignX = 70; // X for the start of the value text (Adjusted for space after colon)
+
       doc.setFont("helvetica", isBold ? "bold" : "normal");
-      doc.text(`${label}:`, 14, yPos);
-      doc.setFont("helvetica", "normal"); // Reset to normal for value
-      doc.text(value || "N/A", 60, yPos); // Adjust X for value
+      doc.text(label, labelX, yPos); // Print label text starting at labelX
+
+      doc.setFont("helvetica", "normal"); // Ensure colon is not bold if label was
+      doc.text(":", colonAlignX, yPos); // Print colon at its fixed X position
+
+      doc.text(String(value || "N/A"), valueAlignX, yPos); // Print value text starting at valueAlignX
       yPos += 7;
     };
 
@@ -1361,8 +1396,8 @@ function genHitung() {
     
     // Add calculated monthly installment from table if available
     const angsuranElement = resultsDiv.querySelector('.sticky-table tbody tr:nth-child(2) td:last-child');
-    if (angsurElement) {
-        addText("Perkiraan Angsuran Bulanan", angsurElement.innerText, true);
+    if (angsuranElement) {
+        addText("Perkiraan Angsuran Bulanan", angsuranElement.innerText, true);
     }
 
 
@@ -1380,12 +1415,10 @@ function genHitung() {
       doc.text("Tabel Detail Angsuran:", 14, yPos);
       yPos += 8;
 
-      // Using jsPDF-AutoTable plugin would be much better for complex tables.
-      // This is a simplified manual rendering.
       const head = [['Ke-', 'Sisa Pinjaman', 'Pokok', 'Bunga', 'Total Angsuran']];
       const body = [];
-      tableElement.querySelectorAll('tbody tr').forEach((tr, index) => {
-        if (index === 0) return; // Skip the initial "0" row for PDF if it's just placeholder
+      // Include the "Ke- 0" row in the PDF table if it exists in the HTML table
+      tableElement.querySelectorAll('tbody tr').forEach((tr) => {
         const rowData = [];
         tr.querySelectorAll('td').forEach(td => {
           rowData.push(td.innerText.replace(/Rp\s?/g, '').trim()); // Remove "Rp " and trim
@@ -1393,43 +1426,59 @@ function genHitung() {
         body.push(rowData);
       });
 
-      if (typeof doc.autoTable === 'function') { // Check if autoTable plugin is loaded
+      if (hasAutoTable) { // Check if autoTable plugin is loaded
         doc.autoTable({
             head: head,
             body: body,
             startY: yPos,
             theme: 'grid', // 'striped', 'grid', 'plain'
             headStyles: { fillColor: [23, 105, 128] }, // --primary-color
-            styles: { fontSize: 8, cellPadding: 2 },
+            styles: { fontSize: 8, cellPadding: 1.5, halign: 'right' }, // Default align right for numbers
             columnStyles: {
-                0: { halign: 'center', cellWidth: 15 },
-                1: { halign: 'right', cellWidth: 40 },
-                2: { halign: 'right', cellWidth: 40 },
-                3: { halign: 'right', cellWidth: 40 },
-                4: { halign: 'right', cellWidth: 40 },
+                0: { halign: 'center', cellWidth: 15 }, // 'Ke-' column
+                // Other columns will use default halign: 'right'
+                1: { cellWidth: 40 }, // Sisa Pinjaman
+                2: { cellWidth: 40 }, // Pokok
+                3: { cellWidth: 40 }, // Bunga
+                4: { cellWidth: 40 }, // Total Angsuran
+            },
+            didDrawPage: function (data) { // Update yPos after each page draw by autoTable
+                yPos = data.cursor.y;
             }
         });
+        yPos = doc.lastAutoTable.finalY || yPos; // Update yPos to after the table
       } else {
         // Manual table rendering (very basic)
+        showAlert("Info PDF", "Plugin jsPDF-AutoTable tidak termuat. Tabel akan ditampilkan secara sederhana. Untuk tampilan tabel yang lebih baik di PDF, pastikan plugin jsPDF-AutoTable termuat dengan benar.");
         doc.setFontSize(8);
-        head[0].forEach((header, idx) => doc.text(header, 14 + idx * 35, yPos));
+        let currentX = 14;
+        head[0].forEach((headerText, headerIdx) => {
+            doc.text(headerText, currentX, yPos);
+            currentX += (headerIdx === 0 ? 15 : 35); // Adjust column widths manually
+        });
         yPos += 5;
         body.forEach(row => {
             if (yPos > 275) { doc.addPage(); yPos = 20; }
-            row.forEach((cell, idx) => doc.text(cell, 14 + idx * 35, yPos));
+            currentX = 14;
+            row.forEach((cell, cellIdx) => {
+                doc.text(cell, currentX, yPos);
+                currentX += (cellIdx === 0 ? 15 : 35);
+            });
             yPos += 5;
         });
-        showAlert("Info PDF", "Tabel angsuran ditampilkan secara sederhana. Untuk tampilan tabel yang lebih baik di PDF, plugin jsPDF-AutoTable direkomendasikan.");
       }
     }
     
     // Add disclaimer
-    const finalY = typeof doc.autoTable === 'function' ? doc.lastAutoTable.finalY + 10 : yPos + 10;
-    if (finalY > 270) doc.addPage();
+    let finalY = yPos + 10; // Position disclaimer after the table or text
+    if (finalY > 270) { // Check if disclaimer needs a new page
+        doc.addPage();
+        finalY = 20; // Reset Y for new page
+    }
     doc.setFontSize(8);
-    doc.setTextColor(150);
-    doc.text("Disclaimer: Simulasi ini bersifat perkiraan dan dapat berbeda dengan perhitungan akhir bank.", 14, finalY > 270 ? 20 : finalY);
-    doc.text("Syarat dan ketentuan berlaku.", 14, (finalY > 270 ? 20 : finalY) + 4);
+    doc.setTextColor(150); // Light grey for disclaimer
+    doc.text("Disclaimer: Simulasi ini bersifat perkiraan dan dapat berbeda dengan perhitungan akhir bank.", 14, finalY);
+    doc.text("Syarat dan ketentuan berlaku.", 14, finalY + 4);
 
     doc.save(`Simulasi_Pinjaman_${document.getElementById('nik').value || 'Karyawan'}.pdf`);
   });
