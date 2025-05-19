@@ -1152,13 +1152,13 @@ function genHitung() {
         let mockResponse = {};
         if (nikk === "123456") {
           mockResponse = { name: "John Doe (Mock)", status: "Permanent" };
-          showAlert("NIK Ditemukan (Mock)", `Data untuk ${mockResponse.name} berhasil dimuat.`);
+          showAlert("NIK Ditemukan (Mock)", `hi ${mockResponse.name}, data anda berhasil dimuat. Silahkan mencoba simulasi pinjaman karyawan.`);
         } else if (nikk === "654321") {
           mockResponse = { name: "Jane Roe (Mock)", status: "Contract" };
-          showAlert("Peringatan (Mock)", `Karyawan ${mockResponse.name} berstatus Kontrak dan tidak dapat mengajukan pinjaman. Simulasi tetap dapat digunakan.`);
+          showAlert("Peringatan (Mock)", `hi ${mockResponse.name}, anda berstatus Kontrak dan tidak dapat mengajukan pinjaman, tetapi anda bisa tetap melakukan Simulasi Pinjaman.`);
         } else {
           mockResponse = { name: "", status: "" }; // NIK not found
-          showAlert("NIK Tidak Ditemukan (Mock)", "NIK tidak terdaftar dalam sistem.");
+          showAlert("NIK Tidak Ditemukan (Mock)", "NIK tidak terdaftar dalam sistem. Mohon hubungi Human Capital. Terima Kasih");
         }
         document.getElementById("name").value = mockResponse.name;
         document.getElementById("status").textContent = mockResponse.status;
@@ -1174,16 +1174,16 @@ function genHitung() {
           document.getElementById("name").value = response.name;
           document.getElementById("status").textContent = response.status;
           if (response.status === "Contract") {
-            showAlert("Peringatan", `Karyawan ${response.name} berstatus Kontrak dan tidak dapat mengajukan pinjaman. Anda masih bisa menggunakan Simulasi Pinjaman ini.`);
+            showAlert("Peringatan", `hi! ${response.name} anda masih berstatus Kontrak dan tidak dapat mengajukan pinjaman. Tetapi Anda masih bisa menggunakan Simulasi Pinjaman ini.`);
           } else if (response.status === "Permanent") {
-            showAlert("NIK Ditemukan", `Data untuk ${response.name} berhasil dimuat.`);
+            showAlert("NIK Ditemukan", `hi! ${response.name} data anda berhasil dimuat. Silahkan mencoba Silumasi Pinjaman. `);
           } else {
-            showAlert("Status Tidak Diketahui", `Status karyawan ${response.name} tidak dikenali.`);
+            showAlert("Status Tidak Diketahui", `hi! ${response.name} status tidak dikenali. Mohon menghubungi Human Capital. Terima Kasih`);
           }
         } else {
           document.getElementById("name").value = ""; 
           document.getElementById("status").textContent = "";
-          showAlert("NIK Tidak Ditemukan", "NIK tidak terdaftar atau terjadi kesalahan saat pengambilan data.");
+          showAlert("NIK Tidak Ditemukan", "hi! NIK tidak terdaftar, Mohon untuk menghubungi Human Capital, Terima Kasih.");
         }
       })
       .withFailureHandler(function(error) {
