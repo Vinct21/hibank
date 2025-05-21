@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Capital Request Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset and Global Styles */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background-color: #f8f9fa; 
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px; 
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 50px; 
+            padding-bottom: 20px; 
+            border-bottom: 1px solid #e0e0e0; 
+        }
+
+        .header-title {
+            font-size: 2.75rem; 
+            font-weight: 700;
+            color: #2c3e50; 
+            margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+            font-size: 1.3rem; 
+            font-weight: 600;
+            color: #D15B28; /* Hibank Orange */
+        }
+
+        /* Main Grid for Cards */
+        .request-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 28px; 
+        }
+
+        /* Card Styles */
+        .card {
+            position: relative;
+            overflow: hidden; 
+            border-radius: 16px; 
+            background-color: #ffffff; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07); 
+            transition: transform 0.3s ease, box-shadow 0.35s ease;
+            cursor: pointer;
+            display: flex; 
+            flex-direction: column;
+            height: 290px; 
+            border: 1px solid #e9ecef; 
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.03); 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); 
+        }
+
+        .card-image-wrapper { 
+            width: 100%;
+            height: 100%; 
+            position: relative; 
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            background-image: linear-gradient(to bottom, #22c1d6, #176980); 
+            border-radius: 15px 15px 0 0; 
+            padding-bottom: 75px; 
+            box-sizing: border-box; 
+            overflow: hidden; 
+        }
+
+        .card-image-wrapper svg.card-icon { 
+            width: 70px; 
+            height: 70px;
+            fill: #FFFFFF; 
+            transition: transform 0.3s ease; 
+        }
+
+        .card:hover .card-image-wrapper svg.card-icon {
+            transform: scale(1.12) rotate(3deg); 
+        }
+
+
+        .new-badge {
+            position: absolute;
+            top: 15px; 
+            right: 15px;
+            background-color: #D15B28; 
+            color: white;
+            padding: 6px 12px; 
+            font-size: 0.75rem; 
+            font-weight: 700;
+            border-radius: 8px; 
+            z-index: 10;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95); 
+            padding: 20px; 
+            min-height: 75px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 0 0 15px 15px; 
+            box-sizing: border-box;
+            transition: background 0.3s ease; 
+            border-top: 1px solid #f0f0f0; 
+        }
+        
+        .card:hover .card-overlay {
+            background: rgba(255,255,255,1);
+        }
+
+        .card-title {
+            /* UPDATED: Font size increased */
+            font-size: 1.15rem; 
+            font-weight: 600;
+            line-height: 1.35;
+            transition: color 0.3s ease;
+            color: #176980; 
+        }
+
+        .card:hover .card-title {
+            color: #145a6f; 
+        }
+
+
+        /* Footer Styles */
+        .footer {
+            text-align: center;
+            margin-top: 70px; 
+            padding-top: 25px;
+            border-top: 1px solid #dee2e6; 
+            font-size: 0.9rem;
+            color: #6c757d; 
+        }
+
+        /* Custom Message Box */
+        #customMessageBox {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #343a40; 
+            color: white;
+            padding: 14px 28px; 
+            border-radius: 10px; 
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.25); 
+            font-size: 1rem; 
+            opacity: 0;
+            transition: opacity 0.3s ease, bottom 0.3s ease;
+        }
+
+        #customMessageBox.show {
+            opacity: 1;
+            bottom: 35px; 
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .request-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+            .header-title { font-size: 2.25rem; }
+            .header-subtitle { font-size: 1.2rem; }
+            .card { height: 280px; }
+            .card-image-wrapper svg.card-icon { width: 64px; height: 64px; }
+            .card-image-wrapper { padding-bottom: 70px; }
+            .card-overlay { min-height: 70px; padding: 15px; }
+            /* UPDATED: Responsive font size for card title */
+            .card-title { font-size: 1.1rem; } 
+        }
+
+        @media (max-width: 768px) {
+            .request-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .header-title { font-size: 2rem; }
+            .header-subtitle { font-size: 1.1rem; }
+            .card { height: 270px; } 
+            .card-image-wrapper svg.card-icon { width: 60px; height: 60px; }
+            .card-image-wrapper { padding-bottom: 65px; }
+            .card-overlay { min-height: 65px; padding: 12px 15px; }
+            /* UPDATED: Responsive font size for card title */
+            .card-title { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-title">HCIH - Request Center</h1>
+            <p class="header-subtitle">PT BANK HIBANK INDONESIA</p>
+        </header>
+
+        <main class="request-grid">
+            <!-- <div class="card" onclick="handleCardClick('Form Pengajuan Cuti')">
+                <div class="card-image-wrapper">
+                    <div class="new-badge">New</div>
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                    </svg>
+                    <div class="card-overlay">
+                        <h2 class="card-title">Form Pengajuan Cuti</h2>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- <div class="card" onclick="handleCardClick('Form Klaim Medis')">
+                 <div class="card-image-wrapper">
+                    <div class="new-badge">New</div>
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    <div class="card-overlay">
+                        <h2 class="card-title">Form Klaim Medis</h2>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="card" onclick="handleCardClick('Form Perjalanan Dinas')">
+                <div class="card-image-wrapper">
+                    <div class="new-badge">New</div>
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zM10 4h4v2h-4V4zm10 15H4V8h16v11z"/>
+                    </svg>
+                    <div class="card-overlay">
+                        <h2 class="card-title">Form Perjalanan Dinas</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" onclick="handleCardClick('Form Pelatihan & Pengembangan')">
+                <div class="card-image-wrapper">
+                    <div class="new-badge">New</div>
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                    </svg>
+                    <div class="card-overlay">
+                        <h2 class="card-title">Form Pelatihan & Pengembangan</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="card" onclick="handleCardClick('Form Penilaian Kinerja')">
+                <div class="card-image-wrapper">
+                    <div class="new-badge">New</div>
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <div class="card-overlay">
+                        <h2 class="card-title">Form Penilaian Kinerja</h2>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- <div class="card" onclick="handleCardClick('Form Surat Keterangan')">
+                <div class="card-image-wrapper">
+                    <div class="new-badge">New</div>
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    <div class="card-overlay">
+                        <h2 class="card-title">Form Surat Keterangan</h2>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- <div class="card" onclick="handleCardClick('Form Perubahan Data Karyawan')">
+                <div class="card-image-wrapper">
+                    <div class="new-badge">New</div>
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    <div class="card-overlay">
+                        <h2 class="card-title">Form Perubahan Data Karyawan</h2>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="card" onclick="handleCardClick('Form Pengunduran Diri')">
+                <div class="card-image-wrapper">
+                    <div class="new-badge">New</div>
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    <div class="card-overlay">
+                        <h2 class="card-title">Form Pengunduran Diri</h2>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; <span id="currentYear"></span> PT BANK HIBANK INDONESIA. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Function to handle card click
+        function handleCardClick(formTitle) {
+            showCustomMessage(`Mengakses ${formTitle}...`);
+            console.log(`Card clicked: ${formTitle}. Navigating to form page (simulation)...`);
+        }
+
+        // Function to show a custom message
+        function showCustomMessage(message) {
+            let messageBox = document.getElementById('customMessageBox');
+            if (!messageBox) {
+                messageBox = document.createElement('div');
+                messageBox.id = 'customMessageBox';
+                document.body.appendChild(messageBox);
+            }
+            messageBox.textContent = message;
+            messageBox.classList.add('show'); 
+
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
