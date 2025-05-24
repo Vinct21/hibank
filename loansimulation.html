@@ -8,15 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   
-<!-- <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Logo" loading="lazy" style="width: 700px;"> -->
-
-<!-- https://drive.google.com/file/d/1vWROesjizhti9mlBCwDD04mNIX4lJb1c/view?usp=drive_link -->
 <title>Hi Simulasi Pinjaman Karyawan</title>
 
-<!-- Style for Header & Footer Section -->
 <style>
     :root {
       --primary-color: #176980;
@@ -359,7 +356,7 @@
     .form-container .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
   
     .form-container .btn:hover {
-       filter: brightness(90%); /* Darken button on hover */
+        filter: brightness(90%); /* Darken button on hover */
     }
   </style>
   
@@ -640,8 +637,7 @@
 </head>
 
 <body>
-  <!-- Nav Bar -->
-<nav class="navbar navbar-expand-lg fixed-top">
+  <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <img src="https://placehold.co/40x40/176980/FFFFFF?text=HCIH" alt="Bubble Logo" style="border-radius: 50%; margin-right: 10px;"
                  onerror="this.onerror=null; this.src='https://placehold.co/40x40/CCCCCC/000000?text=Logo';">
@@ -651,25 +647,24 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#"><span>Home</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzU2GpKE9GqagMJT_EdTNRSXhWwNg5tA-GSxry13G32QEPzFeM8IkRMa0TYvq-y_y6Hmw/exec" target="_top" ><span>Home</span></a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span>Services</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
-                            <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_blank">Loan Simulation</a></li>
+                            <li><a class="dropdown-item" href="#" target="_blank">Loan Simulation</a></li>
                             </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" target="_blank"><span>Gallery</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" target="_blank"><span>Feedback</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_blank"><span>FAQ</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" target="_top"><span>Feedback</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-<!-- Initial Information Board Section -->
 <div id="initialInfoBoard" class="modal" style="display: block;"> <div class="modal-content">
     <span class="modal-close" onclick="closeInitialInfo()">&times;</span>
     <div class="modal-header">
@@ -753,8 +748,8 @@
           <div class="col-md-6 col-sm-12"> <label for="nik" class="form-label">Nomor Induk Karyawan (NIK)</label>
             <div class="input-group">
               <input type="text" class="form-control" id="nik" required 
-                     aria-describedby="nikHelp" pattern="[0-9]+" minlength="6" maxlength="6"
-                     placeholder="Masukkan 6 digit NIK">
+                       aria-describedby="nikHelp" pattern="[0-9]+" minlength="6" maxlength="6"
+                       placeholder="Masukkan 6 digit NIK">
               <button id="chckbtn" class="btn btn-primary d-flex align-items-center justify-content-center" type="button" onclick="getData()" style="width: 42px; height: 42px; border-radius: 0 0.375rem 0.375rem 0;">
                 <i class="fas fa-search fa-sm"></i>
               </button>
@@ -842,16 +837,15 @@
     </div>
 </div>
 
-<!-- Custom Modal -->
 <div id="alertModal" class="modal" tabindex="-1"> <div class="modal-dialog modal-dialog-centered"> <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title" id="modalTitle">Alert Title</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button> </div>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> </div>
     <div class="modal-body" id="modalMessage">
       Alert message goes here.
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()">Tutup</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
     </div>
   </div>
 </div>
@@ -861,7 +855,40 @@
     <i class="fas fa-info-circle"></i> Info
   </button>
 
-<!-- Script Untuk Vlookup Bunga dari Tipe Kredit -->
+<script>
+  // Helper to parse currency string (e.g., "Rp 10.000.000") to float
+  const parseCurrency = (valueStr) => {
+    if (typeof valueStr !== 'string') return 0;
+    return parseFloat(valueStr.replace(/[^0-9]/g, '')) || 0;
+  };
+  
+  // Helper to format number to IDR currency string
+  const formatToIDR = (number) => {
+    if (isNaN(number)) return "Rp 0";
+    return `Rp ${Math.round(number).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  };
+
+  // Currency Formatting for Input Fields
+  function formatCurrencyInput(inputElement) {
+    let value = inputElement.value.replace(/[^\d]/g, ''); // Remove non-digits
+    if (value) {
+      const numberValue = parseInt(value, 10);
+      if (!isNaN(numberValue)) {
+        inputElement.value = 'Rp ' + numberValue.toLocaleString('id-ID');
+      } else {
+        inputElement.value = 'Rp '; // Default if somehow NaN
+      }
+    } else {
+      // If user clears the input, set to 'Rp 0' for cicilanBerjalan, empty for others
+      if (inputElement.id === 'cicilanBerjalan') {
+          inputElement.value = 'Rp 0';
+      } else {
+          inputElement.value = '';
+      }
+    }
+  }
+</script>
+
 <script>
 // Initialize Bootstrap Tooltips
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -890,7 +917,6 @@ function updateBunga() {
 }
 </script>
 
-<!-- Script Untuk Vlookup DP dari Tipe Kredit -->
 <script>
     // Function to update Bunga field based on selected loan type
     function updateDP() {
@@ -907,7 +933,6 @@ function updateBunga() {
     }
     </script>
 
-<!-- Script Untuk Vlookup DBR dari Gaji Pokok -->
 <script>
 // Function to update DBR field based on Gaji Pokok
 function updateDBR() {
@@ -929,36 +954,28 @@ function updateDBR() {
 
 </script>
 
-<!-- Script Untuk Alert Error -->
 <script>
-// Custom Modal Show
-  let alertModalInstance = null; // Store modal instance
+// Custom Modal Handling
+  let alertModalElement = null; 
+
+  document.addEventListener('DOMContentLoaded', () => {
+      alertModalElement = document.getElementById('alertModal');
+  });
+
   function showAlert(title, message) {
-    document.getElementById("modalTitle").innerText = title;
-    document.getElementById("modalMessage").innerHTML = message; // Use innerHTML for potential HTML in message
-    if (!alertModalInstance) {
-        alertModalInstance = new bootstrap.Modal(document.getElementById('alertModal'));
+    if (!alertModalElement) {
+        console.error("Alert modal element not found in showAlert.");
+        return;
     }
-    alertModalInstance.show();
-  }
-  function closeModal() { // Called by modal's close buttons
-     if (alertModalInstance) {
-         alertModalInstance.hide();
-         // Remove modal backdrop and restore page interactivity
-         const backdrop = document.querySelector('.modal-backdrop');
-         if (backdrop) {
-             backdrop.remove();
-         }
-         document.body.classList.remove('modal-open');
-         document.body.style.overflow = '';
-         document.body.style.paddingRight = '';
-     }
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalMessage").innerHTML = message; 
+    
+    const modalInstance = bootstrap.Modal.getOrCreateInstance(alertModalElement);
+    modalInstance.show();
   }
 </script>
 
-<!-- Toggle visibility of the floating info box -->
 <script>
-
   // Toggle visibility of the floating info box
   document.addEventListener('DOMContentLoaded', function() {
     const box = document.getElementById("floatingBox");
@@ -970,27 +987,13 @@ function updateDBR() {
           this.innerHTML = '<i class="fas fa-info-circle"></i> Info';
         } else {
           box.classList.add('visible');
-          this.innerHTML = '<i class="fas fa-times"></i> Tutup Info'; // Changed icon and text
+          this.innerHTML = '<i class="fas fa-times"></i> Tutup Info';
         }
       });
     }
   });
-
-    // Helper to parse currency string (e.g., "Rp 10.000.000") to float
-  const parseCurrency = (valueStr) => {
-    if (typeof valueStr !== 'string') return 0;
-    return parseFloat(valueStr.replace(/[^0-9]/g, '')) || 0;
-  };
-  
-  // Helper to format number to IDR currency string
-  const formatToIDR = (number) => {
-    if (isNaN(number)) return "Rp 0";
-    return `Rp ${Math.round(number).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-  };
-
 </script>
 
-<!-- Script Generate & Reset Table -->
 <script>
 function genHitung() {
     const plafond = parseCurrency(document.getElementById("plafond").value);
@@ -1001,19 +1004,16 @@ function genHitung() {
     const cicilanBerjalan = parseCurrency(document.getElementById("cicilanBerjalan").value);
     const tipePinjaman = document.getElementById("tipePinjaman").value;
 
-    // Convert percentages from text to decimal
     const bungaAnnualRate = parseFloat(bungaAnnualPercentText.replace('%', '')) / 100;
     const dbrRate = parseFloat(dbrPercentText.replace('%', '')) / 100;
     
-    // --- Input Validations ---
     if (plafond <= 0) { showAlert("Input Error", "Plafond pinjaman harus lebih dari 0."); return; }
     if (isNaN(jangkaWaktu) || jangkaWaktu <= 0) { showAlert("Input Error", "Jangka waktu harus berupa angka positif."); return; }
     if (isNaN(bungaAnnualRate) || bungaAnnualRate < 0) { showAlert("Input Error", "Suku bunga tidak valid. Pilih tipe pinjaman."); return; }
     if (gajiPokok <= 0) { showAlert("Input Error", "Penghasilan kotor bulanan harus diisi dan lebih dari 0."); return; }
     if (isNaN(dbrRate) || dbrRate <= 0) { showAlert("Input Error", "DBR tidak valid. Pastikan penghasilan terisi dengan benar."); return; }
 
-    // Loan specific term validations (max plafond, max tenor)
-    if (!validateLoanTerms(tipePinjaman, plafond, jangkaWaktu)) { return; }
+    if (!validateLoanTerms(tipePinjaman, plafond, jangkaWaktu, true)) { return; } 
 
     const bungaMonthlyRate = bungaAnnualRate / 12;
     const angsuranBulanan = calculatePMT(bungaMonthlyRate, jangkaWaktu, plafond);
@@ -1034,7 +1034,6 @@ function genHitung() {
       return;
     }
 
-    // --- Generate Amortization Table ---
     let sisaPinjaman = plafond;
     let resultHtml = `
     <div class="simulation-header">
@@ -1066,15 +1065,14 @@ function genHitung() {
       let bungaAmount = sisaPinjaman * bungaMonthlyRate;
       let pokokAmount = angsuranBulanan - bungaAmount;
       
-      // Adjustment for the last payment
       if (i === jangkaWaktu) {
-        pokokAmount = sisaPinjaman; // Principal is whatever is left
+        pokokAmount = sisaPinjaman; 
         bungaAmount = angsuranBulanan - pokokAmount; 
-        if (bungaAmount < 0) bungaAmount = 0; // Interest cannot be negative
+        if (bungaAmount < 0) bungaAmount = 0; 
       }
       
       sisaPinjaman -= pokokAmount;
-      if (sisaPinjaman < 0.5) sisaPinjaman = 0; // Correct minor floating point inaccuracies to show Rp 0
+      if (sisaPinjaman < 0.5) sisaPinjaman = 0; 
 
       resultHtml += `
       <tr>
@@ -1089,48 +1087,41 @@ function genHitung() {
     document.getElementById("result").innerHTML = resultHtml;
   }
 
-    // Reset Form Function
   function resetForm() {
     const loanForm = document.getElementById("loanForm");
-    loanForm.reset(); // Resets form fields to their initial values
+    loanForm.reset(); 
     document.getElementById("result").innerHTML = '<p class="text-center text-muted p-4">Hasil simulasi akan ditampilkan di sini setelah Anda mengisi formulir dan menekan tombol "Hitung Simulasi".</p>';
-    // Clear auto-filled fields explicitly
     document.getElementById("bunga").value = "";
     document.getElementById("dp").value = "";
     document.getElementById("dbr").value = "";
     document.getElementById("name").value = "";
-    document.getElementById("status").textContent = ""; // Clear hidden status
+    document.getElementById("status").textContent = ""; 
     
-    // Reset Bootstrap validation state
     loanForm.classList.remove('was-validated');
     const invalidInputs = loanForm.querySelectorAll('.is-invalid');
     invalidInputs.forEach(input => input.classList.remove('is-invalid'));
-    // Re-apply initial value for cicilanBerjalan after reset
     document.getElementById('cicilanBerjalan').value = 'Rp 0';
-    formatCurrencyInput(document.getElementById('cicilanBerjalan')); // Re-format
+    formatCurrencyInput(document.getElementById('cicilanBerjalan')); 
   }
 </script>
 
-<!-- Script Rumus PMT -->
 <script>
   function calculatePMT(monthlyRate, numberOfPeriods, loanAmount) {
-    if (monthlyRate === 0) { // For 0% interest loans (e.g., Emergency Loan)
+    if (monthlyRate === 0) { 
       return loanAmount / numberOfPeriods;
     }
-    // Standard PMT formula for loans with interest
     const pmt = (monthlyRate * loanAmount) / (1 - Math.pow(1 + monthlyRate, -numberOfPeriods));
     return pmt;
   }
 </script>
 
 
-<!-- Script get data Employee -->
 <script>
   function getData() {
     const nikInput = document.getElementById("nik");
     const nikk = nikInput.value.trim();
     const checkBtn = document.getElementById("chckbtn");
-    const originalBtnHtml = checkBtn.innerHTML; // Save original button content
+    const originalBtnHtml = checkBtn.innerHTML; 
 
     if (!nikk || !/^[0-9]{6}$/.test(nikk)) {
       showAlert("NIK Tidak Valid", "Harap masukkan 6 digit NIK yang benar.");
@@ -1138,12 +1129,11 @@ function genHitung() {
       nikInput.focus();
       return;
     }
-    nikInput.classList.remove('is-invalid'); // Clear previous validation error
+    nikInput.classList.remove('is-invalid'); 
 
     checkBtn.disabled = true;
-    checkBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'; // Loading spinner
+    checkBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'; 
 
-    // --- Mocking google.script.run for local development/testing ---
     if (typeof google === 'undefined' || typeof google.script === 'undefined' || typeof google.script.run === 'undefined') {
       console.warn("google.script.run is not available. Using mock NIK check.");
       setTimeout(() => {
@@ -1152,20 +1142,19 @@ function genHitung() {
         let mockResponse = {};
         if (nikk === "123456") {
           mockResponse = { name: "John Doe (Mock)", status: "Permanent" };
-          showAlert("NIK Ditemukan (Mock)", `Data untuk ${mockResponse.name} berhasil dimuat.`);
+          showAlert("NIK Ditemukan (Mock)", `hi ${mockResponse.name}, data anda berhasil dimuat. Silahkan mencoba simulasi pinjaman karyawan.`);
         } else if (nikk === "654321") {
           mockResponse = { name: "Jane Roe (Mock)", status: "Contract" };
-          showAlert("Peringatan (Mock)", `Karyawan ${mockResponse.name} berstatus Kontrak dan tidak dapat mengajukan pinjaman. Simulasi tetap dapat digunakan.`);
+          showAlert("Peringatan (Mock)", `hi ${mockResponse.name}, anda berstatus Kontrak dan tidak dapat mengajukan pinjaman, tetapi anda bisa tetap melakukan Simulasi Pinjaman.`);
         } else {
-          mockResponse = { name: "", status: "" }; // NIK not found
-          showAlert("NIK Tidak Ditemukan (Mock)", "NIK tidak terdaftar dalam sistem.");
+          mockResponse = { name: "", status: "" }; 
+          showAlert("NIK Tidak Ditemukan (Mock)", "NIK tidak terdaftar dalam sistem. Mohon hubungi Human Capital. Terima Kasih");
         }
         document.getElementById("name").value = mockResponse.name;
         document.getElementById("status").textContent = mockResponse.status;
-      }, 1200); // Simulate network delay
+      }, 1200); 
       return;
     }
-    // --- Actual Google Apps Script call ---
     google.script.run
       .withSuccessHandler(function(response) {
         checkBtn.disabled = false;
@@ -1174,16 +1163,16 @@ function genHitung() {
           document.getElementById("name").value = response.name;
           document.getElementById("status").textContent = response.status;
           if (response.status === "Contract") {
-            showAlert("Peringatan", `Karyawan ${response.name} berstatus Kontrak dan tidak dapat mengajukan pinjaman. Anda masih bisa menggunakan Simulasi Pinjaman ini.`);
+            showAlert("Peringatan", `hi! ${response.name} anda masih berstatus Kontrak dan tidak dapat mengajukan pinjaman. Tetapi Anda masih bisa menggunakan Simulasi Pinjaman ini.`);
           } else if (response.status === "Permanent") {
-            showAlert("NIK Ditemukan", `Data untuk ${response.name} berhasil dimuat.`);
+            showAlert("NIK Ditemukan", `hi! ${response.name} data anda berhasil dimuat. Silahkan mencoba Silumasi Pinjaman. `);
           } else {
-            showAlert("Status Tidak Diketahui", `Status karyawan ${response.name} tidak dikenali.`);
+            showAlert("Status Tidak Diketahui", `hi! ${response.name} status tidak dikenali. Mohon menghubungi Human Capital. Terima Kasih`);
           }
         } else {
           document.getElementById("name").value = ""; 
           document.getElementById("status").textContent = "";
-          showAlert("NIK Tidak Ditemukan", "NIK tidak terdaftar atau terjadi kesalahan saat pengambilan data.");
+          showAlert("NIK Tidak Ditemukan", "hi! NIK tidak terdaftar, Mohon untuk menghubungi Human Capital, Terima Kasih.");
         }
       })
       .withFailureHandler(function(error) {
@@ -1192,10 +1181,9 @@ function genHitung() {
         showAlert("Error Akses Data", "Gagal menghubungi server atau mengambil data karyawan: " + error.message);
         console.error("GAS Failure: ", error);
       })
-      .checkNIK(nikk); // Assuming 'checkNIK' is your GAS function name
+      .checkNIK(nikk); 
   }
 
-    // Close Initial Information Modal
   let initialModalInstance = null;
   function closeInitialInfo() {
     if (!initialModalInstance) {
@@ -1203,44 +1191,30 @@ function genHitung() {
     }
     if (initialModalInstance) {
       initialModalInstance.hide();
-    } else { // Fallback if Bootstrap JS not fully initialized or modal instance not found
+    } else { 
       document.getElementById('initialInfoBoard').style.display = 'none';
     }
   }
 
-    // Ensure initial modal can be closed if Bootstrap JS loads slightly later
-  document.addEventListener('DOMContentLoaded', function () {
-    var initialModalElement = document.getElementById('initialInfoBoard');
-    if (initialModalElement && typeof bootstrap !== 'undefined') {
-      if (initialModalElement.style.display === 'block') { // Only get instance if it's meant to be shown
-        initialModalInstance = new bootstrap.Modal(initialModalElement);
-      }
-    }
-  });
-
-    // Form Validation and Submission Logic
   function validateAndSubmit() {
     const form = document.getElementById('loanForm');
-    // Remove previous validation states before re-validating
     form.classList.remove('was-validated');
     const invalidInputs = form.querySelectorAll('.is-invalid');
     invalidInputs.forEach(input => input.classList.remove('is-invalid'));
 
-    if (!form.checkValidity()) { // HTML5 validation
-      form.classList.add('was-validated'); // Trigger Bootstrap's native validation styles
+    if (!form.checkValidity()) { 
+      form.classList.add('was-validated'); 
       showAlert("Input Tidak Lengkap", "Harap periksa kembali dan lengkapi semua field yang wajib diisi (ditandai merah) sebelum melanjutkan.");
       const firstInvalidField = form.querySelector(':invalid');
       if (firstInvalidField) {
-        firstInvalidField.focus(); // Focus the first invalid field
+        firstInvalidField.focus(); 
       }
       return;
     }
-    // If all HTML5 validations pass, proceed to calculation
     genHitung(); 
   }
 
-   // Loan Term Validation (Max Plafond, Max Tenor) based on Loan Type
-  function validateLoanTerms(tipePinjaman, plafond, jangkaWaktu) {
+  function validateLoanTerms(tipePinjaman, plafond, jangkaWaktu, finalCheck = false) {
     const loanRules = {
       "Kredit Pemilikan Rumah (KPR)": { maxPlafond: 5000000000, maxTenor: 240, name: "KPR" },
       "Kredit Pemilikan Ruko": { maxPlafond: 5000000000, maxTenor: 240, name: "KPR Ruko" },
@@ -1250,191 +1224,287 @@ function genHitung() {
       "Emergency Loan": { maxPlafond: 100000000, maxTenor: 12, name: "Emergency Loan" }
     };
     const rule = loanRules[tipePinjaman];
-    if (!rule) { // Should not happen if dropdown is correctly populated
-      showAlert("Error Sistem", "Tipe pinjaman tidak dikenali untuk validasi.");
+    if (!rule) { 
+      console.error("Error Sistem: Tipe pinjaman tidak dikenali untuk validasi - ", tipePinjaman);
       return false;
     }
-    if (plafond > rule.maxPlafond) {
-      showAlert(`Plafond Melebihi Batas untuk ${rule.name}`,
-        `Plafond pinjaman untuk ${rule.name} tidak boleh lebih dari ${formatToIDR(rule.maxPlafond)}.`);
-      return false;
-    }
-    if (jangkaWaktu > rule.maxTenor) {
-      showAlert(`Tenor Melebihi Batas untuk ${rule.name}`,
-        `Jangka waktu untuk ${rule.name} tidak boleh lebih dari ${rule.maxTenor / 12} tahun (${rule.maxTenor} bulan).`);
-      return false;
-    }
-    return true; // All specific validations passed
-  }
 
-    // Currency Formatting for Input Fields
-  function formatCurrencyInput(inputElement) {
-    let value = inputElement.value.replace(/[^\d]/g, ''); // Remove non-digits
-    if (value) {
-      const numberValue = parseInt(value, 10);
-      if (!isNaN(numberValue)) {
-        inputElement.value = 'Rp ' + numberValue.toLocaleString('id-ID');
-      } else {
-        inputElement.value = 'Rp '; // Default if somehow NaN
-      }
-    } else {
-      // If user clears the input, set to 'Rp 0' for cicilanBerjalan, empty for others
-      if (inputElement.id === 'cicilanBerjalan') {
-          inputElement.value = 'Rp 0';
-      } else {
-          inputElement.value = '';
-      }
-    }
-  }
+    let overallValidationPassed = true;
 
-  // Add event listeners for real-time currency formatting
-  ['plafond', 'gajiPokok', 'cicilanBerjalan'].forEach(id => {
-    const element = document.getElementById(id);
-    if (element) {
-      // Format on input
-      element.addEventListener('input', function() { formatCurrencyInput(this); });
-      // Format on blur and update DBR if it's gajiPokok
-      element.addEventListener('blur', function() { 
-        formatCurrencyInput(this); 
-        if (this.value.trim() === 'Rp' || this.value.trim() === 'Rp 0' && this.id !== 'cicilanBerjalan') {
-            if (this.id !== 'cicilanBerjalan') this.value = ''; // Clear if only "Rp" or "Rp 0" unless it's cicilanBerjalan
+    if (plafond > 0) { 
+        if (plafond > rule.maxPlafond) {
+            showAlert(`Plafond Melebihi Batas untuk ${rule.name}`,
+            `Plafond pinjaman untuk ${rule.name} tidak boleh lebih dari ${formatToIDR(rule.maxPlafond)}.`);
+            overallValidationPassed = false;
+            if (!finalCheck) return false; 
         }
-        if (this.id === 'gajiPokok') {
-          updateDBR(); // Update DBR after gajiPokok is formatted and loses focus
+    } else if (finalCheck && parseCurrency(document.getElementById('plafond').value) <= 0) {
+        // This specific condition for finalCheck might be redundant if genHitung already checks for positive plafond
+    }
+
+    if (jangkaWaktu > 0 && !isNaN(jangkaWaktu)) { 
+        if (jangkaWaktu > rule.maxTenor) {
+            showAlert(`Tenor Melebihi Batas untuk ${rule.name}`,
+            `Jangka waktu untuk ${rule.name} tidak boleh lebih dari ${rule.maxTenor / 12} tahun (${rule.maxTenor} bulan).`);
+            overallValidationPassed = false;
+            if (!finalCheck) return false; 
         }
-      });
-      // Initial formatting for cicilanBerjalan
-      if (id === 'cicilanBerjalan') {
-          formatCurrencyInput(element);
-      }
+    } else if (finalCheck && (parseInt(document.getElementById('jangkaWaktu').value) <= 0 || isNaN(parseInt(document.getElementById('jangkaWaktu').value)))) {
+        // This specific condition for finalCheck might be redundant if genHitung already checks for positive tenor
     }
-  });
-
-  // PDF Download Functionality
-  document.getElementById('downloadPdfButton').addEventListener('click', function() {
-    const { jsPDF } = window.jspdf; // Destructure from window.jspdf
-    const doc = new jsPDF();
-    const form = document.getElementById('loanForm');
-    const resultsDiv = document.getElementById('result');
-
-    // Check if form is valid and simulation has been run
-    if (!form.checkValidity()) {
-      showAlert("Tidak Bisa Download", "Harap lengkapi semua field yang valid pada formulir sebelum mengunduh PDF.");
-      form.classList.add('was-validated');
-      return;
-    }
-    if (!resultsDiv.querySelector('.sticky-table')) {
-      showAlert("Tidak Bisa Download", "Belum ada hasil simulasi untuk diunduh. Silakan tekan tombol 'Hitung Simulasi' terlebih dahulu.");
-      return;
-    }
-
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "bold");
-    doc.text("Simulasi Pinjaman Karyawan - hibank", 14, 20);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(100); // Grey color for subtitles
-
-    let yPos = 30;
-    const addText = (label, value, isBold = false) => {
-      if (yPos > 275) { // Check for page break
-        doc.addPage();
-        yPos = 20; // Reset Y position for new page
-      }
-      doc.setFont("helvetica", isBold ? "bold" : "normal");
-      doc.text(`${label}:`, 14, yPos);
-      doc.setFont("helvetica", "normal"); // Reset to normal for value
-      doc.text(value || "N/A", 60, yPos); // Adjust X for value
-      yPos += 7;
-    };
-
-    // Add form data to PDF
-    addText("NIK Karyawan", document.getElementById('nik').value);
-    addText("Nama Karyawan", document.getElementById('name').value);
-    addText("Tipe Pinjaman", document.getElementById('tipePinjaman').value);
-    addText("Plafond Pinjaman", document.getElementById('plafond').value, true);
-    addText("Jangka Waktu", `${document.getElementById('jangkaWaktu').value} bulan`);
-    addText("Suku Bunga Pinjaman", document.getElementById('bunga').value);
-    addText("Penghasilan Kotor", document.getElementById('gajiPokok').value);
-    addText("DBR Maksimal", document.getElementById('dbr').value);
-    addText("Cicilan Pinjaman Lain", document.getElementById('cicilanBerjalan').value);
     
-    // Add calculated monthly installment from table if available
-    const angsuranElement = resultsDiv.querySelector('.sticky-table tbody tr:nth-child(2) td:last-child');
-    if (angsurElement) {
-        addText("Perkiraan Angsuran Bulanan", angsurElement.innerText, true);
+    return overallValidationPassed; 
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var initialModalElement = document.getElementById('initialInfoBoard');
+    if (initialModalElement && typeof bootstrap !== 'undefined') {
+      if (initialModalElement.style.display === 'block') { 
+        initialModalInstance = new bootstrap.Modal(initialModalElement);
+      }
     }
 
-
-    yPos += 3; // Extra space before table
-    doc.setLineWidth(0.2);
-    doc.line(14, yPos, 196, yPos); // Separator line
-    yPos += 7;
-
-
-    // Add Amortization Table to PDF
-    const tableElement = resultsDiv.querySelector('.sticky-table');
-    if (tableElement) {
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bold");
-      doc.text("Tabel Detail Angsuran:", 14, yPos);
-      yPos += 8;
-
-      // Using jsPDF-AutoTable plugin would be much better for complex tables.
-      // This is a simplified manual rendering.
-      const head = [['Ke-', 'Sisa Pinjaman', 'Pokok', 'Bunga', 'Total Angsuran']];
-      const body = [];
-      tableElement.querySelectorAll('tbody tr').forEach((tr, index) => {
-        if (index === 0) return; // Skip the initial "0" row for PDF if it's just placeholder
-        const rowData = [];
-        tr.querySelectorAll('td').forEach(td => {
-          rowData.push(td.innerText.replace(/Rp\s?/g, '').trim()); // Remove "Rp " and trim
+    ['plafond', 'gajiPokok', 'cicilanBerjalan'].forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.addEventListener('input', function() { formatCurrencyInput(this); });
+        element.addEventListener('blur', function() { 
+          formatCurrencyInput(this); 
+          if (this.value.trim() === 'Rp' || this.value.trim() === 'Rp 0' && this.id !== 'cicilanBerjalan') {
+              if (this.id !== 'cicilanBerjalan') this.value = '';
+          }
+          if (this.id === 'gajiPokok') {
+            updateDBR();
+          }
         });
-        body.push(rowData);
-      });
+        if (id === 'cicilanBerjalan') {
+            formatCurrencyInput(element); 
+        }
+      }
+    });
 
-      if (typeof doc.autoTable === 'function') { // Check if autoTable plugin is loaded
-        doc.autoTable({
-            head: head,
-            body: body,
-            startY: yPos,
-            theme: 'grid', // 'striped', 'grid', 'plain'
-            headStyles: { fillColor: [23, 105, 128] }, // --primary-color
-            styles: { fontSize: 8, cellPadding: 2 },
-            columnStyles: {
-                0: { halign: 'center', cellWidth: 15 },
-                1: { halign: 'right', cellWidth: 40 },
-                2: { halign: 'right', cellWidth: 40 },
-                3: { halign: 'right', cellWidth: 40 },
-                4: { halign: 'right', cellWidth: 40 },
+    const plafondInput = document.getElementById('plafond');
+    const jangkaWaktuInput = document.getElementById('jangkaWaktu');
+    const tipePinjamanSelect = document.getElementById('tipePinjaman');
+
+    if (plafondInput) {
+        plafondInput.addEventListener('input', function() { // Changed to 'input'
+            const tipePinjaman = tipePinjamanSelect.value;
+            if (!tipePinjaman) return; 
+            const plafondValue = parseCurrency(this.value);
+            if (plafondValue > 0) { 
+                validateLoanTerms(tipePinjaman, plafondValue, 0, false); 
             }
         });
-      } else {
-        // Manual table rendering (very basic)
-        doc.setFontSize(8);
-        head[0].forEach((header, idx) => doc.text(header, 14 + idx * 35, yPos));
-        yPos += 5;
-        body.forEach(row => {
-            if (yPos > 275) { doc.addPage(); yPos = 20; }
-            row.forEach((cell, idx) => doc.text(cell, 14 + idx * 35, yPos));
-            yPos += 5;
+    }
+
+    if (jangkaWaktuInput) {
+        jangkaWaktuInput.addEventListener('input', function() { // Changed to 'input'
+            const tipePinjaman = tipePinjamanSelect.value;
+            if (!tipePinjaman) return;
+            const jangkaWaktuValue = parseInt(this.value);
+            if (jangkaWaktuValue > 0 && !isNaN(jangkaWaktuValue)) { 
+                validateLoanTerms(tipePinjaman, 0, jangkaWaktuValue, false);
+            }
         });
-        showAlert("Info PDF", "Tabel angsuran ditampilkan secara sederhana. Untuk tampilan tabel yang lebih baik di PDF, plugin jsPDF-AutoTable direkomendasikan.");
-      }
     }
     
-    // Add disclaimer
-    const finalY = typeof doc.autoTable === 'function' ? doc.lastAutoTable.finalY + 10 : yPos + 10;
-    if (finalY > 270) doc.addPage();
-    doc.setFontSize(8);
-    doc.setTextColor(150);
-    doc.text("Disclaimer: Simulasi ini bersifat perkiraan dan dapat berbeda dengan perhitungan akhir bank.", 14, finalY > 270 ? 20 : finalY);
-    doc.text("Syarat dan ketentuan berlaku.", 14, (finalY > 270 ? 20 : finalY) + 4);
+    if (tipePinjamanSelect) {
+        tipePinjamanSelect.addEventListener('change', function() {
+            const tipePinjaman = this.value;
+            if (!tipePinjaman) return;
 
-    doc.save(`Simulasi_Pinjaman_${document.getElementById('nik').value || 'Karyawan'}.pdf`);
+            const plafondValue = parseCurrency(plafondInput.value);
+            const jangkaWaktuValue = parseInt(jangkaWaktuInput.value);
+
+            if (plafondValue > 0) {
+                validateLoanTerms(tipePinjaman, plafondValue, 0, false); 
+            }
+            if (jangkaWaktuValue > 0 && !isNaN(jangkaWaktuValue)) {
+                 validateLoanTerms(tipePinjaman, 0, jangkaWaktuValue, false); 
+            }
+        });
+    }
+
+    document.getElementById('downloadPdfButton').addEventListener('click', function() {
+      if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+          showAlert("Error PDF", "jsPDF library is not loaded. Cannot generate PDF.");
+          return;
+      }
+      const { jsPDF } = window.jspdf; 
+      
+      const hasAutoTable = typeof jsPDF.API.autoTable === 'function' || (typeof jspdf.jsPDF.API !== 'undefined' && typeof jspdf.jsPDF.API.autoTable === 'function');
+
+
+      const doc = new jsPDF();
+      const form = document.getElementById('loanForm');
+      const resultsDiv = document.getElementById('result');
+
+      if (!form.checkValidity()) {
+        showAlert("Tidak Bisa Download", "Harap lengkapi semua field yang valid pada formulir sebelum mengunduh PDF.");
+        form.classList.add('was-validated');
+        return;
+      }
+      if (!resultsDiv.querySelector('.sticky-table')) {
+        showAlert("Tidak Bisa Download", "Belum ada hasil simulasi untuk diunduh. Silakan tekan tombol 'Hitung Simulasi' terlebih dahulu.");
+        return;
+      }
+
+      const now = new Date();
+      const dateTimeString = now.toLocaleString('id-ID', { 
+          day: '2-digit', 
+          month: 'long', 
+          year: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false 
+      }) + ' WIB'; 
+
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("Simulasi Pinjaman Karyawan - hibank", 14, 20);
+      
+      doc.setFontSize(9); 
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100); 
+      doc.text(`Dicetak pada: ${dateTimeString}`, 14, 26); 
+      
+      doc.setFontSize(10); 
+      doc.setTextColor(0); 
+
+      let yPos = 35;
+      const addText = (label, value, isBold = false) => {
+        if (yPos > 275) { 
+          doc.addPage();
+          yPos = 20; 
+        }
+        const labelX = 14;     
+        const colonAlignX = 75; 
+        const valueAlignX = 80; 
+
+        doc.setFont("helvetica", isBold ? "bold" : "normal");
+        doc.text(label, labelX, yPos); 
+
+        doc.setFont("helvetica", "normal"); 
+        doc.text(":", colonAlignX, yPos); 
+
+        doc.text(String(value || "N/A"), valueAlignX, yPos); 
+        yPos += 7;
+      };
+
+      addText("NIK Karyawan", document.getElementById('nik').value);
+      addText("Nama Karyawan", document.getElementById('name').value);
+      addText("Tipe Pinjaman", document.getElementById('tipePinjaman').value);
+      addText("Plafond Pinjaman", document.getElementById('plafond').value, true);
+      addText("Jangka Waktu", `${document.getElementById('jangkaWaktu').value} bulan`);
+      addText("Suku Bunga Pinjaman", document.getElementById('bunga').value);
+      addText("Penghasilan Kotor", document.getElementById('gajiPokok').value);
+      
+      const dbrPercentageString = document.getElementById('dbr').value || "N/A";
+      addText("DBR Maksimal (Persentase)", dbrPercentageString);
+
+      const gajiPokokStringForDBRCalc = document.getElementById('gajiPokok').value;
+      let dbrMonetaryDisplayValueInPdf = "N/A"; 
+
+      if (dbrPercentageString !== "N/A" && gajiPokokStringForDBRCalc) {
+          const dbrDecimal = parseFloat(dbrPercentageString.replace('%', '')) / 100;
+          const gajiPokokNumeric = parseCurrency(gajiPokokStringForDBRCalc);
+
+          if (!isNaN(dbrDecimal) && dbrDecimal >= 0 && !isNaN(gajiPokokNumeric) && gajiPokokNumeric > 0) {
+              const calculatedMaxInstallment = dbrDecimal * gajiPokokNumeric;
+              const roundedMaxInstallment = Math.round(calculatedMaxInstallment);
+              dbrMonetaryDisplayValueInPdf = formatToIDR(roundedMaxInstallment);
+          }
+      }
+      addText("DBR Maksimal (Nilai)", dbrMonetaryDisplayValueInPdf); 
+      
+      addText("Cicilan Pinjaman Lain", document.getElementById('cicilanBerjalan').value);
+      
+      const angsuranElement = resultsDiv.querySelector('.sticky-table tbody tr:nth-child(2) td:last-child');
+      if (angsuranElement) {
+          addText("Perkiraan Angsuran Bulanan", angsuranElement.innerText, true);
+      }
+
+
+      yPos += 3; 
+      doc.setLineWidth(0.2);
+      doc.line(14, yPos, 196, yPos); 
+      yPos += 7;
+
+
+      const tableElement = resultsDiv.querySelector('.sticky-table');
+      if (tableElement) {
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("Tabel Detail Angsuran:", 14, yPos);
+        yPos += 8;
+
+        const head = [['Ke-', 'Sisa Pinjaman', 'Pokok', 'Bunga', 'Total Angsuran']];
+        const body = [];
+        tableElement.querySelectorAll('tbody tr').forEach((tr) => {
+          const rowData = [];
+          tr.querySelectorAll('td').forEach(td => {
+            rowData.push(td.innerText.replace(/Rp\s?/g, '').trim()); 
+          });
+          body.push(rowData);
+        });
+
+        if (hasAutoTable) { 
+          doc.autoTable({
+              head: head,
+              body: body,
+              startY: yPos,
+              theme: 'grid', 
+              headStyles: { fillColor: [23, 105, 128] }, 
+              styles: { fontSize: 8, cellPadding: 1.5, halign: 'right' }, 
+              columnStyles: {
+                  0: { halign: 'center', cellWidth: 15 }, 
+                  1: { cellWidth: 40 }, 
+                  2: { cellWidth: 40 }, 
+                  3: { cellWidth: 40 }, 
+                  4: { cellWidth: 40 }, 
+              },
+              didDrawPage: function (data) { 
+                  yPos = data.cursor.y;
+              }
+          });
+          yPos = doc.lastAutoTable.finalY || yPos; 
+        } else {
+          showAlert("Info PDF", "Plugin jsPDF-AutoTable tidak termuat. Tabel akan ditampilkan secara sederhana. Untuk tampilan tabel yang lebih baik di PDF, pastikan plugin jsPDF-AutoTable termuat dengan benar.");
+          doc.setFontSize(8);
+          let currentX = 14;
+          head[0].forEach((headerText, headerIdx) => {
+              doc.text(headerText, currentX, yPos);
+              currentX += (headerIdx === 0 ? 15 : 35); 
+          });
+          yPos += 5;
+          body.forEach(row => {
+              if (yPos > 275) { doc.addPage(); yPos = 20; }
+              currentX = 14;
+              row.forEach((cell, cellIdx) => {
+                  doc.text(cell, currentX, yPos);
+                  currentX += (cellIdx === 0 ? 15 : 35);
+              });
+              yPos += 5;
+          });
+        }
+      }
+      
+      let finalY = yPos + 10; 
+      if (finalY > 270) { 
+          doc.addPage();
+          finalY = 20; 
+      }
+      doc.setFontSize(8);
+      doc.setTextColor(150); 
+      doc.text("Disclaimer: Simulasi ini bersifat perkiraan dan dapat berbeda dengan perhitungan akhir bank.", 14, finalY);
+      doc.text("Syarat dan ketentuan berlaku.", 14, finalY + 4);
+
+      doc.save(`Simulasi_Pinjaman_${document.getElementById('nik').value || 'Karyawan'}.pdf`);
+    });
   });
 
-  // Closing Initial Info Section
   function closeInitialInfo() {
         document.getElementById('initialInfoBoard').style.display = 'none';
     }
@@ -1450,20 +1520,20 @@ function genHitung() {
                         <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
                         <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" class="me-3"><i class="fab fa-instagram fa-lg"></i></a>
                       </div>
-                    </div>
+                </div>
                 <div class="col-lg-2 col-md-6">
                   <h6 class="mb-3 fw-bold">Quick Links</h6>
                   <ul class="list-unstyled">
                     <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" class="text-muted text-decoration-none" target="_blank">HC hiro</a></li>
                     <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" class="text-muted text-decoration-none" target="_blank">Gallery</a></li>
-                    <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" class="text-muted text-decoration-none" target="_blank">Feedback</a></li>
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" class="text-muted text-decoration-none" target="_blank">FAQ</a></li>
+                    <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" class="text-muted text-decoration-none" target="_top">Feedback</a></li>
+                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" class="text-muted text-decoration-none" target="_top">FAQ</a></li>
                       </ul>
                     </div>
                 <div class="col-lg-2 col-md-6">
                   <h6 class="mb-3 fw-bold">Our Services</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" class="text-muted text-decoration-none" target="_blank">Loan Simulation</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Loan Simulation</a></li>
                         <!-- <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">Internal Mobility</a></li>
                         <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">PDF Tools</a></li>
                         <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">Data Hub</a></li> -->
@@ -1482,13 +1552,13 @@ function genHitung() {
                 <hr class="my-4">
 
                 <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
+                  <div class="col-md-6 text-center text-md-start">
                     <p class="mb-0 text-muted">&copy; <span id="currentYear"></span> Human Capital Innovation Hub. All rights reserved.</p>
-                </div>
+                  </div>
 
-                <div class="col-md-6 text-center text-md-end">
+                  <div class="col-md-6 text-center text-md-end">
+                  </div>
                 </div>
-            </div>
                     </div>
             </div>
         </div>
@@ -1503,4 +1573,3 @@ function genHitung() {
     </body>
 
       </html>
-
