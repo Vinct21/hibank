@@ -19,40 +19,99 @@
             --theme-text-light: #495057;
             --theme-border-color: #dee2e6;
             --font-family-sans-serif: 'Inter', sans-serif;
+            --primary-color: #176980;
+            --secondary-color: #D15B28;
+            --bg-gradient: #176980;
         }
 
         body {
             font-family: var(--font-family-sans-serif);
             background-color: var(--theme-white);
             color: var(--theme-text-dark);
+            padding-top: 10%;
         }
 
         /* Navigation Bar */
         .navbar {
-            background-color: var(--theme-white);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding-top: 0.8rem;
+            padding-bottom: 0.8rem;
         }
+
         .navbar-brand {
-            color: var(--theme-primary);
-            font-weight: 700;
-            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.5rem; /* Responsive font size */
         }
-        .navbar-brand:hover {
-            color: var(--theme-primary-darker);
-        }
+
         .nav-link {
-            color: var(--theme-text-light);
+            color: var(--primary-color);
             font-weight: 500;
+            transition: color 0.3s ease;
+            padding-left: 0.8rem !important;
+            padding-right: 0.8rem !important;
+            position: relative;
         }
+
+        .nav-link > span {
+            position: relative;
+            display: inline-block;
+        }
+
+        .nav-link:not(.auth-btn) > span::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:not(.auth-btn):hover > span::after {
+            width: 100%;
+        }
+
         .nav-link:hover,
         .nav-link.active {
-            color: var(--theme-primary);
+            color: var(--secondary-color) !important;
         }
-        .navbar-toggler {
-            border-color: rgba(0,0,0,0.1);
+
+        .dropdown-item:hover {
+            color: var(--secondary-color);
         }
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2823, 105, 128, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .dropdown-item {
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(209, 91, 40, 0.05); /* Light orange tint on hover */
+        }
+
+        .nav-item.dropdown > .nav-link.dropdown-toggle::after {
+            content: '\f078'; /* Font Awesome caret down */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            display: inline-block;
+            margin-left: 0.35em;
+            vertical-align: 0.05em;
+            border: none; /* Remove default Bootstrap arrow */
+            transition: transform 0.3s ease;
+        }
+        .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
+            transform: rotate(180deg); /* Rotate arrow when dropdown is open */
         }
 
 
@@ -210,15 +269,30 @@
 
 
         /* Footer */
-        footer.bg-light {
-            background-color: var(--theme-text-dark) !important;
-            color: var(--theme-light-bg);
-            padding: 2.5rem 0;
-            margin-top: 3rem;
+        /* Footer Styling */
+        footer.bg-white {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            border-top: 1px solid #e9ecef; /* Subtle top border */
         }
-        footer p {
-            margin-bottom: 0;
+        footer h5, footer h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        footer .text-muted {
+            color: #6c757d !important; /* Bootstrap's muted color */
             font-size: 0.9rem;
+        }
+        footer .social-links a {
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+        footer .social-links a:hover {
+            color: var(--secondary-color);
+        }
+        footer .list-unstyled a.text-muted:hover {
+            color: var(--secondary-color) !important;
+            text-decoration: underline !important;
         }
 
         /* PDF Modal */
@@ -289,20 +363,29 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">HiBank</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <img src="https://placehold.co/40x40/176980/FFFFFF?text=HCIH" alt="Bubble Logo" style="border-radius: 50%; margin-right: 10px;"
+                 onerror="this.onerror=null; this.src='https://placehold.co/40x40/CCCCCC/000000?text=Logo';">
+            <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="landingPage.html">Home</a>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzU2GpKE9GqagMJT_EdTNRSXhWwNg5tA-GSxry13G32QEPzFeM8IkRMa0TYvq-y_y6Hmw/exec" target="_top" ><span>Home</span></a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span>Services</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
+                            <li><a class="dropdown-item" href="#" target="_blank">Loan Simulation</a></li>
+                            </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="policy.html">Policies</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" target="_blank"><span>Gallery</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" target="_top"><span>Policy</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a></li>
                 </ul>
             </div>
         </div>
@@ -592,11 +675,59 @@
         </div>
     </section>
 
-    <footer class="bg-light py-4"> 
-        <div class="container text-center">
-            <p>&copy; <script>document.write(new Date().getFullYear())</script> HiBank. All rights reserved.</p>
+    <footer class="bg-white py-5">
+  <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="mb-3">Human Capital Innovation Hub</h5>
+                    <p class="text-muted mb-3">Pioneering digital solutions for human capital development and management.</p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" class="me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                      </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                  <h6 class="mb-3 fw-bold">Quick Links</h6>
+                  <ul class="list-unstyled">
+                    <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" class="text-muted text-decoration-none" target="_blank">HC hiro</a></li>
+                    <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" class="text-muted text-decoration-none" target="_blank">Gallery</a></li>
+                    <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" class="text-muted text-decoration-none" target="_top">Policy</a></li>
+                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" class="text-muted text-decoration-none" target="_top">FAQ</a></li>
+                      </ul>
+                    </div>
+                <div class="col-lg-2 col-md-6">
+                  <h6 class="mb-3 fw-bold">Our Services</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Loan Simulation</a></li>
+                        <!-- <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">Internal Mobility</a></li>
+                        <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">PDF Tools</a></li>
+                        <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">Data Hub</a></li> -->
+                      </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                  <h6 class="mb-3 fw-bold">Contact Us</h6>
+                     <p class="text-muted mb-1">PT Bank Hibank Indonesia</p>
+                     <p class="text-muted mb-1">Rajawali Place, Lantai 22-23
+                       Jl. H.R. Rasuna Said Kav. B.4
+                       Setiabudi, Jakarta Selatan - 12910</p>
+                       <p class="text-muted">Email: <a href="mailto:humancapital@hibank.co.id" class="text-muted text-decoration-none">humancapital@hibank.co.id</a></p>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="row align-items-center">
+                  <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 text-muted">&copy; <span id="currentYear"></span> Human Capital Innovation Hub. All rights reserved.</p>
+                  </div>
+
+                  <div class="col-md-6 text-center text-md-end">
+                  </div>
+                </div>
+                    </div>
+            </div>
         </div>
-    </footer>
+      </footer>
 
     <div class="pdf-modal" id="pdfModal">
         <div class="pdf-container">
@@ -706,6 +837,13 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        // Set current year in footer
+        if (document.getElementById('currentYear')) { // Check if element exists
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        }
     </script>
 </body>
 </html>
