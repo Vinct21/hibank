@@ -152,70 +152,230 @@
             }
         }
 
-        /* Structure Section */
+        /* Structure Section - General Styles */
         .structure-section {
-            padding: 50px 20px;
+            padding: 60px 20px; 
             background-color: #ffffff;
-            text-align: center;
             min-height: 100vh; 
         }
+        
+        /* Single Main Profile Layout (e.g., Dinda Evirtasari) */
+        .single-profile-section { 
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+            gap: 50px; 
+            max-width: 1000px; 
+            width: 100%; 
+            margin: 0 auto 80px auto; 
+            flex-wrap: wrap; 
+            padding: 30px 0; 
+        }
 
-        .structure-section h2 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #333;
+        .single-profile-image-container { 
+            flex-shrink: 0; 
+            width: 100%; 
+            max-width: 360px; 
+            margin-bottom: 20px; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12); 
+        }
+        
+        .single-profile-image-container img { 
+            display: block; 
+            width: 100%;
+            height: auto; 
+        }
+        
+        .profile-image-fallback { 
+            width: 100%;
+            height: 100%; 
+            min-height: 200px; 
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 1rem;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .single-profile-text-content { 
+            flex-grow: 1;
+            max-width: 500px; 
+            text-align: left; 
+        }
+
+        .single-profile-name { 
+            font-size: clamp(2rem, 4vw, 3rem); 
+            font-weight: 700;
+            color: #005A9C; 
+            margin-bottom: 8px; 
+        }
+
+        .single-profile-title { 
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem); 
+            font-weight: 500;
+            color: #F58220; 
+            margin-bottom: 20px;
+        }
+        
+        /* Department Section (for groups of team members) */
+        .department-section {
+            margin-bottom: 60px; 
+        }
+        .department-section .team-grid + .team-grid { /* Add space between grids within the same department section */
+            margin-top: 40px;
+        }
+
+
+        .department-heading {
+            text-align: center;
+            font-size: 2.2rem; 
+            font-weight: 700;
+            color: #005A9C; 
             margin-bottom: 40px;
         }
 
-        .structure-grid {
+        .team-grid { /* General grid, used for People Experience (4 items) */
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); /* Aim for 4 cols on desktop */
+            gap: 20px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        
+        .team-grid-two-people { /* Specific grid for Satria & Dinar */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            max-width: 680px; 
+            gap: 20px;
+        }
+         .team-grid-three-people { /* Specific grid for 3 people */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            max-width: 960px; 
+            gap: 20px;
         }
 
-        .structure-card {
-            background-color: #f9f9f9;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
-            text-align: left;
-        }
 
-        .structure-card:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        .team-member-profile { 
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 20px; 
         }
-
-        .structure-card h3 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #444;
+        
+        .team-member-image-container { 
+            width: 100%; 
+            max-width: 250px; /* Base size for images in the 4-col grid */
+            height: auto; 
             margin-bottom: 15px;
+            overflow: hidden; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        /* Specific image container size for the 2-person grid (Satria & Dinar) */
+        .team-grid-two-people .team-member-image-container {
+            max-width: 280px; 
+        }
+        /* Specific image container size for the 3-person grid */
+        .team-grid-three-people .team-member-image-container {
+            max-width: 260px; 
         }
 
-        .structure-card p {
-            font-size: 1rem;
-            color: #555;
-            line-height: 1.7;
+
+        .team-member-image-container img {
+            display: block; 
+            width: 100%;
+            height: auto; 
+        }
+        
+        .team-member-name {
+            font-size: 1.20rem; 
+            font-weight: 700;
+            color: #005A9C; 
+            margin-bottom: 4px;
         }
 
-        .learn-more-button {
-            display: inline-block;
-            background-color: #007bff;
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 40px;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .team-member-title {
+            font-size: 0.92rem; 
+            font-weight: 500;
+            color: #F58220; 
+            line-height: 1.3;
         }
 
-        .learn-more-button:hover {
-            background-color: #0056b3;
+        @media (max-width: 992px) { /* Larger tablets */
+            .team-grid {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+            }
+            .team-member-image-container { 
+                 max-width: 230px;
+            }
+            .team-grid-two-people {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            }
+            .team-grid-two-people .team-member-image-container {
+                max-width: 250px; 
+            }
+            .team-grid-three-people {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            .team-grid-three-people .team-member-image-container {
+                max-width: 220px;
+            }
+        }
+
+        @media (max-width: 768px) { /* Tablet */
+            .single-profile-section {
+                flex-direction: column; 
+                text-align: center; 
+                gap: 30px;
+            }
+            .single-profile-text-content {
+                text-align: center; 
+            }
+            .single-profile-image-container {
+                 margin-right: 0; 
+                 margin-bottom: 20px; 
+                 max-width: 300px; 
+            }
+            .department-heading {
+                font-size: 1.8rem;
+            }
+            .team-grid { 
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            }
+            .team-member-image-container { 
+                max-width: 220px; 
+            }
+             .team-grid-two-people, .team-grid-three-people {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            }
+             .team-grid-two-people .team-member-image-container,
+             .team-grid-three-people .team-member-image-container {
+                max-width: 230px; 
+            }
+        }
+         @media (max-width: 576px) { /* Mobile */
+            .team-grid, .team-grid-two-people, .team-grid-three-people { 
+                grid-template-columns: 1fr; 
+                gap: 30px; 
+            }
+            .single-profile-image-container { 
+                max-width: 280px; 
+            }
+             .team-member-image-container { 
+                max-width: 260px; 
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .single-profile-name { font-size: 1.8rem; }
+            .single-profile-title { font-size: 1.1rem; }
+            .team-member-name { font-size: 1.1rem; }
+            .team-member-title { font-size: 0.9rem; }
         }
 
         /* Footer */
@@ -258,18 +418,18 @@
 
     <section class="hero-section">
         <img
-            src="https://cdn.hibank.co.id/hcih/full-hc-hiro.jpeg"
+            src="https://cdn.hibank.co.id/hcih/org/full-hc-hiro.jpeg"
             alt="Team photo or abstract background"
             class="hero-background-image"
-            onerror="this.style.display='none'; document.getElementById('imageFallback').style.display='flex';"
+            onerror="this.style.display='none'; document.getElementById('heroImageFallback').style.display='flex';"
         >
-         <div id="imageFallback" class="hero-image-fallback" style="display:none;">
-            Image not found
+         <div id="heroImageFallback" class="hero-image-fallback" style="display:none;">
+            Hero Image not found
         </div>
         <div class="hero-overlay"></div>
 
         <div class="hero-content">
-            <h1 class="hero-text-main"></h1>
+            <h1 class="hero-text-main"></h1> 
         </div>
 
         <a href="#structure-section-target" class="scroll-down-arrow" aria-label="Scroll to next section">
@@ -278,31 +438,208 @@
     </section>
 
     <section id="structure-section-target" class="structure-section">
-        <h2>Our Structure</h2>
-        <div class="structure-grid">
-            <div class="structure-card">
-                <h3>Department A</h3>
-                <p>
-                    Description of Department A. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Vivamus lacinia odio vitae vestibulum vestibulum.
-                </p>
+        <div class="single-profile-section">
+            <div class="single-profile-image-container">
+                <img src="https://cdn.hibank.co.id/hcih/org/Dinda.jpg" alt="Dinda Evirtasari"
+                     onerror="this.style.display='none'; document.getElementById('profileImageFallbackMain').style.display='flex';">
+                <div id="profileImageFallbackMain" class="profile-image-fallback" style="display:none;">
+                    Profile Image not found
+                </div>
             </div>
-            <div class="structure-card">
-                <h3>Team Alpha</h3>
-                <p>
-                    Meet Team Alpha. Cras mattis consectetur purus sit amet fermentum.
-                    Nullam id dolor id nibh ultricies vehicula ut id elit.
-                </p>
-            </div>
-            <div class="structure-card">
-                <h3>Project X</h3>
-                <p>
-                    Information about Project X. Donec ullamcorper nulla non metus auctor fringilla.
-                    Maecenas sed diam eget risus varius blandit.
-                </p>
+            <div class="single-profile-text-content">
+                <h2 class="single-profile-name">Dinda Evirtasari</h2>
+                <p class="single-profile-title">Chief Human Capital Officer</p>
             </div>
         </div>
-        <a href="#" class="learn-more-button">Learn More About Us</a>
+
+        <div class="department-section">
+            <div class="team-grid team-grid-two-people">
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Satria.png" alt="Satria Budi Prasetyo"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackSatria').style.display='flex';">
+                        <div id="teamImageFallbackSatria" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Satria Budi Prasetyo</h4>
+                    <p class="team-member-title">Head People Experience</p>
+                </div>
+
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Prasetya.png" alt="M. Dinar Prasetya"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackDinar').style.display='flex';">
+                        <div id="teamImageFallbackDinar" class="profile-image-fallback" style="display:none;">
+                             Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">M. Dinar Prasetya</h4>
+                    <p class="team-member-title">Head People Reward, Performance<br>& Shared Service</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="department-section">
+            <h3 class="department-heading">People Experience</h3>
+            <div class="team-grid"> 
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                         <img src="https://cdn.hibank.co.id/hcih/org/Ferina.png" alt="Ferina Greebe"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackFerina').style.display='flex';">
+                        <div id="teamImageFallbackFerina" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Ferina Greebe</h4>
+                    <p class="team-member-title">Center of Excellence</p>
+                </div>
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Mely.png" alt="Mely Eprila"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackMely').style.display='flex';">
+                        <div id="teamImageFallbackMely" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Mely Eprila</h4>
+                    <p class="team-member-title">People Partner</p>
+                </div>
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Erlita.png" alt="Erlita Permatasari"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackErlita').style.display='flex';">
+                        <div id="teamImageFallbackErlita" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Erlita Permatasari</h4>
+                    <p class="team-member-title">People Partner</p>
+                </div>
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Amanta.png" alt="Amanta Amaranggana"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackAmanta').style.display='flex';">
+                        <div id="teamImageFallbackAmanta" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Amanta Amaranggana</h4>
+                    <p class="team-member-title">Recruiter</p>
+                </div>
+            </div>
+            <div class="team-grid team-grid-three-people">
+                 <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Elisabeth.png" alt="Elisabeth Galingging"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackElisabeth').style.display='flex';">
+                        <div id="teamImageFallbackElisabeth" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Elisabeth Galingging</h4>
+                    <p class="team-member-title">Learning & Training</p>
+                </div>
+                 <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Fachrul.png" alt="Fachrul Ramadhan Hutasuhut"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackFachrul').style.display='flex';">
+                        <div id="teamImageFallbackFachrul" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Fachrul Ramadhan Hutasuhut</h4>
+                    <p class="team-member-title">Enterprise Talent Management</p>
+                </div>
+                 <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Vincent.png" alt="Vincent"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackVincent').style.display='flex';">
+                        <div id="teamImageFallbackVincent" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Vincent</h4>
+                    <p class="team-member-title">HC Dahsboard & Analytics</p>
+                </div>
+            </div>
+            <div class="team-grid team-grid-three-people">
+                 <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Rivia.png" alt="Rivia Ningsih"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackRivia').style.display='flex';">
+                        <div id="teamImageFallbackRivia" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Rivia Ningsih</h4>
+                    <p class="team-member-title">Internship</p>
+                </div>
+                 <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Mutiara.png" alt="Mutiara Rahmadhanti"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackMutiara').style.display='flex';">
+                        <div id="teamImageFallbackMutiara" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Mutiara Rahmadhanti</h4>
+                    <p class="team-member-title">Internship</p>
+                </div>
+                 <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Cecille.png" alt="Cecille Tangkilisan"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackCecille').style.display='flex';">
+                        <div id="teamImageFallbackCecille" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Cecille Tangkilisan</h4>
+                    <p class="team-member-title">Internship</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="department-section">
+            <h3 class="department-heading">People Reward, Operation & Shares Service</h3>
+            <div class="team-grid"> 
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                         <img src="https://placehold.co/480x480/E0E0E0/333333?text=Team+A1" alt="Team Member A1"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackA1').style.display='flex';">
+                        <div id="teamImageFallbackA1" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Layla Puspa Risha</h4>
+                    <p class="team-member-title">People Operation</p>
+                </div>
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://placehold.co/480x480/D8D8D8/333333?text=Team+A2" alt="Team Member A2"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackA2').style.display='flex';">
+                        <div id="teamImageFallbackA2" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Desy Sri Ayuningtyas</h4>
+                    <p class="team-member-title">People Operation</p>
+                </div>
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://placehold.co/480x480/CFCFCF/333333?text=Team+A3" alt="Team Member A3"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackA3').style.display='flex';">
+                        <div id="teamImageFallbackA3" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Team Member A3</h4>
+                    <p class="team-member-title">Role A3</p>
+                </div>
+            </div>
+        </div>
+
+
     </section>
 
     <footer class="site-footer">
@@ -317,25 +654,25 @@
         // Navbar hiding on scroll
         let lastScrollTop = 0;
         const navbar = document.querySelector('.navbar');
-        const navbarHeight = navbar.offsetHeight; // Get the actual height of the navbar
-        const scrollThreshold = 5; // Small threshold to prevent hiding on minor scrolls
+        const navbarHeight = navbar ? navbar.offsetHeight : 0; 
+        const scrollThreshold = 5; 
 
-        window.addEventListener('scroll', function() {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (navbar) { 
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-            if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
-                // Scrolling Down and past navbar height
-                if (!navbar.classList.contains('navbar-hidden')) {
-                     navbar.classList.add('navbar-hidden');
+                if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
+                    if (!navbar.classList.contains('navbar-hidden')) {
+                         navbar.classList.add('navbar-hidden');
+                    }
+                } else {
+                    if (navbar.classList.contains('navbar-hidden')) {
+                        navbar.classList.remove('navbar-hidden');
+                    }
                 }
-            } else {
-                // Scrolling Up or at the top
-                if (navbar.classList.contains('navbar-hidden')) {
-                    navbar.classList.remove('navbar-hidden');
-                }
-            }
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
-        }, false);
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+            }, false);
+        }
     </script>
 
 </body>
