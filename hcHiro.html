@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Page Hero Image</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Custom Navbar Styling */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.3) !important;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            z-index: 1030;
+            transition: top 0.3s ease-in-out; /* Smooth transition for hiding/showing */
+        }
+        .navbar.navbar-hidden {
+            top: -100px; /* Adjust this value if navbar height is different, to hide it completely */
+        }
+        .navbar .navbar-brand,
+        .navbar .nav-link {
+            color: white !important;
+        }
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            color: #cccccc !important;
+        }
+        .navbar-toggler-icon {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .navbar-brand img {
+            transition: transform 0.3s ease;
+        }
+        .navbar-brand:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Hero Section: Full Viewport Height */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            z-index: 1;
+        }
+
+        .hero-image-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 1.5rem;
+            z-index: 1;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            color: white;
+            padding-top: 70px; /* Adjust if navbar height changes */
+        }
+
+        .hero-text-main {
+            font-size: clamp(3rem, 12vw, 9rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Scroll Down Arrow */
+        .scroll-down-arrow {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        .css-arrow {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-left: 3px solid white;
+            border-bottom: 3px solid white;
+            transform: rotate(-45deg);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Structure Section */
+        .structure-section {
+            padding: 50px 20px;
+            background-color: #ffffff;
+            text-align: center;
+            min-height: 100vh; 
+        }
+
+        .structure-section h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .structure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .structure-card {
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+            text-align: left;
+        }
+
+        .structure-card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .structure-card h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .structure-card p {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .learn-more-button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 40px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .learn-more-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer */
+        .site-footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <img src="https://cdn.hibank.co.id/hcih/buble-hibank.png" alt="Logo" loading="lazy" style="width: 50px; margin-right: 10px;" onerror="this.onerror=null; this.src='https://placehold.co/50x50/CCCCCC/000000?text=Logo';">
+            <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#"><span>Home</span></a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span>Services</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
+                            <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_top">Loan Simulation</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" target="_blank"><span>Gallery</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" target="_top"><span>Policy</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <img
+            src="https://cdn.hibank.co.id/hcih/full-hc-hiro.jpeg"
+            alt="Team photo or abstract background"
+            class="hero-background-image"
+            onerror="this.style.display='none'; document.getElementById('imageFallback').style.display='flex';"
+        >
+         <div id="imageFallback" class="hero-image-fallback" style="display:none;">
+            Image not found
+        </div>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+            <h1 class="hero-text-main"></h1>
+        </div>
+
+        <a href="#structure-section-target" class="scroll-down-arrow" aria-label="Scroll to next section">
+            <span class="css-arrow"></span>
+        </a>
+    </section>
+
+    <section id="structure-section-target" class="structure-section">
+        <h2>Our Structure</h2>
+        <div class="structure-grid">
+            <div class="structure-card">
+                <h3>Department A</h3>
+                <p>
+                    Description of Department A. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Vivamus lacinia odio vitae vestibulum vestibulum.
+                </p>
+            </div>
+            <div class="structure-card">
+                <h3>Team Alpha</h3>
+                <p>
+                    Meet Team Alpha. Cras mattis consectetur purus sit amet fermentum.
+                    Nullam id dolor id nibh ultricies vehicula ut id elit.
+                </p>
+            </div>
+            <div class="structure-card">
+                <h3>Project X</h3>
+                <p>
+                    Information about Project X. Donec ullamcorper nulla non metus auctor fringilla.
+                    Maecenas sed diam eget risus varius blandit.
+                </p>
+            </div>
+        </div>
+        <a href="#" class="learn-more-button">Learn More About Us</a>
+    </section>
+
+    <footer class="site-footer">
+        <p>&copy; <span id="currentYear"></span> Your Company. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Navbar hiding on scroll
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        const navbarHeight = navbar.offsetHeight; // Get the actual height of the navbar
+        const scrollThreshold = 5; // Small threshold to prevent hiding on minor scrolls
+
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
+                // Scrolling Down and past navbar height
+                if (!navbar.classList.contains('navbar-hidden')) {
+                     navbar.classList.add('navbar-hidden');
+                }
+            } else {
+                // Scrolling Up or at the top
+                if (navbar.classList.contains('navbar-hidden')) {
+                    navbar.classList.remove('navbar-hidden');
+                }
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+        }, false);
+    </script>
+
+</body>
+</html>
