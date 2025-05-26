@@ -130,22 +130,17 @@
         .hero-content {
             position: relative; /* For z-index context if needed */
             z-index: 2; /* Ensure hero content is above background canvas */
-            /* text-align: center; /* Uncomment to center hero content including greeting */
         }
 
-        /* Styles for the user greeting area in its new position */
         #user-greeting-status-area {
-            /* padding-top: 70px; /* Removed as it's no longer directly under fixed navbar */
-            /* text-align: center; /* Default is left in hero-content, adjust if needed */
             min-height: 50px; /* Adjusted min-height */
             position: relative; /* Keep relative positioning */
             z-index: 2; /* Ensure it's above p5 canvas */
             margin-bottom: 1rem; /* Space below greeting, before title */
         }
 
-        /* Container within greeting area - adjust if it causes layout issues */
         #user-greeting-status-area .container {
-             padding-left: 0; /* Align with hero content if hero-content is not centered */
+             padding-left: 0; 
              padding-right: 0;
         }
 
@@ -153,45 +148,45 @@
             font-size: 1.6rem; /* Adjusted font size for greeting */
             color: white;
             font-weight: 500;
-            /* text-align: left; /* Ensure alignment matches hero-title if not centered */
         }
          #statusMessage {
             font-size: 0.9rem;
-            color: #ffdddd; /* Light color for status messages */
+            color: #ffdddd; 
             margin-top: 5px;
-            /* text-align: left; /* Match alignment */
         }
 
         .hero-title {
-            font-size: 3.2rem; /* Responsive font size */
+            font-size: 3.2rem; 
             font-weight: 600;
             margin-bottom: 1.5rem;
         }
 
         .hero-text {
-            font-size: 1.2rem; /* Responsive font size */
+            font-size: 1.2rem; 
             opacity: 0.9;
             margin-bottom: 2rem;
         }
 
-        .btn-primary {
+        .btn-primary, .btn-secondary-custom { 
             background-color: var(--secondary-color);
             border-color: var(--secondary-color);
             padding: 0.75rem 2rem;
             font-weight: 500;
             transition: all 0.3s ease;
-            border-radius: 8px; /* Added rounded corners */
+            border-radius: 8px; 
+            color: white; 
+            text-decoration: none; 
         }
-
-        .btn-primary:hover {
-            background-color: #b94f23; /* Darker shade on hover */
+        .btn-primary:hover, .btn-secondary-custom:hover {
+            background-color: #b94f23; 
             border-color: #b94f23;
-            transform: translateY(-2px); /* Slight lift effect */
-            box-shadow: 0 5px 15px rgba(209, 91, 40, 0.3); /* Softer shadow */
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(209, 91, 40, 0.3); 
+            color: white; 
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 992px) { /* Medium devices (tablets, less than 992px) */
+
+        @media (max-width: 992px) { 
             .hero-title {
                 font-size: 2.8rem;
             }
@@ -200,16 +195,16 @@
             }
         }
 
-        @media (max-width: 768px) { /* Small devices (landscape phones, less than 768px) */
+        @media (max-width: 768px) { 
             .hero-section {
-                padding-top: 80px; /* Adjust padding for smaller screens */
-                text-align: center; /* Center text for smaller screens */
+                padding-top: 80px; 
+                text-align: center; 
             }
             .hero-content {
-                 text-align: center; /* Center hero content, including greeting */
+                 text-align: center; 
             }
             #user-greeting-status-area .container {
-                 padding-left: 15px; /* Bootstrap default container padding */
+                 padding-left: 15px; 
                  padding-right: 15px;
             }
             .hero-title {
@@ -244,16 +239,19 @@
                 margin-bottom: 1.5rem;
             }
             .navbar-nav {
-                margin-top: 1rem; /* Space for collapsed navbar items */
+                margin-top: 1rem; 
             }
-            .nav-link.auth-btn { /* Example for auth buttons if they were present */
+            .nav-link.auth-btn { 
                 margin: 0.5rem 0;
                 width: 100%;
             }
+            #feedbackFormModal .col-form-label {
+                text-align: left !important; 
+            }
         }
 
-        @media (max-width: 576px) { /* Extra small devices (portrait phones, less than 576px) */
-             .hero-title {
+        @media (max-width: 576px) { 
+           .hero-title {
                 font-size: 1.8rem;
             }
             .hero-text {
@@ -267,26 +265,26 @@
 
         .features-section {
             padding: 5rem 0;
-            background: #f8f9fa; /* Light grey background */
+            background: #f8f9fa; 
         }
 
         .feature-card {
-            display: block; /* Make the whole card clickable */
+            display: block; 
             text-decoration: none;
             background: white;
             padding: 2rem;
-            border-radius: 15px; /* More pronounced rounded corners */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Softer shadow */
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
             transition: all 0.3s ease-in-out;
-            color: inherit; /* Inherit text color */
-            height: 100%; /* Ensure cards in a row have same height */
+            color: inherit; 
+            height: 100%; 
         }
 
         .feature-card:hover {
             transform: translateY(-10px);
             text-decoration: none;
             color: inherit;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.12); /* Enhanced shadow on hover */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12); 
         }
 
         .feature-icon {
@@ -298,7 +296,7 @@
         .feature-title {
             color: var(--primary-color);
             font-weight: 600;
-            font-size: 1.25rem; /* Slightly larger feature title */
+            font-size: 1.25rem; 
             margin-bottom: 1rem;
         }
 
@@ -307,11 +305,11 @@
         }
 
         .value-card {
-            background: rgba(255, 255, 255, 0.8); /* Lighter background for cards on white section */
+            background: rgba(255, 255, 255, 0.8); 
             border-radius: 15px;
             padding: 1rem;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 1px solid rgba(0, 0, 0, 0.1); /* Softer border */
+            border: 1px solid rgba(0, 0, 0, 0.1); 
             height: 100%;
             cursor: pointer;
             position: relative;
@@ -323,12 +321,12 @@
             justify-content: center;
             text-align: center;
             will-change: transform, opacity;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Subtle shadow for cards */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
         }
 
         .value-card:hover:not(.expanded) {
             transform: translateY(-5px) scale(1.02);
-            background: rgba(255, 255, 255, 0.95); /* Slightly more opaque on hover */
+            background: rgba(255, 255, 255, 0.95); 
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
@@ -337,7 +335,7 @@
             font-weight: 600;
             color: var(--secondary-color);
             margin-bottom: 0.5rem;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Softer text shadow */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); 
             transition: all 0.5s ease;
         }
 
@@ -346,7 +344,7 @@
         }
 
         .value-card h4 {
-            color: #333; /* Darker text for better readability */
+            color: #333; 
             font-size: 1rem;
             margin: 0;
             font-weight: 500;
@@ -367,7 +365,7 @@
 
         .value-card.expanded {
             position: absolute;
-            left: 2.5%; /* Centering expanded card */
+            left: 2.5%; 
             width: 95%;
             max-width: none;
             margin: 0;
@@ -375,11 +373,11 @@
             align-items: stretch;
             justify-content: flex-start;
             padding: 0;
-            background: #fdfdfd; /* Slightly off-white for expanded card */
-            border: 1px solid #ddd; /* Clearer border for expanded */
+            background: #fdfdfd; 
+            border: 1px solid #ddd; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            height: auto; /* Auto height based on content */
-            min-height: 120px; /* Minimum height */
+            height: auto; 
+            min-height: 120px; 
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10;
             transform-origin: center center;
@@ -390,7 +388,7 @@
             padding: 2.5rem;
             margin-bottom: 0;
             border-right: 1px solid #ddd;
-            background: #e9ecef; /* Light grey for letter box */
+            background: #e9ecef; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -407,14 +405,14 @@
 
         .value-card.expanded h4 {
             font-size: 1.5rem;
-            margin-bottom: 0.75rem; /* More space below title */
+            margin-bottom: 0.75rem; 
             color: var(--primary-color);
         }
 
         .value-card.expanded .value-description {
             display: block;
             opacity: 1;
-            transform: translateY(0); /* Reset transform */
+            transform: translateY(0); 
         }
 
         #culture-grid.expanded-view .value-card:not(.expanded),
@@ -427,42 +425,113 @@
 
         #culture-grid.expanded-view,
         #working-character-grid.expanded-view {
-            min-height: 200px; /* Ensure container has height when a card is expanded */
-            position: relative; /* Needed for absolute positioning of expanded card */
+            min-height: 200px; 
+            position: relative; 
         }
 
         .culture-section, .working-character-section {
-            position: relative; /* For z-index context if needed */
-            z-index: 1; /* Ensure these sections are above the p5 canvas if it overlaps */
-            padding: 5rem 0; /* Standard padding */
-            background-color: white; /* Explicit white background */
+            position: relative; 
+            z-index: 1; 
+            padding: 5rem 0; 
+            background-color: white; 
         }
         .culture-section h2, .working-character-section h2 {
-            color: #333; /* Darker heading color */
+            color: #333; 
         }
 
 
         .error-message {
             color: #f8d7da;
             background-color: #721c24;
-            padding: 8px 12px; /* More padding */
+            padding: 8px 12px; 
             border-radius: 5px;
             display: inline-block;
-            font-size: 0.9rem; /* Consistent font size */
+            font-size: 0.9rem; 
         }
 
-        /* Footer Styling */
+        .feedback-section {
+            padding: 5rem 0;
+            background-color: white; 
+            color: #333; 
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .feedback-section h2 {
+            color: var(--primary-color); 
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        .feedback-section p {
+            font-size: 1.1rem;
+            color: #555; 
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #feedbackFormModal .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #feedbackFormModal .modal-header .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        #feedbackFormModal .form-label:not(.textarea-label) { 
+            font-weight: 500;
+            color: #333;
+        }
+         #feedbackFormModal .textarea-label { 
+            font-weight: 500;
+            color: #333;
+            display: block; 
+            margin-bottom: 0.5rem;
+        }
+
+        #feedbackFormModal .form-control,
+        #feedbackFormModal .form-select {
+            border-radius: 0.5rem;
+            border: 1px solid #ced4da;
+        }
+        #feedbackFormModal .form-control:focus,
+        #feedbackFormModal .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(209, 91, 28, 0.25);
+        }
+        #feedbackFormModal #feedbackSubmitBtn {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        #feedbackFormModal #feedbackSubmitBtn:hover {
+            background-color: #b94f23;
+            border-color: #b94f23;
+        }
+        #feedbackFormModal .modal-footer .btn-outline-secondary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+         #feedbackFormModal .modal-footer .btn-outline-secondary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #feedbackStatus {
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+
         footer.bg-white {
             padding-top: 3rem;
             padding-bottom: 3rem;
-            border-top: 1px solid #e9ecef; /* Subtle top border */
+            border-top: 1px solid #e9ecef; 
         }
         footer h5, footer h6 {
             color: var(--primary-color);
             font-weight: 600;
         }
         footer .text-muted {
-            color: #6c757d !important; /* Bootstrap's muted color */
+            color: #6c757d !important; 
             font-size: 0.9rem;
         }
         footer .social-links a {
@@ -477,14 +546,13 @@
             text-decoration: underline !important;
         }
 
-        /* Coming Soon Modal Styling */
         .modal-header {
             background-color: var(--primary-color);
             color: white;
-            border-bottom: none; /* Remove bottom border from header */
+            border-bottom: none; 
         }
         .modal-header .btn-close {
-            filter: invert(1) grayscale(100%) brightness(200%); /* Make close button white */
+            filter: invert(1) grayscale(100%) brightness(200%); 
         }
         .modal-title {
             font-weight: 500;
@@ -493,16 +561,15 @@
             padding: 2rem;
             font-size: 1.1rem;
             color: #333;
-            text-align: center; /* Center align text in modal body */
         }
         .modal-content {
-            border-radius: 10px; /* Rounded corners for modal */
+            border-radius: 10px; 
             border: none;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         .modal-footer {
-            border-top: none; /* Remove top border from footer */
-            justify-content: center; /* Center button in footer */
+            border-top: none; 
+            justify-content: center; 
         }
         .modal-footer .btn-secondary {
             background-color: var(--secondary-color);
@@ -512,7 +579,7 @@
             padding-right: 1.5rem;
         }
         .modal-footer .btn-secondary:hover {
-            background-color: #b94f23; /* Darker shade for hover */
+            background-color: #b94f23; 
             border-color: #b94f23;
         }
 
@@ -521,7 +588,8 @@
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Logo" loading="lazy" style="width: 200px;">
+            <img src="https://drive.google.com/uc?export=view&id=1vWROesjizhti9mlBCwDD04mNIX4lJb1c" alt="Logo" loading="lazy" style="width: 200px;"
+                 onerror="this.onerror=null;">
             <img src="https://placehold.co/40x40/176980/FFFFFF?text=HCIH" alt="Bubble Logo" style="border-radius: 50%; margin-right: 10px;"
                  onerror="this.onerror=null; this.src='https://placehold.co/40x40/CCCCCC/000000?text=Logo';">
             <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
@@ -541,13 +609,12 @@
                     </li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" target="_blank"><span>Gallery</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" target="_top"><span>Feedback</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="" target="_top"><span>Policy</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a></li>
                 </ul>
             </div>
         </div>
     </nav>
-  
 
     <section class="hero-section">
         <div class="container">
@@ -765,8 +832,8 @@
                         <p>One system for managing all HC-related forms and requests.</p>
                     </a>
                 </div>
-                <div class="col-md-4 d-flex align-items-stretch" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="Internal Job Board">
-                    <a href="#" class="feature-card text-center"> <i class="fas fa-briefcase feature-icon"></i>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="#" class="feature-card text-center" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="Internal Job Board"> <i class="fas fa-briefcase feature-icon"></i>
                         <h3 class="feature-title">Internal Job Board</h3>
                         <p>Explore and apply for internal career opportunities across the organization.</p>
                     </a>
@@ -775,6 +842,16 @@
         </div>
     </section>
 
+    <section id="feedback" class="feedback-section">
+        <div class="container">
+            <h2>We Value Your Feedback</h2>
+            <p>Your opinions and suggestions are important to us. Help us improve our services and platform by sharing your thoughts.</p>
+            <button type="button" class="btn btn-secondary-custom btn-lg" data-bs-toggle="modal" data-bs-target="#feedbackFormModal">
+                <i class="fas fa-comments me-2"></i>Provide Feedback
+            </button>
+        </div>
+    </section>
+    
     <footer class="bg-white py-5">
         <div class="container">
             <div class="row gy-4">
@@ -791,7 +868,7 @@
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" class="text-muted text-decoration-none" target="_blank">HC hiro</a></li>
                         <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" class="text-muted text-decoration-none" target="_blank">Gallery</a></li>
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxpGylM2w3bstdmM3HWaQCng0I17dZDSEsXeK_w7-yqPXaj4S7M0YpgDuCBf-CKn-79/exec" class="text-muted text-decoration-none" target="_top">Feedback</a></li>
+                        <li class="mb-2"><a href="" class="text-muted text-decoration-none" target="_top">Policy</a></li>
                         <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" class="text-muted text-decoration-none" target="_top">FAQ</a></li>
                     </ul>
                 </div>
@@ -799,17 +876,15 @@
                     <h6 class="mb-3 fw-bold">Our Services</h6>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" class="text-muted text-decoration-none" target="_top">Loan Simulation</a></li>
-                        <!-- <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">Internal Mobility</a></li>
-                        <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">PDF Tools</a></li>
-                        <li class="mb-2"><a href="#services" class="text-muted text-decoration-none">Data Hub</a></li> -->
+                        <li class="mb-2"><a href="#services" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="More Services">More Coming Soon</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-4 col-md-6">
                      <h6 class="mb-3 fw-bold">Contact Us</h6>
                      <p class="text-muted mb-1">PT Bank Hibank Indonesia</p>
-                     <p class="text-muted mb-1">Rajawali Place, Lantai 22-23
-                                                Jl. H.R. Rasuna Said Kav. B.4
-                                                Setiabudi, Jakarta Selatan - 12910</p>
+                     <p class="text-muted mb-1">Rajawali Place, Lantai 22-23<br>
+                                                 Jl. H.R. Rasuna Said Kav. B.4<br>
+                                                 Setiabudi, Jakarta Selatan - 12910</p>
                      <p class="text-muted">Email: <a href="mailto:humancapital@hibank.co.id" class="text-muted text-decoration-none">humancapital@hibank.co.id</a></p>
                 </div>
             </div>
@@ -824,7 +899,6 @@
         </div>
     </footer>
 
-    <!-- Modal Coming Soon Services -->
     <div class="modal fade" id="comingSoonModal" tabindex="-1" aria-labelledby="comingSoonModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -842,6 +916,60 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="feedbackFormModal" tabindex="-1" aria-labelledby="feedbackFormModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackFormModalLabel"><i class="fas fa-paper-plane me-2"></i>Share Your Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm">
+                        <div class="row mb-3 align-items-center">
+                            <label for="feedbackEmail" class="col-sm-3 col-form-label text-sm-start">Email</label>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" id="feedbackEmail" placeholder="Enter your email address" required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid email address.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <label for="feedbackType" class="col-sm-3 col-form-label text-sm-start">Feedback Type</label>
+                            <div class="col-sm-9">
+                                <select class="form-select" id="feedbackType" aria-label="Feedback type" required>
+                                    <option selected value="General">General Feedback</option>
+                                    <option value="Technical Issues">Technical Issues</option>
+                                    <option value="Feature Request">Feature Request</option>
+                                    <option value="Compliment">Compliment</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select a feedback type.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedbackMessage" class="form-label textarea-label">Your Message</label>
+                            <textarea class="form-control" id="feedbackMessage" rows="4" placeholder="Tell us what you think..." required></textarea>
+                            <div class="invalid-feedback">
+                                Please enter your message.
+                            </div>
+                        </div>
+                        <div id="feedbackStatus" class="mt-3"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="feedbackSubmitBtn" form="feedbackForm">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -864,26 +992,24 @@
 
         // p5.js sketch for background animation
         let stars = [];
-        let starCount = 70; // Increased star count for denser field
-        let maxDistance = 120; // Adjusted connection distance
+        let starCount = 70; 
+        let maxDistance = 120; 
 
         function setup() {
             let canvas = createCanvas(windowWidth, windowHeight);
-            canvas.parent(document.body); // Attach canvas directly to body
-            canvas.id('canvas-background'); // Assign ID for CSS styling
+            canvas.parent(document.body); 
+            canvas.id('canvas-background'); 
             for (let i = 0; i < starCount; i++) {
                 stars.push(new Star(random(width), random(height)));
             }
-            // Ensure p5 canvas is behind other content
             select('#canvas-background').style('z-index', '-1');
-            select('#canvas-background').style('position', 'fixed'); // Make sure it covers the viewport
+            select('#canvas-background').style('position', 'fixed'); 
             select('#canvas-background').style('top', '0');
             select('#canvas-background').style('left', '0');
-
         }
 
         function draw() {
-            clear(); // Use clear() instead of background() for transparency
+            clear(); 
             for (let i = 0; i < stars.length; i++) {
                 stars[i].move();
                 stars[i].show();
@@ -895,16 +1021,15 @@
             constructor(x, y) {
                 this.x = x;
                 this.y = y;
-                this.vx = random(-0.5, 0.5); // Slower movement
+                this.vx = random(-0.5, 0.5); 
                 this.vy = random(-0.5, 0.5);
-                this.radius = random(1, 3); // Varied star size
+                this.radius = random(1, 3); 
             }
 
             move() {
                 this.x += this.vx;
                 this.y += this.vy;
 
-                // Wrap around edges
                 if (this.x < -this.radius) this.x = width + this.radius;
                 if (this.y < -this.radius) this.y = height + this.radius;
                 if (this.x > width + this.radius) this.x = -this.radius;
@@ -913,7 +1038,7 @@
 
             show() {
                 noStroke();
-                fill(255, 255, 255, 150); // White stars with some transparency
+                fill(255, 255, 255, 150); 
                 ellipse(this.x, this.y, this.radius * 2, this.radius * 2);
             }
 
@@ -922,14 +1047,13 @@
                     if (other === this) continue;
                     let d = dist(this.x, this.y, other.x, other.y);
                     if (d < maxDistance) {
-                        let opacity = map(d, 0, maxDistance, 100, 0); // Lines are more transparent
+                        let opacity = map(d, 0, maxDistance, 100, 0); 
                         stroke(255, 255, 255, opacity);
                         line(this.x, this.y, other.x, other.y);
                     }
                 }
-                 // Connect to cursor
                 let dToCursor = dist(this.x, this.y, mouseX, mouseY);
-                if (dToCursor < maxDistance + 50) { // Slightly larger range for cursor
+                if (dToCursor < maxDistance + 50) { 
                     let cursorOpacity = map(dToCursor, 0, maxDistance + 50, 80, 0);
                     stroke(255, 255, 255, cursorOpacity);
                     line(this.x, this.y, mouseX, mouseY);
@@ -942,7 +1066,6 @@
         }
 
 
-        // Card expansion logic for Culture and Working Character sections
         function initializeCardExpansion(gridId) {
             const grid = document.getElementById(gridId);
             if (!grid) return;
@@ -952,10 +1075,8 @@
             let isAnimating = false;
 
             function toggleCard(card, expand) {
-                if (isAnimating) return;
+                if (isAnimating && card.classList.contains('expanded') !== expand) return; 
                 isAnimating = true;
-
-                // Force reflow / repaint before adding class for transition
                 void card.offsetWidth;
 
                 requestAnimationFrame(() => {
@@ -966,41 +1087,42 @@
                         card.classList.remove('expanded');
                         grid.classList.remove('expanded-view');
                     }
-                    // Event listener for transition end to set isAnimating to false
                     card.addEventListener('transitionend', function onTransitionEnd() {
                         isAnimating = false;
                         card.removeEventListener('transitionend', onTransitionEnd);
-                    });
+                    }, { once: true }); 
                 });
             }
 
             cards.forEach(card => {
                 card.addEventListener('click', function(event) {
-                    event.stopPropagation(); // Prevent click from bubbling to document
+                    event.stopPropagation(); 
+                    if (isAnimating) return; 
 
-                    if (currentlyExpandedCard === this) { // Clicked on already expanded card
+                    if (currentlyExpandedCard === this) { 
                         toggleCard(this, false);
                         currentlyExpandedCard = null;
-                    } else { // Clicked on a new card or no card was expanded
-                        if (currentlyExpandedCard) { // Another card is already expanded
+                    } else { 
+                        if (currentlyExpandedCard) { 
                             toggleCard(currentlyExpandedCard, false);
                         }
-                        toggleCard(this, true);
-                        currentlyExpandedCard = this;
+                        setTimeout(() => {
+                            toggleCard(this, true);
+                            currentlyExpandedCard = this;
+                        }, currentlyExpandedCard ? 50 : 0); 
                     }
                 });
             });
 
-            // Close expanded card if clicking outside
             document.addEventListener('click', function(event) {
-                if (currentlyExpandedCard && !grid.contains(event.target)) {
+                if (isAnimating) return;
+                if (currentlyExpandedCard && !grid.contains(event.target) && !currentlyExpandedCard.contains(event.target)) {
                     toggleCard(currentlyExpandedCard, false);
                     currentlyExpandedCard = null;
                 }
             }, { passive: true });
         }
 
-        // User Greeting and Data Fetching Logic
         const greetingContainerElement = document.getElementById('greetingContainer');
         const typewriterCursorElement = document.getElementById('typewriterCursor');
         const statusMessageElement = document.getElementById('statusMessage');
@@ -1022,12 +1144,10 @@
             }
             stopGreetingCycle();
 
-            const greetings = [`hi, ${name}!`]; // Simplified to one greeting
+            const greetings = [`hi, ${name}!`]; 
             let currentGreetingIndex = 0;
             let currentCharIndex = 0;
-            const typingSpeed = 80; // Adjusted speed
-            // const deletingSpeed = 50; // Not used if not deleting
-            // const delayBetweenGreetings = 2000; // Not used if not cycling
+            const typingSpeed = 80; 
 
             greetingContainerElement.textContent = '';
             typewriterCursorElement.style.display = 'inline';
@@ -1038,8 +1158,7 @@
                 currentCharIndex++;
 
                 if (currentCharIndex === currentText.length) {
-                    typewriterCursorElement.style.display = 'none'; // Hide cursor after typing
-                    // No deletion, no cycling. Greeting stays.
+                    typewriterCursorElement.style.display = 'none'; 
                     return;
                 }
                 greetingInterval = setTimeout(type, typingSpeed);
@@ -1054,16 +1173,14 @@
             }
 
             statusMessageElement.textContent = "Fetching your information...";
-            statusMessageElement.className = ""; // Reset classes
+            statusMessageElement.className = ""; 
             statusMessageElement.style.color = "#ffdddd";
-            statusMessageElement.style.display = 'block'; // Show status while fetching
+            statusMessageElement.style.display = 'block'; 
             retryButton.style.display = 'none';
-            greetingContainerElement.style.display = 'none'; // Hide greeting while fetching
+            greetingContainerElement.style.display = 'none'; 
             typewriterCursorElement.style.display = 'none';
             stopGreetingCycle();
 
-            // --- MOCK google.script.run for local testing ---
-            // Remove or comment this out when deploying to Google Apps Script
             if (typeof google === 'undefined' || typeof google.script === 'undefined') {
                 console.warn("Google Apps Script environment not found. Using mock data.");
                 window.google = {
@@ -1078,51 +1195,38 @@
                                 return this;
                             },
                             getUserEmail: function() {
-                                // Simulate a successful response
                                 setTimeout(() => {
                                     this.successCallback({
                                         isAuthorized: true,
-                                        name: "Guest User", // Mock name
+                                        name: "Guest User",
                                         email: "guest@example.com",
-                                        joblevel: "Staff" // or "Chief" to test Data Hub
+                                        joblevel: "Staff" 
                                     });
                                 }, 1000);
-
-                                // Simulate a failure response (uncomment to test)
-                                // setTimeout(() => {
-                                //    this.failureCallback({ message: "Mock server communication error." });
-                                // }, 1000);
-
-                                 // Simulate an unauthorized response (uncomment to test)
-                                // setTimeout(() => {
-                                //     this.successCallback({ isAuthorized: false, error: "Authorization denied by mock." });
-                                // }, 1000);
                             }
                         }
                     }
                 };
             }
-            // --- END MOCK ---
-
 
             google.script.run
             .withSuccessHandler(function(response) {
-                statusMessageElement.style.display = 'none'; // Hide status message by default
+                statusMessageElement.style.display = 'none';
                 statusMessageElement.textContent = "";
 
                 if (response && response.isAuthorized && response.name) {
-                    greetingContainerElement.style.display = 'inline'; // Show greeting container
+                    greetingContainerElement.style.display = 'inline';
                     startGreetingCycle(response.name);
 
                     const dataHubFeatureContainer = document.getElementById('dataHubFeatureContainer');
                     if (dataHubFeatureContainer) {
                         if (response.joblevel && response.joblevel.toLowerCase() === 'chief') {
-                            dataHubFeatureContainer.style.display = 'flex'; // Use flex to align with other cards
+                            dataHubFeatureContainer.style.display = 'flex';
                         } else {
                             dataHubFeatureContainer.style.display = 'none';
                         }
                     }
-                } else { // Handle errors or unauthorized access
+                } else {
                     greetingContainerElement.style.display = 'none';
                     typewriterCursorElement.style.display = 'none';
                     let message = "Access denied or user information not available.";
@@ -1130,9 +1234,9 @@
                         message = response.error;
                     }
                     statusMessageElement.textContent = message;
-                    statusMessageElement.className = "error-message"; // Apply error styling
+                    statusMessageElement.className = "error-message";
                     statusMessageElement.style.display = 'block';
-                    retryButton.style.display = 'inline-block'; // Show retry button
+                    retryButton.style.display = 'inline-block';
                 }
             })
             .withFailureHandler(function(error) {
@@ -1148,21 +1252,15 @@
         }
 
 
-        // DOMContentLoaded to initialize scripts
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize card expansions
             initializeCardExpansion('culture-grid');
             initializeCardExpansion('working-character-grid');
-
-            // Fetch user data
             fetchUserData();
 
-            // Retry button event listener
             if (retryButton) {
                 retryButton.addEventListener('click', fetchUserData);
             }
 
-            // Navbar toggler for mobile
             const navbarToggler = document.querySelector('.navbar-toggler');
             const navbarCollapse = document.querySelector('.navbar-collapse');
             if (navbarToggler && navbarCollapse) {
@@ -1170,7 +1268,6 @@
                     navbarCollapse.classList.toggle('show');
                 });
 
-                // Close navbar when clicking outside on mobile
                 document.addEventListener('click', function(event) {
                     const isClickInsideNav = navbarCollapse.contains(event.target);
                     const isToggler = navbarToggler.contains(event.target);
@@ -1180,20 +1277,131 @@
                 });
             }
 
-            // Coming Soon Modal: Update service name
-            const comingSoonModal = document.getElementById('comingSoonModal');
-            if (comingSoonModal) {
-                comingSoonModal.addEventListener('show.bs.modal', function (event) {
-                    // Button that triggered the modal
+            const comingSoonModalEl = document.getElementById('comingSoonModal');
+            if (comingSoonModalEl) {
+                comingSoonModalEl.addEventListener('show.bs.modal', function (event) {
                     const button = event.relatedTarget;
-                    // Extract info from data-service-name attributes
                     const serviceName = button.getAttribute('data-service-name');
-                    const modalServiceNameElement = comingSoonModal.querySelector('#modalServiceName');
+                    const modalServiceNameElement = comingSoonModalEl.querySelector('#modalServiceName');
                     if (serviceName) {
                         modalServiceNameElement.textContent = serviceName;
                     } else {
-                        modalServiceNameElement.textContent = "This feature"; // Default if no name provided
+                        modalServiceNameElement.textContent = "This feature";
                     }
+                });
+            }
+
+            // Feedback Form Modal Logic (Updated to call Apps Script)
+            const feedbackForm = document.getElementById('feedbackForm');
+            const feedbackSubmitBtn = document.getElementById('feedbackSubmitBtn');
+            const feedbackStatus = document.getElementById('feedbackStatus');
+            const feedbackModalEl = document.getElementById('feedbackFormModal');
+            
+            const feedbackEmailInput = document.getElementById('feedbackEmail');
+            const feedbackTypeSelect = document.getElementById('feedbackType');
+            const feedbackMessageTextarea = document.getElementById('feedbackMessage');
+
+
+            if (feedbackForm && feedbackSubmitBtn && feedbackStatus && feedbackModalEl) {
+                feedbackForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); 
+                    let isValid = true;
+                    feedbackStatus.innerHTML = ''; 
+
+                    feedbackEmailInput.classList.remove('is-invalid');
+                    if (feedbackEmailInput.value.trim() === '') {
+                        feedbackEmailInput.classList.add('is-invalid');
+                        feedbackEmailInput.nextElementSibling.textContent = 'Please provide an email address.';
+                        isValid = false;
+                    } else {
+                        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailPattern.test(feedbackEmailInput.value.trim())) {
+                            feedbackEmailInput.classList.add('is-invalid');
+                            feedbackEmailInput.nextElementSibling.textContent = 'Please provide a valid email address.';
+                            isValid = false;
+                        }
+                    }
+                    
+                    feedbackTypeSelect.classList.remove('is-invalid');
+                    if (feedbackTypeSelect.value === '') { 
+                        feedbackTypeSelect.classList.add('is-invalid');
+                        isValid = false;
+                    }
+
+                    feedbackMessageTextarea.classList.remove('is-invalid');
+                    if (feedbackMessageTextarea.value.trim() === '') {
+                        feedbackMessageTextarea.classList.add('is-invalid');
+                        isValid = false;
+                    }
+
+                    if (!isValid) {
+                        feedbackStatus.innerHTML = '<div class="alert alert-danger p-2" role="alert">Please fill in all required fields correctly.</div>';
+                        return;
+                    }
+
+                    feedbackSubmitBtn.disabled = true;
+                    feedbackSubmitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+                    feedbackStatus.innerHTML = '<div class="alert alert-info p-2" role="alert">Submitting your feedback...</div>';
+
+                    const formData = {
+                        email: feedbackEmailInput.value.trim(),
+                        category: feedbackTypeSelect.value,
+                        feedbackDetails: feedbackMessageTextarea.value.trim()
+                    };
+
+                    // --- Call Google Apps Script function ---
+                    if (typeof google !== 'undefined' && typeof google.script !== 'undefined' && typeof google.script.run !== 'undefined') {
+                        google.script.run
+                            .withSuccessHandler(function(response) {
+                                if (response.success) {
+                                    feedbackStatus.innerHTML = `<div class="alert alert-success p-2" role="alert">${response.message}</div>`;
+                                    feedbackForm.reset();
+                                    setTimeout(() => {
+                                        const modalInstance = bootstrap.Modal.getInstance(feedbackModalEl);
+                                        if (modalInstance) {
+                                            modalInstance.hide();
+                                        }
+                                    }, 2000);
+                                } else {
+                                    feedbackStatus.innerHTML = `<div class="alert alert-danger p-2" role="alert">${response.message || 'An unknown error occurred.'}</div>`;
+                                }
+                                feedbackSubmitBtn.disabled = false;
+                                feedbackSubmitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Feedback';
+                            })
+                            .withFailureHandler(function(error) {
+                                feedbackStatus.innerHTML = `<div class="alert alert-danger p-2" role="alert">Error: ${error.message}. Please try again.</div>`;
+                                feedbackSubmitBtn.disabled = false;
+                                feedbackSubmitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Feedback';
+                                console.error("Apps Script execution error:", error);
+                            })
+                            .submitFeedback(formData);
+                    } else {
+                        // Fallback for local testing if google.script.run is not available
+                        console.log("Google Apps Script environment not available. Simulating submission.");
+                        console.log("Feedback Submitted (Simulated):", formData);
+                        setTimeout(() => {
+                            feedbackStatus.innerHTML = '<div class="alert alert-success p-2" role="alert">Thank you! (Simulated submission)</div>';
+                            feedbackForm.reset(); 
+                            feedbackSubmitBtn.disabled = false;
+                            feedbackSubmitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Feedback';
+                            setTimeout(() => {
+                                const modalInstance = bootstrap.Modal.getInstance(feedbackModalEl);
+                                if (modalInstance) {
+                                    modalInstance.hide();
+                                }
+                            }, 2000);
+                        }, 1500);
+                    }
+                });
+
+                feedbackModalEl.addEventListener('hidden.bs.modal', function () {
+                    feedbackForm.reset();
+                    feedbackEmailInput.classList.remove('is-invalid');
+                    feedbackTypeSelect.classList.remove('is-invalid');
+                    feedbackMessageTextarea.classList.remove('is-invalid');
+                    feedbackStatus.innerHTML = '';
+                    feedbackSubmitBtn.disabled = false;
+                    feedbackSubmitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Feedback';
                 });
             }
         });
