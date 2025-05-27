@@ -43,33 +43,85 @@
             z-index: 1030;
             transition: top 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
             box-shadow: none; /* No shadow initially */
+            transition: top 0.3s ease-in-out; /* This creates the smooth transition */
         }
-        .navbar.navbar-scrolled { /* Shadow when scrolled and navbar is visible */
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-        }
+
         .navbar.navbar-hidden {
             top: -100px; 
         }
-        .navbar .navbar-brand,
-        .navbar .nav-link {
-            color: white !important;
+
+        .navbar-brand {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.5rem; /* Responsive font size */
+        }
+
+        .nav-link {
+            color: var(--primary-color);
+            font-weight: 500;
             transition: color 0.3s ease;
+            padding-left: 0.8rem !important;
+            padding-right: 0.8rem !important;
+            position: relative;
         }
-        .navbar .nav-link:hover,
-        .navbar .nav-link.active {
-            color: #e0e0e0 !important; /* Softer hover color */
+
+        .nav-link > span {
+            position: relative;
+            display: inline-block;
         }
-        .navbar-toggler-icon {
-            filter: invert(1) grayscale(100%) brightness(200%);
+
+        .nav-link:not(.auth-btn) > span::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
         }
-        .navbar-brand img {
+
+        .nav-link:not(.auth-btn):hover > span::after {
+            width: 100%;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--secondary-color) !important;
+        }
+
+        .dropdown-item:hover {
+            color: var(--secondary-color);
+        }
+
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .dropdown-item {
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(209, 91, 40, 0.05); /* Light orange tint on hover */
+        }
+
+        .nav-item.dropdown > .nav-link.dropdown-toggle::after {
+            content: '\f078'; /* Font Awesome caret down */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            display: inline-block;
+            margin-left: 0.35em;
+            vertical-align: 0.05em;
+            border: none; /* Remove default Bootstrap arrow */
             transition: transform 0.3s ease;
         }
-        .navbar-brand:hover img {
-            transform: scale(1.1);
-        }
-        .navbar-brand {
-            font-weight: 600; /* Bolder brand name */
+        .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
+            transform: rotate(180deg); /* Rotate arrow when dropdown is open */
         }
 
         /* Hero Section: Full Viewport Height */
@@ -466,24 +518,24 @@
 
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <img src="https://cdn.hibank.co.id/hcih/buble-hibank.png" alt="Logo" loading="lazy" style="width: 50px; margin-right: 10px;" onerror="this.onerror=null; this.src='https://placehold.co/50x50/CCCCCC/000000?text=Logo';">
+            <img src="https://cdn.hibank.co.id/hcih/hi-by-hibank-logo.png" alt="Logo" loading="lazy" style="width: 50px; margin-right: 10px;"  onerror="this.onerror=null;">
             <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#"><span>Home</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzU2GpKE9GqagMJT_EdTNRSXhWwNg5tA-GSxry13G32QEPzFeM8IkRMa0TYvq-y_y6Hmw/exec" target="_top"><span>Home</span></a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span>Services</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
                             <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_top">Loan Simulation</a></li>
-                        </ul>
+                            </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" target="_blank"><span>HC hiro</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" target="_blank"><span>Gallery</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#" target="_top"><span>HC hiro</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx-HGsao6BRcWDTYxkfY8Xdeua8VSbhKgS0V1jNN2EOpnRInw6EOsNKMp1IiL-FRTLY_w/exec" target="_top"><span>Gallery</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" target="_top"><span>Policy</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a></li>
                 </ul>
@@ -631,7 +683,7 @@
                         </div>
                     </div>
                     <h4 class="team-member-name">Vincent</h4>
-                    <p class="team-member-title">HC Dahsboard & Analytics</p>
+                    <p class="team-member-title">HC Dashboard & Analytics</p>
                 </div>
             </div>
             <div class="team-grid team-grid-three-people">
@@ -772,8 +824,8 @@
                 <div class="col-lg-2 col-md-6">
                     <h6 class="mb-3 fw-bold">Quick Links</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/hc-hiro" class="text-muted text-decoration-none" target="_blank">HC hiro</a></li>
-                        <li class="mb-2"><a href="https://sites.google.com/hibank.co.id/hcinnovationhub/gallery" class="text-muted text-decoration-none" target="_blank">Gallery</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none" target="">HC hiro</a></li>
+                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx-HGsao6BRcWDTYxkfY8Xdeua8VSbhKgS0V1jNN2EOpnRInw6EOsNKMp1IiL-FRTLY_w/exec" class="text-muted text-decoration-none" target="_top">Gallery</a></li>
                         <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" class="text-muted text-decoration-none" target="_top">Policy</a></li>
                         <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" class="text-muted text-decoration-none" target="_top">FAQ</a></li>
                     </ul>
