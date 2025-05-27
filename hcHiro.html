@@ -6,6 +6,7 @@
     <title>Full Page Hero Image</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Basic Reset */
@@ -20,7 +21,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Sora', sans-serif;
             line-height: 1.6;
             color: #333;
         }
@@ -111,7 +112,8 @@
 
         .hero-text-main {
             font-size: clamp(3rem, 12vw, 9rem);
-            font-weight: 900;
+            font-weight: 900; /* Using Inter font for this, which has 900 weight */
+            font-family: 'Inter', sans-serif; /* Explicitly use Inter for hero text if it needs to be very bold */
             line-height: 1;
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
@@ -211,7 +213,7 @@
 
         .single-profile-name { 
             font-size: clamp(2rem, 4vw, 3rem); 
-            font-weight: 700;
+            font-weight: bold; /* Should now map to 700 if Sora 700 is loaded */
             color: #005A9C; 
             margin-bottom: 8px; 
         }
@@ -235,7 +237,7 @@
         .department-heading {
             text-align: center;
             font-size: 2.2rem; 
-            font-weight: 700;
+            font-weight: bold; /* Should now map to 700 if Sora 700 is loaded */
             color: #005A9C; 
             margin-bottom: 40px;
         }
@@ -295,17 +297,18 @@
         
         .team-member-name {
             font-size: 1.20rem; 
-            font-weight: 700;
+            font-weight: bold; /* Should now map to 700 if Sora 700 is loaded */
             color: #005A9C; 
             margin-bottom: 4px;
         }
 
         .team-member-title {
             font-size: 0.92rem; 
-            font-weight: 500;
+            font-weight: 500; /* Titles are typically not as bold as names */
             color: #F58220; 
             line-height: 1.3;
         }
+
 
         @media (max-width: 992px) { /* Larger tablets */
             .team-grid {
@@ -605,9 +608,9 @@
             <div class="team-grid"> 
                 <div class="team-member-profile"> 
                     <div class="team-member-image-container">
-                         <img src="https://placehold.co/480x480/E0E0E0/333333?text=Team+A1" alt="Team Member A1"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackA1').style.display='flex';">
-                        <div id="teamImageFallbackA1" class="profile-image-fallback" style="display:none;">
+                         <img src="https://cdn.hibank.co.id/hcih/org/Layla.png" alt="Layla Puspa Risha"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackLayla').style.display='flex';">
+                        <div id="teamImageFallbackLayla" class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
@@ -616,9 +619,9 @@
                 </div>
                 <div class="team-member-profile"> 
                     <div class="team-member-image-container">
-                        <img src="https://placehold.co/480x480/D8D8D8/333333?text=Team+A2" alt="Team Member A2"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackA2').style.display='flex';">
-                        <div id="teamImageFallbackA2" class="profile-image-fallback" style="display:none;">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Desy.png" alt="Desy Sri Ayuningtyas"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackDesy').style.display='flex';">
+                        <div id="teamImageFallbackDesy" class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
@@ -627,14 +630,61 @@
                 </div>
                 <div class="team-member-profile"> 
                     <div class="team-member-image-container">
-                        <img src="https://placehold.co/480x480/CFCFCF/333333?text=Team+A3" alt="Team Member A3"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackA3').style.display='flex';">
-                        <div id="teamImageFallbackA3" class="profile-image-fallback" style="display:none;">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Mardiana.png" alt="Mardiana"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackMardiana').style.display='flex';">
+                        <div id="teamImageFallbackMardiana" class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
-                    <h4 class="team-member-name">Team Member A3</h4>
-                    <p class="team-member-title">Role A3</p>
+                    <h4 class="team-member-name">Mardiana</h4>
+                    <p class="team-member-title">People Care</p>
+                </div>
+                <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Debora.png" alt="Debora Prestina W. S."
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackDebora').style.display='flex';">
+                        <div id="teamImageFallbackDebora" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Debora Prestina W. S.</h4>
+                    <p class="team-member-title">People Care</p>
+                </div>
+            </div>
+
+            <div class="team-grid team-grid-three-people">
+                 <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Dodi.png" alt="I Wayan Dodi Cahyadipa"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackDodi').style.display='flex';">
+                        <div id="teamImageFallbackDodi" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">I Wayan Dodi Cahyadipa</h4>
+                    <p class="team-member-title">Internship</p>
+                </div>
+                 <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Tarlin.png" alt="Teresa Harlin"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackTarlin').style.display='flex';">
+                        <div id="teamImageFallbackTarlin" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Teresa Harlin</h4>
+                    <p class="team-member-title">Internship</p>
+                </div>
+                 <div class="team-member-profile"> 
+                    <div class="team-member-image-container">
+                        <img src="https://cdn.hibank.co.id/hcih/org/Vieren.png" alt="Vieren Septishia"
+                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackVieren').style.display='flex';">
+                        <div id="teamImageFallbackVieren" class="profile-image-fallback" style="display:none;">
+                            Image not found
+                        </div>
+                    </div>
+                    <h4 class="team-member-name">Vieren Septishia</h4>
+                    <p class="team-member-title">Internship</p>
                 </div>
             </div>
         </div>
