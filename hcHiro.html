@@ -24,26 +24,32 @@
             font-family: 'Sora', sans-serif;
             line-height: 1.6;
             color: #333;
+            background-color: #f8f9fa; /* Light background for the whole page */
         }
 
         /* Custom Navbar Styling */
         .navbar {
-            background-color: rgba(0, 0, 0, 0.3) !important;
-            -webkit-backdrop-filter: blur(5px);
-            backdrop-filter: blur(5px);
+            background-color: rgba(20, 20, 20, 0.5) !important; /* Slightly darker transparent background */
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
             z-index: 1030;
-            transition: top 0.3s ease-in-out; /* Smooth transition for hiding/showing */
+            transition: top 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
+            box-shadow: none; /* No shadow initially */
+        }
+        .navbar.navbar-scrolled { /* Shadow when scrolled and navbar is visible */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
         }
         .navbar.navbar-hidden {
-            top: -100px; /* Adjust this value if navbar height is different, to hide it completely */
+            top: -100px; 
         }
         .navbar .navbar-brand,
         .navbar .nav-link {
             color: white !important;
+            transition: color 0.3s ease;
         }
         .navbar .nav-link:hover,
         .navbar .nav-link.active {
-            color: #cccccc !important;
+            color: #e0e0e0 !important; /* Softer hover color */
         }
         .navbar-toggler-icon {
             filter: invert(1) grayscale(100%) brightness(200%);
@@ -53,6 +59,9 @@
         }
         .navbar-brand:hover img {
             transform: scale(1.1);
+        }
+        .navbar-brand {
+            font-weight: 600; /* Bolder brand name */
         }
 
         /* Hero Section: Full Viewport Height */
@@ -74,7 +83,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(100%);
+            filter: grayscale(100%) brightness(0.9); /* Slightly darker image */
             z-index: 1;
         }
 
@@ -99,7 +108,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.1);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3)); /* Subtle gradient overlay */
             z-index: 2;
         }
 
@@ -107,16 +116,17 @@
             position: relative;
             z-index: 3;
             color: white;
-            padding-top: 70px; /* Adjust if navbar height changes */
+            padding-top: 70px; 
         }
 
         .hero-text-main {
-            font-size: clamp(3rem, 12vw, 9rem);
-            font-weight: 900; /* Using Inter font for this, which has 900 weight */
-            font-family: 'Inter', sans-serif; /* Explicitly use Inter for hero text if it needs to be very bold */
+            font-size: clamp(3.5rem, 15vw, 10rem); /* Slightly larger */
+            font-weight: 900; 
+            font-family: 'Inter', sans-serif; 
             line-height: 1;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 0px 0px 15px rgba(0,0,0,0.6); /* More pronounced shadow */
+            letter-spacing: -2px; /* Slightly tighter letter spacing */
         }
 
         /* Scroll Down Arrow */
@@ -127,16 +137,21 @@
             transform: translateX(-50%);
             z-index: 4;
             color: white;
-            font-size: 2rem;
+            font-size: 2.2rem; /* Slightly larger arrow */
             cursor: pointer;
             padding: 10px;
-            animation: bounce 2s infinite;
+            animation: bounce 2.5s infinite; /* Slightly slower bounce */
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-down-arrow:hover {
+            opacity: 1;
         }
         
         .css-arrow {
             display: inline-block;
-            width: 20px;
-            height: 20px;
+            width: 22px; /* Slightly larger */
+            height: 22px;
             border-left: 3px solid white;
             border-bottom: 3px solid white;
             transform: rotate(-45deg);
@@ -147,16 +162,16 @@
                 transform: translateX(-50%) translateY(0);
             }
             40% {
-                transform: translateX(-50%) translateY(-10px);
+                transform: translateX(-50%) translateY(-12px); /* Increased bounce height */
             }
             60% {
-                transform: translateX(-50%) translateY(-5px);
+                transform: translateX(-50%) translateY(-6px);
             }
         }
 
         /* Structure Section - General Styles */
         .structure-section {
-            padding: 60px 20px; 
+            padding: 80px 20px; /* Increased padding */
             background-color: #ffffff;
             min-height: 100vh; 
         }
@@ -172,16 +187,25 @@
             margin: 0 auto 80px auto; 
             flex-wrap: wrap; 
             padding: 30px 0; 
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
         }
+        .single-profile-section:hover {
+            transform: translateY(-5px);
+        }
+
 
         .single-profile-image-container { 
             flex-shrink: 0; 
             width: 100%; 
             max-width: 360px; 
             margin-bottom: 20px; 
-            border-radius: 12px; 
+            border-radius: 16px; /* More rounded */
             overflow: hidden; 
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1); 
+            transition: box-shadow 0.3s ease-out;
+        }
+        .single-profile-section:hover .single-profile-image-container {
+             box-shadow: 0 12px 30px rgba(0,0,0,0.18);
         }
         
         .single-profile-image-container img { 
@@ -212,14 +236,15 @@
         }
 
         .single-profile-name { 
-            font-size: clamp(2rem, 4vw, 3rem); 
-            font-weight: bold; /* Should now map to 700 if Sora 700 is loaded */
+            font-size: clamp(2.2rem, 4vw, 3.2rem); 
+            font-weight: 700; /* Sora 700 */
             color: #005A9C; 
             margin-bottom: 8px; 
+            font-family: 'Inter', sans-serif; /* Using Inter for this main heading */
         }
 
         .single-profile-title { 
-            font-size: clamp(1.1rem, 2.5vw, 1.5rem); 
+            font-size: clamp(1.2rem, 2.5vw, 1.6rem); 
             font-weight: 500;
             color: #F58220; 
             margin-bottom: 20px;
@@ -229,36 +254,37 @@
         .department-section {
             margin-bottom: 60px; 
         }
-        .department-section .team-grid + .team-grid { /* Add space between grids within the same department section */
+        .department-section .team-grid + .team-grid { 
             margin-top: 40px;
         }
 
 
         .department-heading {
             text-align: center;
-            font-size: 2.2rem; 
-            font-weight: bold; /* Should now map to 700 if Sora 700 is loaded */
+            font-size: 2.5rem; 
+            font-weight: 700; /* Sora 700 */
             color: #005A9C; 
-            margin-bottom: 40px;
+            margin-bottom: 50px; /* Increased margin */
+            font-family: 'Inter', sans-serif; /* Using Inter for headings */
         }
 
-        .team-grid { /* General grid, used for People Experience (4 items) */
+        .team-grid { 
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); /* Aim for 4 cols on desktop */
-            gap: 20px; 
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); 
+            gap: 25px; /* Slightly increased gap */
             max-width: 1200px; 
             margin: 0 auto; 
         }
         
-        .team-grid-two-people { /* Specific grid for Satria & Dinar */
+        .team-grid-two-people { 
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            max-width: 680px; 
-            gap: 20px;
+            max-width: 720px; /* Adjusted for new gap */
+            gap: 30px;
         }
-         .team-grid-three-people { /* Specific grid for 3 people */
+         .team-grid-three-people { 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            max-width: 960px; 
-            gap: 20px;
+            max-width: 980px; /* Adjusted for new gap */
+            gap: 30px;
         }
 
 
@@ -267,25 +293,31 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-bottom: 20px; 
+            padding: 10px; /* Added some padding to the profile block itself */
+            border-radius: 12px; /* Rounded corners for the profile block */
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        }
+        .team-member-profile:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
         
         .team-member-image-container { 
             width: 100%; 
-            max-width: 250px; /* Base size for images in the 4-col grid */
+            max-width: 230px; /* Adjusted base size */
             height: auto; 
             margin-bottom: 15px;
             overflow: hidden; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 10px; /* Slightly less rounded than main profile */
+            /* box-shadow removed, shadow is on parent .team-member-profile */
         }
-        /* Specific image container size for the 2-person grid (Satria & Dinar) */
         .team-grid-two-people .team-member-image-container {
-            max-width: 280px; 
-        }
-        /* Specific image container size for the 3-person grid */
-        .team-grid-three-people .team-member-image-container {
             max-width: 260px; 
+        }
+        .team-grid-three-people .team-member-image-container {
+            max-width: 240px; 
         }
 
 
@@ -297,41 +329,53 @@
         
         .team-member-name {
             font-size: 1.20rem; 
-            font-weight: bold; /* Should now map to 700 if Sora 700 is loaded */
+            font-weight: 600; /* Sora 600 for slightly less bold than heading */
             color: #005A9C; 
             margin-bottom: 4px;
         }
 
         .team-member-title {
             font-size: 0.92rem; 
-            font-weight: 500; /* Titles are typically not as bold as names */
+            font-weight: 400; /* Sora 400 */
             color: #F58220; 
             line-height: 1.3;
         }
 
+        /* Scroll Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px); /* Start slightly lower */
+            transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        @media (max-width: 992px) { /* Larger tablets */
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) { 
             .team-grid {
-                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
             }
             .team-member-image-container { 
-                 max-width: 230px;
+                 max-width: 210px;
             }
             .team-grid-two-people {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+                grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); 
             }
             .team-grid-two-people .team-member-image-container {
-                max-width: 250px; 
+                max-width: 240px; 
             }
             .team-grid-three-people {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             }
             .team-grid-three-people .team-member-image-container {
-                max-width: 220px;
+                max-width: 210px;
             }
         }
 
-        @media (max-width: 768px) { /* Tablet */
+        @media (max-width: 768px) { 
             .single-profile-section {
                 flex-direction: column; 
                 text-align: center; 
@@ -346,23 +390,23 @@
                  max-width: 300px; 
             }
             .department-heading {
-                font-size: 1.8rem;
+                font-size: 2rem; /* Adjusted for tablet */
             }
             .team-grid { 
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
             }
             .team-member-image-container { 
-                max-width: 220px; 
+                max-width: 200px; 
             }
              .team-grid-two-people, .team-grid-three-people {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+                grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); 
             }
              .team-grid-two-people .team-member-image-container,
              .team-grid-three-people .team-member-image-container {
-                max-width: 230px; 
+                max-width: 210px; 
             }
         }
-         @media (max-width: 576px) { /* Mobile */
+         @media (max-width: 576px) { 
             .team-grid, .team-grid-two-people, .team-grid-three-people { 
                 grid-template-columns: 1fr; 
                 gap: 30px; 
@@ -371,7 +415,7 @@
                 max-width: 280px; 
             }
              .team-member-image-container { 
-                max-width: 260px; 
+                max-width: 250px; /* Slightly larger on mobile when stacked */
                 margin-left: auto;
                 margin-right: auto;
             }
@@ -383,10 +427,11 @@
 
         /* Footer */
         .site-footer {
-            background-color: #333;
-            color: white;
+            background-color: #2c3e50; /* Darker blue-gray footer */
+            color: #ecf0f1; /* Lighter text for footer */
             text-align: center;
-            padding: 25px 0;
+            padding: 30px 20px; /* Increased padding */
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -431,17 +476,13 @@
         </div>
         <div class="hero-overlay"></div>
 
-        <div class="hero-content">
-            <h1 class="hero-text-main"></h1> 
-        </div>
-
         <a href="#structure-section-target" class="scroll-down-arrow" aria-label="Scroll to next section">
             <span class="css-arrow"></span>
         </a>
     </section>
 
     <section id="structure-section-target" class="structure-section">
-        <div class="single-profile-section">
+        <div class="single-profile-section animate-on-scroll">
             <div class="single-profile-image-container">
                 <img src="https://cdn.hibank.co.id/hcih/org/Dinda.jpg" alt="Dinda Evirtasari"
                      onerror="this.style.display='none'; document.getElementById('profileImageFallbackMain').style.display='flex';">
@@ -455,7 +496,7 @@
             </div>
         </div>
 
-        <div class="department-section">
+        <div class="department-section animate-on-scroll">
             <div class="team-grid team-grid-two-people">
                 <div class="team-member-profile"> 
                     <div class="team-member-image-container">
@@ -483,7 +524,7 @@
             </div>
         </div>
 
-        <div class="department-section">
+        <div class="department-section animate-on-scroll">
             <h3 class="department-heading">People Experience</h3>
             <div class="team-grid"> 
                 <div class="team-member-profile"> 
@@ -603,7 +644,7 @@
             </div>
         </div>
 
-        <div class="department-section">
+        <div class="department-section animate-on-scroll">
             <h3 class="department-heading">People Reward, Operation & Shares Service</h3>
             <div class="team-grid"> 
                 <div class="team-member-profile"> 
@@ -701,28 +742,60 @@
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-        // Navbar hiding on scroll
+        // Navbar hiding on scroll & scroll animations
         let lastScrollTop = 0;
         const navbar = document.querySelector('.navbar');
         const navbarHeight = navbar ? navbar.offsetHeight : 0; 
         const scrollThreshold = 5; 
+        const scrollElements = document.querySelectorAll(".animate-on-scroll");
+
+        const elementInView = (el, dividend = 1) => {
+            const elementTop = el.getBoundingClientRect().top;
+            return (
+                elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
+            );
+        };
+
+        const displayScrollElement = (element) => {
+            element.classList.add("is-visible");
+        };
+
+        const handleScrollAnimation = () => {
+            scrollElements.forEach((el) => {
+                if (elementInView(el, 1.15)) { // Trigger animation a bit earlier
+                    displayScrollElement(el);
+                }
+            });
+        };
 
         if (navbar) { 
             window.addEventListener('scroll', function() {
                 let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
+                // Navbar hiding logic
                 if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
                     if (!navbar.classList.contains('navbar-hidden')) {
                          navbar.classList.add('navbar-hidden');
                     }
+                    navbar.classList.remove('navbar-scrolled');
                 } else {
                     if (navbar.classList.contains('navbar-hidden')) {
                         navbar.classList.remove('navbar-hidden');
                     }
+                    if (scrollTop > scrollThreshold) {
+                        navbar.classList.add('navbar-scrolled');
+                    } else {
+                        navbar.classList.remove('navbar-scrolled');
+                    }
                 }
                 lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+
+                // Scroll animations for sections
+                handleScrollAnimation();
             }, false);
         }
+        // Initial check for scroll animations on page load
+        handleScrollAnimation();
     </script>
 
 </body>
