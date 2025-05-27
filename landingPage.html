@@ -39,6 +39,11 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding-top: 0.8rem;
             padding-bottom: 0.8rem;
+            transition: top 0.3s ease-in-out; /* This creates the smooth transition */
+        }
+
+        .navbar.navbar-hidden {
+            top: -100px; 
         }
 
         .navbar-brand {
@@ -1402,6 +1407,62 @@
                 });
             }
         });
+
+
+        // Navbar hiding on scroll & scroll animations
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        const navbarHeight = navbar ? navbar.offsetHeight : 0; 
+        const scrollThreshold = 5; 
+        const scrollElements = document.querySelectorAll(".animate-on-scroll");
+
+        const elementInView = (el, dividend = 1) => {
+            const elementTop = el.getBoundingClientRect().top;
+            return (
+                elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
+            );
+        };
+
+        const displayScrollElement = (element) => {
+            element.classList.add("is-visible");
+        };
+
+        const handleScrollAnimation = () => {
+            scrollElements.forEach((el) => {
+                if (elementInView(el, 1.15)) { // Trigger animation a bit earlier
+                    displayScrollElement(el);
+                }
+            });
+        };
+
+        if (navbar) { 
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                // Navbar hiding logic
+                if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
+                    if (!navbar.classList.contains('navbar-hidden')) {
+                         navbar.classList.add('navbar-hidden');
+                    }
+                    navbar.classList.remove('navbar-scrolled');
+                } else {
+                    if (navbar.classList.contains('navbar-hidden')) {
+                        navbar.classList.remove('navbar-hidden');
+                    }
+                    if (scrollTop > scrollThreshold) {
+                        navbar.classList.add('navbar-scrolled');
+                    } else {
+                        navbar.classList.remove('navbar-scrolled');
+                    }
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+
+                // Scroll animations for sections
+                handleScrollAnimation();
+            }, false);
+        }
+        // Initial check for scroll animations on page load
+        handleScrollAnimation();
 
     </script>
 </body>
