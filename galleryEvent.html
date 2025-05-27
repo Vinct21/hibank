@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for Theme Colors */
+        :root {
+            --primary-color: #176980;   /* Deep Teal/Blue */
+            --secondary-color: #D15B28; /* Orange/Rust */
+            --background-gradient-start: #e8f0f3; 
+            --background-gradient-end: #d9e8f5;   
+            --card-background: #ffffff;
+            --text-color-dark: #2c3e50;
+            --text-color-medium: #555;
+            --text-color-light: #506070;
+            --placeholder-icon-color: #a0aec0;
+            --placeholder-icon-hover-color: #718096;
+            --placeholder-text-color: #909db0;
+            --placeholder-text-hover-color: #606f82;
+            --footer-background: #e0e9f0;
+            --border-color-light: #d1d9e0;
+            --font-primary: 'Sora', sans-serif; 
+        }
+
+        /* General Body Styles */
+        body {
+            font-family: var(--font-primary); 
+            margin: 0;
+            background: linear-gradient(to bottom right, var(--background-gradient-start), var(--background-gradient-end));
+            color: var(--text-color-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            padding: 40px 20px 30px; /* Reduced bottom padding to make space for search */
+        }
+
+        .gallery-title-main {
+            font-family: var(--font-primary); 
+            font-size: 3.5rem;
+            color: var(--primary-color); 
+            font-weight: 700; 
+            letter-spacing: 0.01em; 
+            margin: 0 0 20px 0; /* Added bottom margin */
+        }
+
+        /* Search Bar Styles */
+        .search-bar-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px; /* Space below search bar */
+            padding: 0 20px;
+        }
+
+        #gallerySearchInput {
+            font-family: var(--font-primary);
+            width: 100%;
+            max-width: 500px; /* Max width for the search bar */
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #gallerySearchInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(23, 105, 128, 0.2); /* Primary color focus ring */
+        }
+
+
+        /* Main Content and Container Styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 0 20px 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Gallery Grid Styles */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 30px;
+        }
+
+        /* Loading Indicator Styles */
+        #loadingIndicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: var(--primary-color); 
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color); 
+            animation: spin 1s ease infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+        /* Gallery Card Styles */
+        .gallery-card {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.35s ease-in-out, box-shadow 0.35s ease-in-out;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-image-wrapper {
+            overflow: hidden;
+            position: relative;
+            height: 220px;
+            background-color: #e2e8f0;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.35s ease-in-out;
+        }
+
+        .gallery-card:hover .card-image {
+            transform: scale(1.07);
+        }
+
+        .card-content {
+            padding: 20px 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-family: var(--font-primary); 
+            font-size: 1.6rem;
+            font-weight: 600; 
+            color: var(--text-color-dark);
+            margin: 0 0 10px 0;
+            transition: color 0.3s ease-in-out;
+            word-break: break-word; 
+        }
+
+        .gallery-card:hover .card-title {
+            color: var(--primary-color); 
+        }
+
+        .card-description {
+            font-family: var(--font-primary); 
+            font-size: 0.95rem;
+            color: var(--text-color-medium);
+            line-height: 1.6;
+            margin: 0 0 15px 0;
+            flex-grow: 1;
+        }
+
+        .card-date {
+            font-family: var(--font-primary); 
+            font-size: 0.8rem;
+            color: var(--secondary-color); 
+            font-weight: 600; 
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: auto;
+        }
+
+        /* Placeholder Card Specific Styles */
+        .placeholder-card .card-image-wrapper {
+            background-color: #f0f2f5;
+            border-bottom: 1px solid #e0e4e8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .placeholder-icon svg {
+            width: 50px;
+            height: 50px;
+            color: var(--placeholder-icon-color);
+            transition: color 0.3s ease-in-out;
+            margin-bottom: 8px;
+        }
+        .placeholder-card:hover .placeholder-icon svg {
+            color: var(--placeholder-icon-hover-color);
+        }
+        .placeholder-card .card-title {
+            color: var(--placeholder-text-color);
+        }
+        .placeholder-card:hover .card-title {
+            color: var(--placeholder-text-hover-color);
+        }
+        .placeholder-card .card-description {
+            color: var(--placeholder-icon-color); 
+        }
+        .placeholder-text { 
+            font-family: var(--font-primary); 
+            font-size: 0.8rem;
+            color: var(--placeholder-icon-color);
+            margin-top: 5px;
+        }
+
+        /* Footer Styles */
+        .footer {
+            text-align: center;
+            padding: 25px 20px;
+            background-color: var(--footer-background);
+            border-top: 1px solid var(--border-color-light);
+            margin-top: auto;
+        }
+
+        .footer-text {
+            font-family: var(--font-primary); 
+            color: var(--text-color-light);
+            font-size: 0.9rem;
+        }
+
+        /* Error and No Data Messages */
+        #noDataMessage, #errorMessage {
+            font-family: var(--font-primary); 
+            text-align: center; 
+            padding: 50px; 
+            font-size: 1.2rem; 
+        }
+        #noDataMessage {
+            color: var(--text-color-medium);
+        }
+        #errorMessage {
+            color: var(--secondary-color); 
+            font-weight: bold;
+        }
+
+
+        /* Responsive Grid Adjustments */
+        @media (min-width: 640px) { 
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .gallery-title-main {
+                font-size: 3.8rem;
+            }
+            .card-image-wrapper {
+                height: 240px;
+            }
+        }
+
+        @media (min-width: 1024px) { 
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .gallery-title-main {
+                font-size: 4.2rem;
+            }
+             .card-image-wrapper {
+                height: 260px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1 class="gallery-title-main">My Awesome Gallery</h1>
+        <div class="search-bar-container">
+            <input type="search" id="gallerySearchInput" placeholder="Search by name...">
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div id="loadingIndicator">
+                <div class="spinner"></div>
+                Loading gallery data...
+            </div>
+            <div class="gallery-grid" id="galleryGrid" style="display: none;">
+                </div>
+            <div id="noDataMessage" style="display: none;">
+                No items found in the gallery. Check sheet data and filter logic.
+            </div>
+            <div id="errorMessage" style="display: none;">
+                Error loading gallery data. Please try again later or contact support.
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-text">&copy; <span id="currentYear"></span> Your Creative Gallery. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let galleryDataStore = []; // Stores the original full list of items from the server
+        let currentlyDisplayedData = []; // Stores the list currently being shown (can be filtered)
+
+        function createPlaceholderIconHTML(text = "Image unavailable") {
+            return `
+                <div class="placeholder-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.158 0a.075.075 0 0 1 .075.075v.008a.075.075 0 0 1-.075.075h-.008a.075.075 0 0 1-.075-.075v-.008a.075.075 0 0 1 .075-.075h.008Z" />
+                    </svg>
+                </div>
+                <p class="placeholder-text">${text}</p>`;
+        }
+
+        function createGalleryCard(item, index) { 
+            const card = document.createElement('article');
+            card.className = 'gallery-card';
+            
+            const isEffectivelyPlaceholder = item.isPlaceholder || !item.imageUrl;
+            if (isEffectivelyPlaceholder) {
+                card.classList.add('placeholder-card');
+            }
+
+            const imageWrapper = document.createElement('div');
+            imageWrapper.className = 'card-image-wrapper';
+
+            if (item.imageUrl) {
+                const image = document.createElement('img');
+                image.src = item.imageUrl;
+                image.alt = item.altText || item.title || 'Gallery image';
+                image.className = 'card-image';
+                
+                image.onerror = function() {
+                    this.onerror=null; 
+                    imageWrapper.innerHTML = createPlaceholderIconHTML('Error loading image');
+                    if (!card.classList.contains('placeholder-card')) {
+                        card.classList.add('placeholder-card');
+                    }
+                };
+                imageWrapper.appendChild(image);
+            } else {
+                imageWrapper.innerHTML = createPlaceholderIconHTML(item.isPlaceholder || !item.title ? 'Coming Soon' : 'No Image Provided');
+            }
+
+            const content = document.createElement('div');
+            content.className = 'card-content';
+
+            const titleElement = document.createElement('h2');
+            titleElement.className = 'card-title';
+            titleElement.textContent = item.title || ""; 
+
+            const descriptionElement = document.createElement('p');
+            descriptionElement.className = 'card-description';
+            descriptionElement.textContent = item.description || "No description available."; 
+
+            const dateElement = document.createElement('p');
+            dateElement.className = 'card-date';
+            dateElement.textContent = item.date || ""; 
+
+            content.appendChild(titleElement);
+            content.appendChild(descriptionElement);
+            content.appendChild(dateElement);
+
+            card.appendChild(imageWrapper);
+            card.appendChild(content);
+
+            if (item.linkDrive) {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    window.open(item.linkDrive, '_blank');
+                });
+            }
+            return card;
+        }
+
+        /**
+         * Displays gallery items based on the provided data array.
+         * @param {Array<object>} dataToDisplay - The array of items to display.
+         */
+        function renderGallery(dataToDisplay) {
+            const galleryGrid = document.getElementById('galleryGrid');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const noDataMessage = document.getElementById('noDataMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (loadingIndicator) loadingIndicator.style.display = 'none';
+
+            if (!galleryGrid) {
+                console.error("CRITICAL: Gallery grid element with ID 'galleryGrid' not found!");
+                if(errorMessage) {
+                    errorMessage.textContent = "Page error: Gallery display area not found.";
+                    errorMessage.style.display = 'block';
+                }
+                return;
+            }
+
+            galleryGrid.innerHTML = ''; 
+
+            if (dataToDisplay && dataToDisplay.length > 0) {
+                dataToDisplay.forEach((item, index) => { 
+                    const cardElement = createGalleryCard(item, index); 
+                    galleryGrid.appendChild(cardElement);
+                });
+                galleryGrid.style.display = 'grid';
+                if (noDataMessage) noDataMessage.style.display = 'none';
+                if (errorMessage) errorMessage.style.display = 'none';
+            } else {
+                galleryGrid.style.display = 'none';
+                if (noDataMessage) {
+                    // Modify noDataMessage based on whether a search is active
+                    const searchInput = document.getElementById('gallerySearchInput');
+                    if (searchInput && searchInput.value.trim() !== '') {
+                        noDataMessage.textContent = `No items match your search for "${searchInput.value.trim()}".`;
+                    } else {
+                        noDataMessage.textContent = "No items found in the gallery.";
+                    }
+                    noDataMessage.style.display = 'block';
+                }
+                if (errorMessage) errorMessage.style.display = 'none';
+            }
+        }
+        
+        /**
+         * Filters galleryDataStore based on the search term and calls renderGallery.
+         */
+        function filterAndDisplayGallery() {
+            const searchTerm = document.getElementById('gallerySearchInput').value.toLowerCase().trim();
+            if (searchTerm === "") {
+                currentlyDisplayedData = [...galleryDataStore]; // Show all if search is empty
+            } else {
+                currentlyDisplayedData = galleryDataStore.filter(item => 
+                    item.title && item.title.toLowerCase().includes(searchTerm)
+                );
+            }
+            renderGallery(currentlyDisplayedData);
+        }
+
+
+        function onDataFetched(dataFromServer) {
+            galleryDataStore = dataFromServer; 
+            currentlyDisplayedData = [...galleryDataStore]; // Initially display all data
+            renderGallery(currentlyDisplayedData);
+        }
+
+        function onFetchFailed(error) {
+            console.error("Google Apps Script call failed: ", error);
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const galleryGrid = document.getElementById('galleryGrid');
+            const noDataMessage = document.getElementById('noDataMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if(loadingIndicator) loadingIndicator.style.display = 'none';
+            if(galleryGrid) galleryGrid.style.display = 'none';
+            if(noDataMessage) noDataMessage.style.display = 'none';
+            if(errorMessage) {
+                errorMessage.textContent = `Failed to load gallery: ${error.message || 'An unknown error occurred with google.script.run.'}. Check browser and Apps Script logs.`;
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        function setFooterYear() {
+            const currentYearElement = document.getElementById('currentYear');
+            if (currentYearElement) {
+                currentYearElement.textContent = new Date().getFullYear();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setFooterYear();
+            
+            const searchInput = document.getElementById('gallerySearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', filterAndDisplayGallery);
+            }
+
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const galleryGrid = document.getElementById('galleryGrid');
+            const noDataMessage = document.getElementById('noDataMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if(loadingIndicator) loadingIndicator.style.display = 'flex';
+            if(galleryGrid) galleryGrid.style.display = 'none';
+            if(noDataMessage) noDataMessage.style.display = 'none';
+            if(errorMessage) errorMessage.style.display = 'none';
+
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                google.script.run
+                    .withSuccessHandler(onDataFetched)
+                    .withFailureHandler(onFetchFailed)
+                    .importData(); 
+            } else {
+                 onFetchFailed({ message: "Google Apps Script environment (google.script.run) not detected. Cannot load live data." });
+            }
+        });
+    </script>
+</body>
+</html>
