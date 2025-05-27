@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery</title>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         /* CSS Variables for Theme Colors */
         :root {
-            --primary-color: #176980;   /* Deep Teal/Blue */
+            --primary-color: #176980;  /* Deep Teal/Blue */
             --secondary-color: #D15B28; /* Orange/Rust */
             --background-gradient-start: #e8f0f3; 
-            --background-gradient-end: #d9e8f5;   
+            --background-gradient-end: #d9e8f5;  
             --card-background: #ffffff;
             --text-color-dark: #2c3e50;
             --text-color-medium: #555;
@@ -20,7 +22,7 @@
             --placeholder-icon-hover-color: #718096;
             --placeholder-text-color: #909db0;
             --placeholder-text-hover-color: #606f82;
-            --footer-background: #e0e9f0;
+            --footer-background: #ffffff; /* Changed to white to match provided footer style */
             --border-color-light: #d1d9e0;
             --font-primary: 'Sora', sans-serif; 
         }
@@ -29,6 +31,7 @@
         body {
             font-family: var(--font-primary); 
             margin: 0;
+            padding-top: 70px; /* Adjust if navbar height changes significantly */
             background: linear-gradient(to bottom right, var(--background-gradient-start), var(--background-gradient-end));
             color: var(--text-color-dark);
             min-height: 100vh;
@@ -38,22 +41,28 @@
 
         /* Navbar Styling */
         .navbar {
-            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
-            backdrop-filter: blur(10px); /* Frosted glass effect */
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.9); /* Slightly less transparent for better readability */
+            backdrop-filter: blur(8px); 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             padding-top: 0.8rem;
             padding-bottom: 0.8rem;
-            transition: top 0.3s ease-in-out; /* This creates the smooth transition */
+            transition: top 0.3s ease-in-out; 
         }
 
         .navbar.navbar-hidden {
-            top: -100px; 
+            top: -100px; /* Adjust if navbar height is more than 100px */
         }
 
+        .navbar-brand img {
+            width: 45px; /* Slightly smaller logo for balance */
+            margin-right: 8px;
+        }
         .navbar-brand {
             color: var(--primary-color);
             font-weight: 600;
-            font-size: 1.5rem; /* Responsive font size */
+            font-size: 1.3rem; /* Adjusted for responsiveness */
+            display: flex;
+            align-items: center;
         }
 
         .nav-link {
@@ -76,12 +85,14 @@
             width: 0;
             height: 2px;
             bottom: -5px;
-            left: 0;
+            left: 0; /* Changed from 50% */
+            /* transform: translateX(-50%); Removed for left-to-right animation */
             background-color: var(--secondary-color);
             transition: width 0.3s ease;
         }
 
-        .nav-link:not(.auth-btn):hover > span::after {
+        .nav-link:not(.auth-btn):hover > span::after,
+        .nav-link.active:not(.auth-btn) > span::after { /* Added active state for underline */
             width: 100%;
         }
 
@@ -89,10 +100,14 @@
         .nav-link.active {
             color: var(--secondary-color) !important;
         }
-
-        .dropdown-item:hover {
-            color: var(--secondary-color);
+        
+        .navbar-toggler {
+            border-color: rgba(0,0,0,0.1);
         }
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(23, 105, 128, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
 
         .dropdown-menu {
             border-radius: 8px;
@@ -106,55 +121,49 @@
             padding: 0.5rem 1.2rem;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
-        .dropdown-item:hover {
-            background-color: rgba(209, 91, 40, 0.05); /* Light orange tint on hover */
+        .dropdown-item:hover, .dropdown-item:focus {
+            background-color: rgba(209, 91, 40, 0.08); /* Light orange tint on hover */
+            color: var(--secondary-color);
         }
 
         .nav-item.dropdown > .nav-link.dropdown-toggle::after {
-            content: '\f078'; /* Font Awesome caret down */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            display: inline-block;
-            margin-left: 0.35em;
-            vertical-align: 0.05em;
-            border: none; /* Remove default Bootstrap arrow */
-            transition: transform 0.3s ease;
+            /* Using Bootstrap's default caret for simplicity and reliability */
+            /* If custom FontAwesome is strictly needed, ensure FA is loaded and classes are correct */
+             margin-left: 0.35em;
         }
-        .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
-            transform: rotate(180deg); /* Rotate arrow when dropdown is open */
-        }
+
 
         /* Header Styles */
         .header {
             text-align: center;
-            padding: 40px 20px 30px; /* Reduced bottom padding to make space for search */
+            padding: 40px 20px 30px; 
         }
 
         .gallery-title-main {
             font-family: var(--font-primary); 
-            font-size: 3.5rem;
+            font-size: 3.2rem; /* Slightly adjusted */
             color: var(--primary-color); 
             font-weight: 700; 
             letter-spacing: 0.01em; 
-            margin: 0 0 20px 0; /* Added bottom margin */
+            margin: 0 0 25px 0; /* Increased bottom margin */
         }
 
         /* Search Bar Styles */
         .search-bar-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 30px; /* Space below search bar */
+            margin-bottom: 35px; /* Increased space */
             padding: 0 20px;
         }
 
         #gallerySearchInput {
             font-family: var(--font-primary);
             width: 100%;
-            max-width: 500px; /* Max width for the search bar */
+            max-width: 500px; 
             padding: 12px 20px;
             font-size: 1rem;
             border: 1px solid var(--border-color-light);
-            border-radius: 8px;
+            border-radius: 25px; /* Pill shape */
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
@@ -162,7 +171,7 @@
         #gallerySearchInput:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(23, 105, 128, 0.2); /* Primary color focus ring */
+            box-shadow: 0 0 0 3px rgba(23, 105, 128, 0.2); 
         }
 
 
@@ -188,11 +197,14 @@
         /* Loading Indicator Styles */
         #loadingIndicator {
             display: flex;
+            flex-direction: column; /* Stack spinner and text */
             justify-content: center;
             align-items: center;
             padding: 50px;
-            font-size: 1.2rem;
+            font-size: 1.1rem; /* Adjusted size */
             color: var(--primary-color); 
+            grid-column: 1 / -1; /* Span all columns if grid is already active */
+            text-align: center;
         }
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
@@ -201,7 +213,7 @@
             border-radius: 50%;
             border-left-color: var(--primary-color); 
             animation: spin 1s ease infinite;
-            margin-right: 10px;
+            margin-bottom: 15px; /* Space between spinner and text */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -230,7 +242,11 @@
             overflow: hidden;
             position: relative;
             height: 220px;
-            background-color: #e2e8f0;
+            background-color: #e2e8f0; /* Fallback bg for image area */
+            display: flex; /* Added for centering placeholder content */
+            align-items: center; /* Added for centering placeholder content */
+            justify-content: center; /* Added for centering placeholder content */
+            text-align: center; /* Added for centering placeholder content */
         }
 
         .card-image {
@@ -253,7 +269,7 @@
 
         .card-title {
             font-family: var(--font-primary); 
-            font-size: 1.6rem;
+            font-size: 1.5rem; /* Adjusted size */
             font-weight: 600; 
             color: var(--text-color-dark);
             margin: 0 0 10px 0;
@@ -267,7 +283,7 @@
 
         .card-description {
             font-family: var(--font-primary); 
-            font-size: 0.95rem;
+            font-size: 0.9rem; /* Adjusted size */
             color: var(--text-color-medium);
             line-height: 1.6;
             margin: 0 0 15px 0;
@@ -276,27 +292,22 @@
 
         .card-date {
             font-family: var(--font-primary); 
-            font-size: 0.8rem;
+            font-size: 0.75rem; /* Adjusted size */
             color: var(--secondary-color); 
             font-weight: 600; 
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-top: auto;
+            margin-top: auto; /* Pushes to bottom */
         }
 
         /* Placeholder Card Specific Styles */
         .placeholder-card .card-image-wrapper {
             background-color: #f0f2f5;
             border-bottom: 1px solid #e0e4e8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
         }
         .placeholder-icon svg {
-            width: 50px;
-            height: 50px;
+            width: 45px; /* Adjusted size */
+            height: 45px;
             color: var(--placeholder-icon-color);
             transition: color 0.3s ease-in-out;
             margin-bottom: 8px;
@@ -317,41 +328,50 @@
             font-family: var(--font-primary); 
             font-size: 0.8rem;
             color: var(--placeholder-icon-color);
-            margin-top: 5px;
+            /* margin-top: 5px; Removed as SVG has margin-bottom now */
         }
 
         /* Footer Styles */
-        footer.bg-white {
-            padding-top: 3rem;
-            padding-bottom: 3rem;
-            border-top: 1px solid #e9ecef; 
+        .site-footer { /* Renamed class for clarity */
+            background-color: var(--footer-background);
+            padding-top: 2.5rem; /* Adjusted padding */
+            padding-bottom: 2.5rem;
+            border-top: 1px solid var(--border-color-light); 
+            margin-top: auto; /* Pushes footer to bottom of content */
         }
-        footer h5, footer h6 {
+        .site-footer h5, .site-footer h6 {
             color: var(--primary-color);
             font-weight: 600;
+            margin-bottom: 1rem; /* Added margin */
         }
-        footer .text-muted {
+        .site-footer .text-muted {
             color: #6c757d !important; 
-            font-size: 0.9rem;
+            font-size: 0.875rem; /* Adjusted size */
         }
-        footer .social-links a {
+        .site-footer .social-links a {
             color: var(--primary-color);
             transition: color 0.3s ease;
+            font-size: 1.25rem; /* Made icons slightly larger */
         }
-        footer .social-links a:hover {
+        .site-footer .social-links a:hover {
             color: var(--secondary-color);
         }
-        footer .list-unstyled a.text-muted:hover {
+        .site-footer .list-unstyled a.text-muted:hover {
             color: var(--secondary-color) !important;
             text-decoration: underline !important;
         }
+        .site-footer hr {
+            border-top-color: var(--border-color-light);
+        }
+
 
         /* Error and No Data Messages */
         #noDataMessage, #errorMessage {
             font-family: var(--font-primary); 
             text-align: center; 
-            padding: 50px; 
-            font-size: 1.2rem; 
+            padding: 40px 20px; /* Reduced padding */
+            font-size: 1.1rem; 
+            grid-column: 1 / -1; /* Span all columns */
         }
         #noDataMessage {
             color: var(--text-color-medium);
@@ -368,10 +388,10 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             .gallery-title-main {
-                font-size: 3.8rem;
+                font-size: 3.5rem; /* Adjusted */
             }
             .card-image-wrapper {
-                height: 240px;
+                height: 230px; /* Adjusted */
             }
         }
 
@@ -380,10 +400,19 @@
                 grid-template-columns: repeat(3, 1fr);
             }
             .gallery-title-main {
-                font-size: 4.2rem;
+                font-size: 3.8rem; /* Adjusted */
             }
              .card-image-wrapper {
-                height: 260px;
+                height: 250px; /* Adjusted */
+            }
+        }
+        @media (max-width: 991.98px) { /* Bootstrap lg breakpoint for navbar collapse */
+            .navbar-nav {
+                margin-top: 0.5rem;
+            }
+            .nav-link {
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
             }
         }
     </style>
@@ -391,8 +420,10 @@
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <img src="https://cdn.hibank.co.id/hcih/hi-by-hibank-logo.png" alt="Logo" loading="lazy" style="width: 50px; margin-right: 10px;"  onerror="this.onerror=null;">
-            <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
+            <a class="navbar-brand mb-0" href="#">
+                <img src="https://cdn.hibank.co.id/hcih/hi-by-hibank-logo.png" alt="Logo" loading="lazy" onerror="this.style.display='none'">
+                Human Capital Innovation Hub
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -405,10 +436,10 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
                             <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_top">Loan Simulation</a></li>
-                            </ul>
+                        </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link active" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec" target="_top"><span>HC hiro</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" target="_top"><span>Gallery</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec" target="_top"><span>HC hiro</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#" target="_top"><span>Gallery</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" target="_top"><span>Policy</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a></li>
                 </ul>
@@ -419,7 +450,7 @@
     <header class="header">
         <h1 class="gallery-title-main">My Awesome Gallery</h1>
         <div class="search-bar-container">
-            <input type="search" id="gallerySearchInput" placeholder="Search by name...">
+            <input type="search" id="gallerySearchInput" placeholder="Search by name or NIK...">
         </div>
     </header>
 
@@ -432,23 +463,22 @@
             <div class="gallery-grid" id="galleryGrid" style="display: none;">
                 </div>
             <div id="noDataMessage" style="display: none;">
-                No items found in the gallery. Check sheet data and filter logic.
+                No items found.
             </div>
             <div id="errorMessage" style="display: none;">
-                Error loading gallery data. Please try again later or contact support.
+                Error loading data.
             </div>
         </div>
     </main>
 
-    <footer class="bg-white py-5">
-        <div class="container">
+    <footer class="site-footer bg-white"> <div class="container">
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6">
                     <h5 class="mb-3">Human Capital Innovation Hub</h5>
                     <p class="text-muted mb-3">Pioneering digital solutions for human capital development and management.</p>
                     <div class="social-links">
-                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
-                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" class="me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" class="me-3" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" class="me-3" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                         </div>
                 </div>
                 <div class="col-lg-2 col-md-6">
@@ -470,15 +500,15 @@
                 <div class="col-lg-4 col-md-6">
                      <h6 class="mb-3 fw-bold">Contact Us</h6>
                      <p class="text-muted mb-1">PT Bank Hibank Indonesia</p>
-                     <p class="text-muted mb-1">Rajawali Place, Lantai 22-23<br>
-                                                 Jl. H.R. Rasuna Said Kav. B.4<br>
-                                                 Setiabudi, Jakarta Selatan - 12910</p>
+                     <p class="text-muted mb-1" style="line-height: 1.4;">Rajawali Place, Lantai 22-23<br>
+                                Jl. H.R. Rasuna Said Kav. B.4<br>
+                                Setiabudi, Jakarta Selatan - 12910</p>
                      <p class="text-muted">Email: <a href="mailto:humancapital@hibank.co.id" class="text-muted text-decoration-none">humancapital@hibank.co.id</a></p>
                 </div>
             </div>
             <hr class="my-4">
             <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
                     <p class="mb-0 text-muted">&copy; <span id="currentYear"></span> Human Capital Innovation Hub. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
@@ -486,10 +516,33 @@
             </div>
         </div>
     </footer>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let galleryDataStore = []; // Stores the original full list of items from the server
-        let currentlyDisplayedData = []; // Stores the list currently being shown (can be filtered)
+        // --- Configuration ---
+        // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (including ?action=getData):
+        const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE?action=getData"; 
+        // Example: "https://script.google.com/macros/s/YOUR_DEPLOY_ID/exec?action=getData"
+        // --- End Configuration ---
+
+        let galleryDataStore = []; 
+        let currentlyDisplayedData = []; 
+
+        // Navbar hide on scroll
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > navbar.offsetHeight) {
+                // Scroll Down
+                navbar.classList.add('navbar-hidden');
+            } else {
+                // Scroll Up
+                navbar.classList.remove('navbar-hidden');
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+        }, false);
+
 
         function createPlaceholderIconHTML(text = "Image unavailable") {
             return `
@@ -518,6 +571,7 @@
                 image.src = item.imageUrl;
                 image.alt = item.altText || item.title || 'Gallery image';
                 image.className = 'card-image';
+                image.loading = 'lazy'; // Add lazy loading for images
                 
                 image.onerror = function() {
                     this.onerror=null; 
@@ -528,7 +582,7 @@
                 };
                 imageWrapper.appendChild(image);
             } else {
-                imageWrapper.innerHTML = createPlaceholderIconHTML(item.isPlaceholder || !item.title ? 'Coming Soon' : 'No Image Provided');
+                imageWrapper.innerHTML = createPlaceholderIconHTML(item.isPlaceholder || !item.title ? 'Event Image Coming Soon' : 'No Image Provided');
             }
 
             const content = document.createElement('div');
@@ -536,7 +590,7 @@
 
             const titleElement = document.createElement('h2');
             titleElement.className = 'card-title';
-            titleElement.textContent = item.title || ""; 
+            titleElement.textContent = item.title || "Untitled Event"; 
 
             const descriptionElement = document.createElement('p');
             descriptionElement.className = 'card-description';
@@ -544,7 +598,7 @@
 
             const dateElement = document.createElement('p');
             dateElement.className = 'card-date';
-            dateElement.textContent = item.date || ""; 
+            dateElement.textContent = item.date || "Date TBD"; 
 
             content.appendChild(titleElement);
             content.appendChild(descriptionElement);
@@ -553,19 +607,18 @@
             card.appendChild(imageWrapper);
             card.appendChild(content);
 
-            if (item.linkDrive) {
+            // Updated to use item.driveLink (from your Apps Script)
+            if (item.driveLink && !isEffectivelyPlaceholder) { 
                 card.style.cursor = 'pointer';
-                card.addEventListener('click', () => {
-                    window.open(item.linkDrive, '_blank');
+                card.addEventListener('click', (e) => {
+                    // Prevent click if a link inside the card was clicked (future-proofing)
+                    if (e.target.tagName === 'A') return;
+                    window.open(item.driveLink, '_blank');
                 });
             }
             return card;
         }
 
-        /**
-         * Displays gallery items based on the provided data array.
-         * @param {Array<object>} dataToDisplay - The array of items to display.
-         */
         function renderGallery(dataToDisplay) {
             const galleryGrid = document.getElementById('galleryGrid');
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -596,7 +649,6 @@
             } else {
                 galleryGrid.style.display = 'none';
                 if (noDataMessage) {
-                    // Modify noDataMessage based on whether a search is active
                     const searchInput = document.getElementById('gallerySearchInput');
                     if (searchInput && searchInput.value.trim() !== '') {
                         noDataMessage.textContent = `No items match your search for "${searchInput.value.trim()}".`;
@@ -609,41 +661,70 @@
             }
         }
         
-        /**
-         * Filters galleryDataStore based on the search term and calls renderGallery.
-         */
         function filterAndDisplayGallery() {
             const searchTerm = document.getElementById('gallerySearchInput').value.toLowerCase().trim();
             if (searchTerm === "") {
-                currentlyDisplayedData = [...galleryDataStore]; // Show all if search is empty
+                currentlyDisplayedData = [...galleryDataStore];
             } else {
-                currentlyDisplayedData = galleryDataStore.filter(item => 
-                    item.title && item.title.toLowerCase().includes(searchTerm)
-                );
+                currentlyDisplayedData = galleryDataStore.filter(item => {
+                    const titleMatch = item.title && item.title.toLowerCase().includes(searchTerm);
+                    // Assuming NIK is part of the description as per your Apps Script
+                    const nikMatch = item.description && item.description.toLowerCase().includes(searchTerm); 
+                    return titleMatch || nikMatch;
+                });
             }
             renderGallery(currentlyDisplayedData);
         }
 
-
-        function onDataFetched(dataFromServer) {
-            galleryDataStore = dataFromServer; 
-            currentlyDisplayedData = [...galleryDataStore]; // Initially display all data
-            renderGallery(currentlyDisplayedData);
-        }
-
-        function onFetchFailed(error) {
-            console.error("Google Apps Script call failed: ", error);
+        async function fetchAndDisplayData() {
             const loadingIndicator = document.getElementById('loadingIndicator');
             const galleryGrid = document.getElementById('galleryGrid');
             const noDataMessage = document.getElementById('noDataMessage');
             const errorMessage = document.getElementById('errorMessage');
 
-            if(loadingIndicator) loadingIndicator.style.display = 'none';
+            if(loadingIndicator) loadingIndicator.style.display = 'flex';
             if(galleryGrid) galleryGrid.style.display = 'none';
             if(noDataMessage) noDataMessage.style.display = 'none';
-            if(errorMessage) {
-                errorMessage.textContent = `Failed to load gallery: ${error.message || 'An unknown error occurred with google.script.run.'}. Check browser and Apps Script logs.`;
-                errorMessage.style.display = 'block';
+            if(errorMessage) errorMessage.style.display = 'none';
+
+            if (SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE?action=getData" || !SCRIPT_URL.includes("?action=getData")) {
+                console.error("SCRIPT_URL is not configured correctly. It should end with '?action=getData'.");
+                if(loadingIndicator) loadingIndicator.style.display = 'none';
+                if(errorMessage) {
+                    errorMessage.textContent = "Configuration error: App Script URL is missing or incorrect. Please contact support.";
+                    errorMessage.style.display = 'block';
+                }
+                return;
+            }
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) {
+                    let errorText = `HTTP error! Status: ${response.status}`;
+                    try {
+                        const errData = await response.json();
+                        errorText += ` - ${errData.error || 'Server error message not available.'}`;
+                    } catch (e) { /* Failed to parse error JSON */ }
+                    throw new Error(errorText);
+                }
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    galleryDataStore = result.data;
+                    currentlyDisplayedData = [...galleryDataStore];
+                    renderGallery(currentlyDisplayedData);
+                } else {
+                    throw new Error(result.error || "Failed to load gallery data: Invalid data structure from server.");
+                }
+            } catch (error) {
+                console.error("Fetch operation failed:", error);
+                if(loadingIndicator) loadingIndicator.style.display = 'none';
+                if(galleryGrid) galleryGrid.style.display = 'none';
+                if(noDataMessage) noDataMessage.style.display = 'none';
+                if(errorMessage) {
+                    errorMessage.textContent = `Failed to load gallery: ${error.message}. Please try again or contact support.`;
+                    errorMessage.style.display = 'block';
+                }
             }
         }
 
@@ -661,26 +742,8 @@
             if (searchInput) {
                 searchInput.addEventListener('input', filterAndDisplayGallery);
             }
-
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            const galleryGrid = document.getElementById('galleryGrid');
-            const noDataMessage = document.getElementById('noDataMessage');
-            const errorMessage = document.getElementById('errorMessage');
-
-            if(loadingIndicator) loadingIndicator.style.display = 'flex';
-            if(galleryGrid) galleryGrid.style.display = 'none';
-            if(noDataMessage) noDataMessage.style.display = 'none';
-            if(errorMessage) errorMessage.style.display = 'none';
-
-            if (typeof google !== 'undefined' && google.script && google.script.run) {
-                google.script.run
-                    .withSuccessHandler(onDataFetched)
-                    .withFailureHandler(onFetchFailed)
-                    .importData(); 
-            } else {
-                 onFetchFailed({ message: "Google Apps Script environment (google.script.run) not detected. Cannot load live data." });
-            }
+            fetchAndDisplayData(); // Changed from google.script.run
         });
     </script>
 </body>
-</html>
+</html
