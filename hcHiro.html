@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-
         :root {
             --primary-color: #176980;
             --secondary-color: #D15B28;
@@ -33,22 +32,27 @@
             line-height: 1.6;
             color: #333;
             background-color: #f8f9fa; /* Light background for the whole page */
+            /* Padding-top will be set by JavaScript */
         }
 
         /* Custom Navbar Styling */
         .navbar {
-            background-color: rgba(20, 20, 20, 0.5) !important; /* Slightly darker transparent background */
-            -webkit-backdrop-filter: blur(8px);
+            background-color: rgb(248, 245, 245) !important; /* Slightly darker transparent background */
+            /* -webkit-backdrop-filter: blur(8px); */
             backdrop-filter: blur(8px);
             z-index: 1030;
-            transition: top 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
+            transition: top 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
             box-shadow: none; /* No shadow initially */
-            transition: top 0.3s ease-in-out; /* This creates the smooth transition */
+            /* transition: top 0.3s ease-in-out; This creates the smooth transition - already included above */
         }
 
         .navbar.navbar-hidden {
-            top: -100px; 
+            top: -100px; /* Adjust this value if navbar height is significantly different */
         }
+        .navbar.navbar-scrolled {
+             box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Add shadow on scroll */
+        }
+
 
         .navbar-brand {
             color: var(--primary-color);
@@ -127,13 +131,14 @@
         /* Hero Section: Full Viewport Height */
         .hero-section {
             position: relative;
-            height: 100vh;
+            /* height: 100vh; */ /* Base height, will be adjusted by JS to fit screen */
             width: 100%;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
+            /* background-color: var(--bg-gradient); */ /* Removed as image is primary */
         }
 
         .hero-background-image {
@@ -159,7 +164,7 @@
             justify-content: center;
             color: #ccc;
             font-size: 1.5rem;
-            z-index: 1;
+            z-index: 1; /* Same as image, will be hidden if image loads */
         }
 
         .hero-overlay {
@@ -176,13 +181,13 @@
             position: relative;
             z-index: 3;
             color: white;
-            padding-top: 70px; 
+            /* padding-top: 70px; */ /* Removed: body padding handles navbar offset */
         }
 
         .hero-text-main {
             font-size: clamp(3.5rem, 15vw, 10rem); /* Slightly larger */
-            font-weight: 900; 
-            font-family: 'Inter', sans-serif; 
+            font-weight: 900;
+            font-family: 'Inter', sans-serif;
             line-height: 1;
             margin-bottom: 20px;
             text-shadow: 0px 0px 15px rgba(0,0,0,0.6); /* More pronounced shadow */
@@ -233,20 +238,20 @@
         .structure-section {
             padding: 80px 20px; /* Increased padding */
             background-color: #ffffff;
-            min-height: 100vh; 
+            min-height: 100vh;
         }
         
         /* Single Main Profile Layout (e.g., Dinda Evirtasari) */
-        .single-profile-section { 
+        .single-profile-section {
             display: flex;
             align-items: center;
-            justify-content: center; 
-            gap: 50px; 
-            max-width: 1000px; 
-            width: 100%; 
-            margin: 0 auto 80px auto; 
-            flex-wrap: wrap; 
-            padding: 30px 0; 
+            justify-content: center;
+            gap: 50px;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto 80px auto;
+            flex-wrap: wrap;
+            padding: 30px 0;
             transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
         }
         .single-profile-section:hover {
@@ -254,30 +259,30 @@
         }
 
 
-        .single-profile-image-container { 
-            flex-shrink: 0; 
-            width: 100%; 
-            max-width: 360px; 
-            margin-bottom: 20px; 
+        .single-profile-image-container {
+            flex-shrink: 0;
+            width: 100%;
+            max-width: 360px;
+            margin-bottom: 20px;
             border-radius: 16px; /* More rounded */
-            overflow: hidden; 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1); 
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
             transition: box-shadow 0.3s ease-out;
         }
         .single-profile-section:hover .single-profile-image-container {
              box-shadow: 0 12px 30px rgba(0,0,0,0.18);
         }
         
-        .single-profile-image-container img { 
-            display: block; 
+        .single-profile-image-container img {
+            display: block;
             width: 100%;
-            height: auto; 
+            height: auto;
         }
         
-        .profile-image-fallback { 
+        .profile-image-fallback {
             width: 100%;
-            height: 100%; 
-            min-height: 200px; 
+            height: 100%;
+            min-height: 200px;
             background-color: #e0e0e0;
             border-radius: 8px;
             display: flex;
@@ -289,67 +294,67 @@
             padding: 10px;
         }
 
-        .single-profile-text-content { 
+        .single-profile-text-content {
             flex-grow: 1;
-            max-width: 500px; 
-            text-align: left; 
+            max-width: 500px;
+            text-align: left;
         }
 
-        .single-profile-name { 
-            font-size: clamp(2.2rem, 4vw, 3.2rem); 
+        .single-profile-name {
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
             font-weight: 700; /* Sora 700 */
-            color: #005A9C; 
-            margin-bottom: 8px; 
+            color: #005A9C;
+            margin-bottom: 8px;
             font-family: 'Inter', sans-serif; /* Using Inter for this main heading */
         }
 
-        .single-profile-title { 
-            font-size: clamp(1.2rem, 2.5vw, 1.6rem); 
+        .single-profile-title {
+            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
             font-weight: 500;
-            color: #F58220; 
+            color: #F58220;
             margin-bottom: 20px;
         }
         
         /* Department Section (for groups of team members) */
         .department-section {
-            margin-bottom: 60px; 
+            margin-bottom: 60px;
         }
-        .department-section .team-grid + .team-grid { 
+        .department-section .team-grid + .team-grid {
             margin-top: 40px;
         }
 
 
         .department-heading {
             text-align: center;
-            font-size: 2.5rem; 
+            font-size: 2.5rem;
             font-weight: 700; /* Sora 700 */
-            color: #005A9C; 
+            color: #005A9C;
             margin-bottom: 50px; /* Increased margin */
             font-family: 'Inter', sans-serif; /* Using Inter for headings */
         }
 
-        .team-grid { 
+        .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); 
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
             gap: 25px; /* Slightly increased gap */
-            max-width: 1200px; 
-            margin: 0 auto; 
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
-        .team-grid-two-people { 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+        .team-grid-two-people {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             max-width: 720px; /* Adjusted for new gap */
             gap: 30px;
         }
-         .team-grid-three-people { 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+         .team-grid-three-people {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             max-width: 980px; /* Adjusted for new gap */
             gap: 30px;
         }
 
 
-        .team-member-profile { 
-            text-align: center; 
+        .team-member-profile {
+            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -364,40 +369,40 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
         
-        .team-member-image-container { 
-            width: 100%; 
+        .team-member-image-container {
+            width: 100%;
             max-width: 230px; /* Adjusted base size */
-            height: auto; 
+            height: auto;
             margin-bottom: 15px;
-            overflow: hidden; 
+            overflow: hidden;
             border-radius: 10px; /* Slightly less rounded than main profile */
             /* box-shadow removed, shadow is on parent .team-member-profile */
         }
         .team-grid-two-people .team-member-image-container {
-            max-width: 260px; 
+            max-width: 260px;
         }
         .team-grid-three-people .team-member-image-container {
-            max-width: 240px; 
+            max-width: 240px;
         }
 
 
         .team-member-image-container img {
-            display: block; 
+            display: block;
             width: 100%;
-            height: auto; 
+            height: auto;
         }
         
         .team-member-name {
-            font-size: 1.20rem; 
+            font-size: 1.20rem;
             font-weight: 600; /* Sora 600 for slightly less bold than heading */
-            color: #005A9C; 
+            color: #005A9C;
             margin-bottom: 4px;
         }
 
         .team-member-title {
-            font-size: 0.92rem; 
+            font-size: 0.92rem;
             font-weight: 400; /* Sora 400 */
-            color: #F58220; 
+            color: #F58220;
             line-height: 1.3;
         }
 
@@ -414,18 +419,18 @@
 
 
         /* Responsive adjustments */
-        @media (max-width: 992px) { 
+        @media (max-width: 992px) {
             .team-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
-            .team-member-image-container { 
+            .team-member-image-container {
                  max-width: 210px;
             }
             .team-grid-two-people {
-                grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); 
+                grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
             }
             .team-grid-two-people .team-member-image-container {
-                max-width: 240px; 
+                max-width: 240px;
             }
             .team-grid-three-people {
                 grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -435,46 +440,46 @@
             }
         }
 
-        @media (max-width: 768px) { 
+        @media (max-width: 768px) {
             .single-profile-section {
-                flex-direction: column; 
-                text-align: center; 
+                flex-direction: column;
+                text-align: center;
                 gap: 30px;
             }
             .single-profile-text-content {
-                text-align: center; 
+                text-align: center;
             }
             .single-profile-image-container {
-                 margin-right: 0; 
-                 margin-bottom: 20px; 
-                 max-width: 300px; 
+                margin-right: 0;
+                margin-bottom: 20px;
+                max-width: 300px;
             }
             .department-heading {
                 font-size: 2rem; /* Adjusted for tablet */
             }
-            .team-grid { 
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            .team-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             }
-            .team-member-image-container { 
-                max-width: 200px; 
+            .team-member-image-container {
+                max-width: 200px;
             }
              .team-grid-two-people, .team-grid-three-people {
-                grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); 
+                grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
             }
              .team-grid-two-people .team-member-image-container,
              .team-grid-three-people .team-member-image-container {
-                max-width: 210px; 
+                max-width: 210px;
             }
         }
-         @media (max-width: 576px) { 
-            .team-grid, .team-grid-two-people, .team-grid-three-people { 
-                grid-template-columns: 1fr; 
-                gap: 30px; 
+         @media (max-width: 576px) {
+            .team-grid, .team-grid-two-people, .team-grid-three-people {
+                grid-template-columns: 1fr;
+                gap: 30px;
             }
-            .single-profile-image-container { 
-                max-width: 280px; 
+            .single-profile-image-container {
+                max-width: 280px;
             }
-             .team-member-image-container { 
+             .team-member-image-container {
                 max-width: 250px; /* Slightly larger on mobile when stacked */
                 margin-left: auto;
                 margin-right: auto;
@@ -490,7 +495,7 @@
         footer.bg-white {
             padding-top: 3rem;
             padding-bottom: 3rem;
-            border-top: 1px solid #e9ecef; 
+            border-top: 1px solid #e9ecef;
             font-family: 'Jost', sans-serif;
         }
         footer h5, footer h6 {
@@ -498,7 +503,7 @@
             font-weight: 600;
         }
         footer .text-muted {
-            color: #6c757d !important; 
+            color: #6c757d !important;
             font-size: 0.9rem;
         }
         footer .social-links a {
@@ -518,7 +523,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <img src="https://cdn.hibank.co.id/hcih/hi-by-hibank-logo.png" alt="Logo" loading="lazy" style="width: 50px; margin-right: 10px;"  onerror="this.onerror=null;">
+            <img src="https://cdn.hibank.co.id/hcih/logo-HCIH.png" alt="Logo" loading="lazy" style="width: 60px; margin-right: 5px;"  onerror="this.style.display='none'; this.parentElement.querySelector('.navbar-brand').insertAdjacentText('beforebegin', 'Logo Error ');">
             <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -554,7 +559,6 @@
             Hero Image not found
         </div>
         <div class="hero-overlay"></div>
-
         <a href="#structure-section-target" class="scroll-down-arrow" aria-label="Scroll to next section">
             <span class="css-arrow"></span>
         </a>
@@ -577,11 +581,11 @@
 
         <div class="department-section animate-on-scroll">
             <div class="team-grid team-grid-two-people">
-                <div class="team-member-profile"> 
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Satria.png" alt="Satria Budi Prasetyo"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackSatria').style.display='flex';">
-                        <div id="teamImageFallbackSatria" class="profile-image-fallback" style="display:none;">
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
@@ -589,11 +593,11 @@
                     <p class="team-member-title">Head People Experience</p>
                 </div>
 
-                <div class="team-member-profile"> 
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Prasetya.png" alt="M. Dinar Prasetya"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackDinar').style.display='flex';">
-                        <div id="teamImageFallbackDinar" class="profile-image-fallback" style="display:none;">
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                              Image not found
                         </div>
                     </div>
@@ -605,45 +609,45 @@
 
         <div class="department-section animate-on-scroll">
             <h3 class="department-heading">People Experience</h3>
-            <div class="team-grid"> 
-                <div class="team-member-profile"> 
+            <div class="team-grid">
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                          <img src="https://cdn.hibank.co.id/hcih/org/Ferina.png" alt="Ferina Greebe"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackFerina').style.display='flex';">
-                        <div id="teamImageFallbackFerina" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Ferina Greebe</h4>
                     <p class="team-member-title">Center of Excellence</p>
                 </div>
-                <div class="team-member-profile"> 
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Mely.png" alt="Mely Eprila"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackMely').style.display='flex';">
-                        <div id="teamImageFallbackMely" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Mely Eprila</h4>
                     <p class="team-member-title">People Partner</p>
                 </div>
-                <div class="team-member-profile"> 
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Erlita.png" alt="Erlita Permatasari"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackErlita').style.display='flex';">
-                        <div id="teamImageFallbackErlita" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Erlita Permatasari</h4>
                     <p class="team-member-title">People Partner</p>
                 </div>
-                <div class="team-member-profile"> 
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Amanta.png" alt="Amanta Amaranggana"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackAmanta').style.display='flex';">
-                        <div id="teamImageFallbackAmanta" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
@@ -652,33 +656,33 @@
                 </div>
             </div>
             <div class="team-grid team-grid-three-people">
-                 <div class="team-member-profile"> 
+                 <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Elisabeth.png" alt="Elisabeth Galingging"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackElisabeth').style.display='flex';">
-                        <div id="teamImageFallbackElisabeth" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Elisabeth Galingging</h4>
                     <p class="team-member-title">Learning & Training</p>
                 </div>
-                 <div class="team-member-profile"> 
+                 <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Fachrul.png" alt="Fachrul Ramadhan Hutasuhut"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackFachrul').style.display='flex';">
-                        <div id="teamImageFallbackFachrul" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Fachrul Ramadhan Hutasuhut</h4>
                     <p class="team-member-title">Enterprise Talent Management</p>
                 </div>
-                 <div class="team-member-profile"> 
+                 <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Vincent.png" alt="Vincent"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackVincent').style.display='flex';">
-                        <div id="teamImageFallbackVincent" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
@@ -687,33 +691,33 @@
                 </div>
             </div>
             <div class="team-grid team-grid-three-people">
-                 <div class="team-member-profile"> 
+                 <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Rivia.png" alt="Rivia Ningsih"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackRivia').style.display='flex';">
-                        <div id="teamImageFallbackRivia" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Rivia Ningsih</h4>
                     <p class="team-member-title">Internship</p>
                 </div>
-                 <div class="team-member-profile"> 
+                 <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Mutiara.png" alt="Mutiara Rahmadhanti"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackMutiara').style.display='flex';">
-                        <div id="teamImageFallbackMutiara" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Mutiara Rahmadhanti</h4>
                     <p class="team-member-title">Internship</p>
                 </div>
-                 <div class="team-member-profile"> 
+                 <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Cecille.png" alt="Cecille Tangkilisan"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackCecille').style.display='flex';">
-                        <div id="teamImageFallbackCecille" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
@@ -725,45 +729,45 @@
 
         <div class="department-section animate-on-scroll">
             <h3 class="department-heading">People Reward, Operation & Shares Service</h3>
-            <div class="team-grid"> 
-                <div class="team-member-profile"> 
+            <div class="team-grid">
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                          <img src="https://cdn.hibank.co.id/hcih/org/Layla.png" alt="Layla Puspa Risha"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackLayla').style.display='flex';">
-                        <div id="teamImageFallbackLayla" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Layla Puspa Risha</h4>
                     <p class="team-member-title">People Operation</p>
                 </div>
-                <div class="team-member-profile"> 
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Desy.png" alt="Desy Sri Ayuningtyas"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackDesy').style.display='flex';">
-                        <div id="teamImageFallbackDesy" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Desy Sri Ayuningtyas</h4>
                     <p class="team-member-title">People Operation</p>
                 </div>
-                <div class="team-member-profile"> 
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Mardiana.png" alt="Mardiana"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackMardiana').style.display='flex';">
-                        <div id="teamImageFallbackMardiana" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Mardiana</h4>
                     <p class="team-member-title">People Care</p>
                 </div>
-                <div class="team-member-profile"> 
+                <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Debora.png" alt="Debora Prestina W. S."
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackDebora').style.display='flex';">
-                        <div id="teamImageFallbackDebora" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
@@ -773,33 +777,33 @@
             </div>
 
             <div class="team-grid team-grid-three-people">
-                 <div class="team-member-profile"> 
+                 <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Dodi.png" alt="I Wayan Dodi Cahyadipa"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackDodi').style.display='flex';">
-                        <div id="teamImageFallbackDodi" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">I Wayan Dodi Cahyadipa</h4>
                     <p class="team-member-title">Internship</p>
                 </div>
-                 <div class="team-member-profile"> 
+                 <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Tarlin.png" alt="Teresa Harlin"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackTarlin').style.display='flex';">
-                        <div id="teamImageFallbackTarlin" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
                     <h4 class="team-member-name">Teresa Harlin</h4>
                     <p class="team-member-title">Internship</p>
                 </div>
-                 <div class="team-member-profile"> 
+                 <div class="team-member-profile">
                     <div class="team-member-image-container">
                         <img src="https://cdn.hibank.co.id/hcih/org/Vieren.png" alt="Vieren Septishia"
-                             onerror="this.style.display='none'; document.getElementById('teamImageFallbackVieren').style.display='flex';">
-                        <div id="teamImageFallbackVieren" class="profile-image-fallback" style="display:none;">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-image-fallback" style="display:none;">
                             Image not found
                         </div>
                     </div>
@@ -808,6 +812,8 @@
                 </div>
             </div>
         </div>
+        <img src="https://cdn.hibank.co.id/hcih/hi-by-hibank-logo.png" alt="Logo" loading="lazy" style="width: 50px; margin-right: 10px;"  onerror="this.style.display='none'; this.parentElement.querySelector('.navbar-brand').insertAdjacentText('beforebegin', 'Logo Error ');">
+
     </section>
 
     <footer class="bg-white py-5">
@@ -862,14 +868,28 @@
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-        // Navbar hiding on scroll & scroll animations
-        let lastScrollTop = 0;
+        // Navbar related variables and functions
         const navbar = document.querySelector('.navbar');
-        const navbarHeight = navbar ? navbar.offsetHeight : 0; 
-        const scrollThreshold = 5; 
+        let lastScrollTop = 0;
+        const scrollThreshold = 5; // How much user needs to scroll before navbar changes style
         const scrollElements = document.querySelectorAll(".animate-on-scroll");
 
+        // Function to adjust body padding and hero section height
+        function adjustLayout() {
+            if (navbar) {
+                const currentNavbarHeight = navbar.offsetHeight;
+                document.body.style.paddingTop = `${currentNavbarHeight}px`;
+
+                // Adjust hero section height to fill the remaining viewport
+                const heroSection = document.querySelector('.hero-section');
+                if (heroSection) {
+                    heroSection.style.height = `calc(100vh - ${currentNavbarHeight}px)`;
+                }
+            }
+        }
+
         const elementInView = (el, dividend = 1) => {
+            if (!el) return false; // Guard clause if element is not found
             const elementTop = el.getBoundingClientRect().top;
             return (
                 elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
@@ -877,7 +897,9 @@
         };
 
         const displayScrollElement = (element) => {
-            element.classList.add("is-visible");
+            if (element) { // Guard clause
+                 element.classList.add("is-visible");
+            }
         };
 
         const handleScrollAnimation = () => {
@@ -888,34 +910,59 @@
             });
         };
 
-        if (navbar) { 
+        // Initial setup and event listeners
+        if (navbar) {
+            adjustLayout(); // Adjust layout on initial load
+
             window.addEventListener('scroll', function() {
                 let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const currentDynamicNavbarHeight = navbar.offsetHeight; // Get current height, could change on resize/content change
 
-                // Navbar hiding logic
-                if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
+                // Navbar hiding/showing logic
+                if (scrollTop > lastScrollTop && scrollTop > currentDynamicNavbarHeight) {
+                    // Scrolling Down and past the navbar height
                     if (!navbar.classList.contains('navbar-hidden')) {
-                         navbar.classList.add('navbar-hidden');
+                        navbar.classList.add('navbar-hidden');
                     }
-                    navbar.classList.remove('navbar-scrolled');
+                    navbar.classList.remove('navbar-scrolled'); // Remove scrolled style when hiding
                 } else {
+                    // Scrolling Up or near the top
                     if (navbar.classList.contains('navbar-hidden')) {
                         navbar.classList.remove('navbar-hidden');
                     }
+                    // Add/remove scrolled style based on scroll position
                     if (scrollTop > scrollThreshold) {
                         navbar.classList.add('navbar-scrolled');
                     } else {
                         navbar.classList.remove('navbar-scrolled');
                     }
                 }
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
 
                 // Scroll animations for sections
                 handleScrollAnimation();
             }, false);
+
+            // Adjust layout on window resize
+            window.addEventListener('resize', adjustLayout);
         }
+
         // Initial check for scroll animations on page load
-        handleScrollAnimation();
+        // Ensure this is called after DOM is ready or elements are available
+        document.addEventListener('DOMContentLoaded', () => {
+            handleScrollAnimation(); // Initial check for elements in view
+            // Call adjustLayout again after DOM content is fully loaded,
+            // especially if navbar or other elements affecting layout might take time to render fully.
+            const initialNav = document.querySelector('.navbar');
+            if(initialNav) {
+                adjustLayout();
+            } else {
+                 // Fallback if navbar isn't immediately available, try once more after a short delay
+                 // This is a bit of a failsafe, ideally DOMContentLoaded and initial call should be enough
+                 setTimeout(adjustLayout, 100);
+            }
+        });
+
     </script>
 
 </body>
