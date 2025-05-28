@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Base Body Styles --- */
+        body {
+            font-family: 'Inter', sans-serif; /* Apply Inter font to the whole body */
+            overscroll-behavior: none; /* Prevents pull-to-refresh on mobile */
+        }
+
+        /* --- Card Styles --- */
+        .card {
+            width: 100%; /* Full width of the grid cell */
+            height: 0;
+            padding-bottom: 100%; /* Creates a square aspect ratio (height = width) */
+            position: relative; /* For absolute positioning of card faces */
+            transform-style: preserve-3d; /* Enables 3D transformations for flip effect */
+            transition: transform 0.6s; /* Smooth transition for the flip */
+            cursor: pointer; /* Indicates clickable items */
+        }
+        .card.flipped {
+            transform: rotateY(180deg); /* Flips the card */
+        }
+        .card.matched {
+            cursor: default; /* Non-interactive once matched */
+            opacity: 0.7; /* Visually indicate matched cards */
+        }
+        .card.disabled { 
+            pointer-events: none; /* Make card unclickable before game starts */
+            opacity: 0.6; /* Visually dim disabled cards */
+        }
+
+        /* --- Card Face Styles (Front and Back) --- */
+        .card-face {
+            position: absolute; /* Positioned within the .card container */
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* Hides the back of the face during flip */
+            display: flex;
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
+            border-radius: 0.5rem; /* Tailwind's rounded-lg */
+            font-size: 1.75rem; /* Base font size for symbols/text on cards */
+        }
+        .card-front {
+            background-color: #176980; /* User-defined Tile color */
+            color: white; /* Text color for the front face (if any) */
+        }
+        .card-back {
+            background-color: #6FBDD1; /* Lighter shade of Tile color for card back */
+            transform: rotateY(180deg); /* Initially rotated to be hidden */
+            color: #176980; /* Tile color for text/symbols on the back for good contrast */
+        }
+
+        /* --- Custom Button Styles --- */
+        /* Applied to Start, Reset, and Play Again buttons */
+        #start-button, #reset-button, #close-message-button {
+            background-color: #D15B28; /* User-defined Orange color */
+            /* text-white is applied via Tailwind classes directly on the HTML elements */
+        }
+        #start-button:hover, #reset-button:hover, #close-message-button:hover {
+            background-color: #B34D20; /* Darker shade of Orange for hover state */
+        }
+
+        /* --- Responsive Font Sizes for Card Faces --- */
+        @media (max-width: 768px) { /* md breakpoint (tablets) */
+             .card-face { font-size: 1.5rem; }
+        }
+        @media (max-width: 640px) { /* sm breakpoint (large mobiles) */
+            .card-face { font-size: 1.25rem; }
+        }
+        @media (max-width: 480px) { /* Smaller mobiles */
+            .card-face { font-size: 1rem; }
+        }
+
+        /* --- Message Box Transition --- */
+        #message-box {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        /* --- Leaderboard Entry Styling --- */
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between; /* Pushes rank/name and score to opposite ends */
+            padding: 0.125rem 0; /* Reduced vertical padding */
+        }
+
+        /* --- Game Board Container Sizing --- */
+        #game-board-container {
+            min-height: 200px; /* Ensures space for the Start button even if board is empty */
+            flex-grow: 1; /* Allows the container to take available vertical space */
+        }
+        
+        /* * Utility class for main content wrapper (not explicitly used on a div with this class name in current HTML,
+         * but kept as a reference if needed for overall page structure).
+         * Aims to make the main content area fit within the viewport height.
+         */
+        .main-content-wrapper {
+            max-height: calc(100vh - 100px); /* Example: viewport height minus header/footer */
+            overflow-y: auto; /* Adds scroll if content overflows */
+        }
+
+    </style>
+</head>
+<body class="bg-slate-100 flex flex-col items-center justify-center min-h-screen p-2 sm:p-4 selection:bg-orange-500 selection:text-white">
+
+    <div class="w-full max-w-5xl bg-white p-4 sm:p-6 rounded-xl shadow-2xl flex flex-col">
+        <header class="mb-4 text-center">
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-700">Memory Game</h1>
+        </header>
+
+        <div class="mb-4 grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-base sm:text-lg">
+            <div>
+                <span class="font-semibold text-slate-600">Moves:</span>
+                <span id="moves-count" class="font-bold text-slate-700">0</span>
+            </div>
+            <div>
+                <span class="font-semibold text-slate-600">Pairs:</span>
+                <span id="pairs-found" class="font-bold text-green-600">0</span> / <span id="total-pairs" class="font-bold text-green-600">0</span>
+            </div>
+            <div class="sm:col-span-1 col-span-2 sm:text-right">
+                <span class="font-semibold text-slate-600">Time:</span>
+                <span id="time-left" class="font-bold text-red-600">30</span>s
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-4 items-start flex-grow">
+            
+            <div class="w-full lg:w-2/3 flex flex-col">
+                <div id="game-board-container" class="relative flex-grow">
+                    <div id="game-board" class="grid grid-cols-4 gap-2 sm:gap-3">
+                    </div>
+                    <button id="start-button" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 w-3/4 sm:w-1/2 text-white font-semibold py-3 px-5 text-base sm:text-lg rounded-lg shadow-xl transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#D15B28] focus:ring-opacity-75">
+                        Start Game
+                    </button>
+                </div>
+                <button id="reset-button" class="w-full text-white font-semibold py-2 sm:py-3 px-4 rounded-lg shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#D15B28] focus:ring-opacity-75 mt-4 hidden">
+                    Reset Game
+                </button>
+            </div>
+
+            <div id="leaderboard-section" class="w-full lg:w-1/3 p-3 sm:p-4 border border-slate-200 rounded-lg bg-slate-50 lg:mt-0 mt-4 self-stretch">
+                <h2 class="text-lg sm:text-xl font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Leaderboard</h2>
+                <ol id="leaderboard-list" class="list-decimal list-inside text-slate-600 space-y-0.5 sm:space-y-1 text-sm sm:text-base">
+                    <li id="no-scores" class="text-center text-slate-500">No scores yet. Be the first!</li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="message-box" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none -translate-y-10 z-30">
+            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl text-center max-w-xs sm:max-w-sm w-full">
+                <h2 id="message-title" class="text-xl sm:text-2xl font-bold text-slate-700 mb-3 sm:mb-4">Game Over!</h2>
+                <p id="message-text" class="text-slate-600 mb-4 sm:mb-6 text-sm sm:text-base">You completed the game!</p>
+                <button id="close-message-button" class="text-white font-semibold py-2 px-4 sm:px-6 rounded-lg shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#D15B28] focus:ring-opacity-75">
+                    Play Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Game Configuration ---
+        const symbols = ['UMKM', 'hiro', 'Orkestrator', 'AKHLAK', 'FIRST', 'Digital', 'Jumprenuer', 'hi Coffee', 'Pasar', 'Wirausaha', 'hi nabung', 'hi deposito']; // Array of symbols for the cards
+        let gameSize = 16; // Default number of cards (e.g., 4x4 grid = 8 pairs). Will be adjusted if not enough symbols.
+        const TIME_LIMIT = 60; // Game time limit in seconds.
+
+        // --- DOM Elements ---
+        // Cached references to frequently accessed HTML elements for performance.
+        const gameBoardContainer = document.getElementById('game-board-container'); 
+        const gameBoard = document.getElementById('game-board');
+        const movesCountEl = document.getElementById('moves-count');
+        const pairsFoundEl = document.getElementById('pairs-found');
+        const totalPairsEl = document.getElementById('total-pairs');
+        const startButton = document.getElementById('start-button');
+        const resetButton = document.getElementById('reset-button');
+        const timeLeftEl = document.getElementById('time-left');
+        const messageBox = document.getElementById('message-box');
+        const messageTitleEl = document.getElementById('message-title');
+        const messageTextEl = document.getElementById('message-text');
+        const closeMessageButton = document.getElementById('close-message-button');
+        const leaderboardListEl = document.getElementById('leaderboard-list');
+        const noScoresLi = document.getElementById('no-scores'); // Reference to the "No scores yet" list item.
+
+
+        // --- Game State Variables ---
+        // Variables to keep track of the game's current state.
+        let cards = []; // Array to store card objects { id, symbol, isFlipped, isMatched, element }
+        let flippedCards = []; // Stores the currently flipped cards (maximum of 2).
+        let moves = 0; // Counter for player moves.
+        let pairsFound = 0; // Counter for matched pairs.
+        let totalPairsToFind = 0; // Total number of pairs to find to win.
+        let lockBoard = true; // Boolean to lock the board during checks or before game starts.
+        let timeLeft = TIME_LIMIT; // Remaining time for the game.
+        let timerInterval = null; // Interval ID for the game timer.
+        let gameStarted = false; // Boolean to track if the game has been started by the user.
+
+        // --- Game Logic Functions ---
+
+        /**
+         * Shuffles an array in place using the Fisher-Yates algorithm.
+         * @param {Array} array - The array to shuffle.
+         */
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // ES6 destructuring swap
+            }
+        }
+        
+        /**
+         * Sets up the game board, UI elements, and resets game state.
+         * Does not start the timer or enable card clicks; waits for the Start button.
+         */
+        function setupGame() {
+            stopTimer(); // Clear any existing timer interval.
+
+            // Determine the number of pairs based on available symbols and gameSize.
+            let availablePairs = symbols.length;
+            if (gameSize / 2 > availablePairs) { // If requested game size exceeds available symbols
+                gameSize = availablePairs * 2; // Adjust game size to max possible pairs
+            } else if (gameSize % 2 !== 0) { // Ensure gameSize is even
+                gameSize = (gameSize - 1); 
+            }
+            totalPairsToFind = gameSize / 2;
+
+            // Prepare symbols for the game.
+            let currentSymbols = symbols.slice(0, totalPairsToFind); // Take needed symbols
+            let gameSymbols = [...currentSymbols, ...currentSymbols]; // Duplicate to create pairs
+            shuffle(gameSymbols); // Shuffle the pairs randomly.
+
+            // Reset game state variables.
+            cards = [];
+            flippedCards = [];
+            moves = 0;
+            pairsFound = 0;
+            lockBoard = true; // Board is locked until 'Start Game' is clicked.
+            gameStarted = false;
+            timeLeft = TIME_LIMIT;
+
+            // Update UI display for stats.
+            movesCountEl.textContent = moves;
+            pairsFoundEl.textContent = pairsFound;
+            totalPairsEl.textContent = totalPairsToFind;
+            timeLeftEl.textContent = timeLeft; 
+            gameBoard.innerHTML = ''; // Clear any previous cards from the board.
+
+            // Adjust grid layout based on the number of pairs for responsiveness.
+            if (totalPairsToFind <= 4) gameBoard.className = 'grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3'; 
+            else if (totalPairsToFind <= 6) gameBoard.className = 'grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3'; 
+            else if (totalPairsToFind <= 8) gameBoard.className = 'grid grid-cols-4 gap-2 sm:gap-3'; 
+            else if (totalPairsToFind <= 12) gameBoard.className = 'grid grid-cols-4 sm:grid-cols-6 gap-2 sm:gap-3'; 
+            else gameBoard.className = 'grid grid-cols-4 sm:grid-cols-6 gap-2 sm:gap-3'; // Default for larger sets
+
+            // Create and append card elements to the game board.
+            for (let i = 0; i < gameSymbols.length; i++) {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('card', 'rounded-lg', 'shadow-md', 'disabled'); // 'disabled' initially
+                cardElement.dataset.id = i; // Store card index in data attribute.
+
+                const cardFront = document.createElement('div');
+                cardFront.classList.add('card-face', 'card-front');
+                // cardFront.textContent = '?'; // Optional: placeholder for front
+
+                const cardBack = document.createElement('div');
+                cardBack.classList.add('card-face', 'card-back');
+                cardBack.textContent = gameSymbols[i]; // Display symbol on the back
+
+                cardElement.appendChild(cardFront);
+                cardElement.appendChild(cardBack);
+                cardElement.addEventListener('click', () => handleCardClick(cardElement, i));
+                gameBoard.appendChild(cardElement);
+
+                // Store card data.
+                cards.push({ 
+                    id: i, 
+                    symbol: gameSymbols[i], 
+                    isFlipped: false, 
+                    isMatched: false, 
+                    element: cardElement 
+                });
+            }
+            
+            // Manage button visibility.
+            startButton.classList.remove('hidden');
+            resetButton.classList.add('hidden');
+            gameBoardContainer.classList.remove('pointer-events-none'); // Ensure start button is clickable.
+            hideMessage(); // Ensure message box is hidden.
+
+            // Load leaderboard if it's empty or only shows the default "no scores" message.
+            if (!leaderboardListEl.children.length || (leaderboardListEl.children.length === 1 && leaderboardListEl.firstChild.id === 'no-scores')) {
+                loadLeaderboard();
+            }
+        }
+
+        /**
+         * Starts the actual game: enables card clicks, starts the timer, and updates button visibility.
+         */
+        function startGame() {
+            gameStarted = true;
+            lockBoard = false; // Unlock the board for playing.
+            startButton.classList.add('hidden'); // Hide Start button.
+            resetButton.classList.remove('hidden'); // Show Reset button.
+            
+            // Remove 'disabled' class from all cards to make them interactive.
+            cards.forEach(card => card.element.classList.remove('disabled'));
+            startTimer(); // Begin the countdown.
+        }
+
+        /**
+         * Starts the game timer and updates the time display every second.
+         */
+        function startTimer() {
+            stopTimer(); // Clear any existing timer before starting a new one.
+            timeLeftEl.textContent = timeLeft; // Initialize time display.
+            timerInterval = setInterval(() => {
+                if (!gameStarted) return; // Stop decrementing if game hasn't officially started or has ended.
+                timeLeft--;
+                timeLeftEl.textContent = timeLeft;
+                if (timeLeft <= 0) { // Time's up
+                    stopTimer();
+                    lockBoard = true; // Lock board.
+                    gameStarted = false; // Mark game as not active.
+                    showMessage('Time\'s Up!', `You ran out of time. Try again!`);
+                }
+            }, 1000); // Update every second.
+        }
+
+        /**
+         * Stops the game timer by clearing the interval.
+         */
+        function stopTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        /**
+         * Handles a click event on a card.
+         * @param {HTMLElement} cardElement - The HTML element of the clicked card.
+         * @param {number} index - The index of the clicked card in the `cards` array.
+         */
+        function handleCardClick(cardElement, index) {
+            // Ignore clicks if board is locked, game not started, time is up, or card already flipped/matched.
+            if (lockBoard || !gameStarted || timeLeft <= 0) return; 
+            const clickedCard = cards[index];
+            if (clickedCard.isFlipped || clickedCard.isMatched) return;
+
+            flipCard(clickedCard); // Flip the clicked card.
+            if (flippedCards.length < 2) {
+                flippedCards.push(clickedCard); // Add to list of currently flipped cards.
+            }
+
+            // If two cards are flipped, check for a match.
+            if (flippedCards.length === 2) {
+                incrementMoves();
+                lockBoard = true; // Temporarily lock board while checking.
+                checkForMatch();
+            }
+        }
+
+        /**
+         * Visually flips a card by adding the 'flipped' class.
+         * @param {object} card - The card object to flip.
+         */
+        function flipCard(card) {
+            card.isFlipped = true;
+            card.element.classList.add('flipped');
+        }
+
+        /**
+         * Visually un-flips a card by removing the 'flipped' class.
+         * @param {object} card - The card object to un-flip.
+         */
+        function unflipCard(card) {
+            card.isFlipped = false;
+            card.element.classList.remove('flipped');
+        }
+
+        /**
+         * Increments the moves counter and updates the UI display.
+         */
+        function incrementMoves() {
+            moves++;
+            movesCountEl.textContent = moves;
+        }
+
+        /**
+         * Checks if the two currently flipped cards are a match.
+         * Handles match (marks cards, checks for win) or mismatch (unflips cards).
+         */
+        function checkForMatch() {
+            const [card1, card2] = flippedCards; // Destructure the two flipped cards.
+            if (card1.symbol === card2.symbol) { // Match found
+                card1.isMatched = true;
+                card2.isMatched = true;
+                card1.element.classList.add('matched');
+                card2.element.classList.add('matched');
+                pairsFound++;
+                pairsFoundEl.textContent = pairsFound;
+                flippedCards = []; // Clear the flipped cards array.
+                if (gameStarted) lockBoard = false; // Unlock board if game is still active.
+
+                // Check for win condition.
+                if (pairsFound === totalPairsToFind) {
+                    stopTimer();
+                    gameStarted = false; // Mark game as not active.
+                    const timeTaken = TIME_LIMIT - timeLeft;
+                    showMessage('Congratulations!', `You won in ${moves} moves and ${timeTaken} seconds!`);
+                    saveScoreToLeaderboard(moves, timeTaken); // Save score.
+                }
+            } else { // No match
+                // Unflip cards after a short delay.
+                setTimeout(() => {
+                    unflipCard(card1);
+                    unflipCard(card2);
+                    flippedCards = []; // Clear the flipped cards array.
+                    if (gameStarted) lockBoard = false; // Unlock board if game is still active.
+                }, 1000); // 1-second delay.
+            }
+        }
+
+        /**
+         * Shows the custom message box with a given title and text.
+         * @param {string} title - The title for the message.
+         * @param {string} text - The main text for the message.
+         */
+        function showMessage(title, text) {
+            messageTitleEl.textContent = title;
+            messageTextEl.textContent = text;
+            messageBox.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-10');
+            messageBox.classList.add('opacity-100', 'translate-y-0');
+        }
+
+        /**
+         * Hides the custom message box.
+         */
+        function hideMessage() {
+            messageBox.classList.add('opacity-0', 'pointer-events-none', '-translate-y-10');
+            messageBox.classList.remove('opacity-100', 'translate-y-0');
+        }
+
+        // --- Leaderboard Functions ---
+
+        /**
+         * Saves the player's score to the leaderboard via Google Apps Script.
+         * @param {number} currentMoves - The number of moves taken by the player.
+         * @param {number} currentTimeTaken - The time taken by the player in seconds.
+         */
+        function saveScoreToLeaderboard(currentMoves, currentTimeTaken) {
+            console.log("Attempting to save score:", { moves: currentMoves, time: currentTimeTaken });
+            // Call the server-side Apps Script function.
+            google.script.run
+                .withSuccessHandler(updatedScores => { // Callback on successful save.
+                    console.log("Score saved successfully, updating display.");
+                    updateLeaderboardDisplay(updatedScores); // Refresh leaderboard display.
+                })
+                .withFailureHandler(error => { // Callback on failure.
+                    console.error("Error saving score:", error);
+                    // Optionally, inform the user about the error.
+                })
+                .savePlayerScore({ moves: currentMoves, time: currentTimeTaken });
+        }
+
+        /**
+         * Loads leaderboard scores from Google Apps Script.
+         */
+        function loadLeaderboard() {
+            console.log("Attempting to load leaderboard...");
+            google.script.run
+                .withSuccessHandler(scores => { // Callback on successful load.
+                    console.log("Leaderboard loaded:", scores);
+                    updateLeaderboardDisplay(scores);
+                })
+                .withFailureHandler(error => { // Callback on failure.
+                    console.error("Error loading leaderboard:", error);
+                    leaderboardListEl.innerHTML = '<li class="text-center text-red-500">Could not load scores.</li>';
+                     if (noScoresLi) noScoresLi.style.display = 'none'; // Hide default "no scores" message.
+                })
+                .getLeaderboardScores();
+        }
+
+        /**
+         * Updates the leaderboard display in the HTML.
+         * @param {Array<object>} scores - An array of score objects {moves: number, time: number}.
+         */
+        function updateLeaderboardDisplay(scores) {
+            leaderboardListEl.innerHTML = ''; // Clear existing leaderboard entries.
+            const currentNoScoresLi = document.getElementById('no-scores'); // Get the "no scores" li again
+
+            if (scores && scores.length > 0) {
+                 if (currentNoScoresLi) currentNoScoresLi.style.display = 'none'; // Hide if scores exist.
+                scores.forEach((score, index) => {
+                    const li = document.createElement('li');
+                    li.classList.add('leaderboard-entry');
+                    // Display rank, moves, and time.
+                    li.innerHTML = `<span>${index + 1}. ${score.moves} moves</span> <span>${score.time}s</span>`;
+                    leaderboardListEl.appendChild(li);
+                });
+            } else { // No scores to display.
+                if (currentNoScoresLi) {
+                    // If the "no-scores" li was cleared, re-append it.
+                    if (!leaderboardListEl.contains(currentNoScoresLi)) {
+                         leaderboardListEl.appendChild(currentNoScoresLi);
+                    }
+                    currentNoScoresLi.style.display = 'list-item'; // Ensure it's visible.
+                } else { 
+                    // Fallback: if 'no-scores' element was somehow completely removed from DOM.
+                    const li = document.createElement('li');
+                    li.id = 'no-scores'; // Re-add id if creating new
+                    li.textContent = 'No scores yet. Be the first!';
+                    li.classList.add('text-center', 'text-slate-500');
+                    leaderboardListEl.appendChild(li);
+                }
+            }
+        }
+
+        // --- Event Listeners ---
+        // Attach event listeners to buttons.
+        startButton.addEventListener('click', startGame);
+        resetButton.addEventListener('click', setupGame); // Reset calls setupGame to return to pre-start state.
+        closeMessageButton.addEventListener('click', () => {
+            hideMessage();
+            setupGame(); // After closing message, return to pre-start state.
+        });
+
+        // --- Initial Game Setup ---
+        // Configure game size (can be adjusted here or by user input in a more complex setup).
+        gameSize = 16; // Example: 4x4 grid (8 pairs).
+        setupGame(); // Call to set up the game board and UI when the page loads.
+
+    </script>
+</body>
+</html>
