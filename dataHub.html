@@ -1,715 +1,371 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Export Active Employee Data</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<html>
+  <head>
+    <base target="_top">
+    <title>Data Hub</title>
     <style>
-        /* --- Base Styles & Variables --- */
-        :root {
-            --theme-orange: #D15B28;
-            --theme-tile: #176980;
-            --theme-tile-light: #e8f0f2;
-            --theme-orange-dark: #b34c20;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-500: #6b7280;
-            --gray-700: #374151;
-            --white: #ffffff;
-            --green-100: #d1fae5;
-            --green-700: #047857;
-            --red-100: #fee2e2;
-            --red-700: #b91c1c;
-            --yellow-100: #fef3c7;
-            --yellow-700: #b45309;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--gray-100);
-            margin: 0;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-            overscroll-behavior-y: contain;
-        }
-
-        .modal-content {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-            max-width: 500px;
-            width: 90%;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--theme-tile);
-            margin: 0;
-        }
-
-        .field-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--gray-700);
-            margin-bottom: 0.5rem;
-        }
-        .info-text {
-            font-size: 0.875rem;
-            color: var(--gray-700);
-            background-color: var(--theme-tile-light);
-            padding: 0.75rem;
-            border-radius: 0.375rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--theme-tile);
-            text-align: center;
-        }
-
-        .text-xs { font-size: 0.75rem; }
-        .text-gray-500 { color: var(--gray-500); }
-        .mt-1 { margin-top: 0.25rem; }
-
-        .space-y-4 > *:not(:last-child) {
-            margin-bottom: 1rem;
-        }
-
-        /* --- Custom Checkbox Dropdown (for Filters and Employee Data) --- */
-        .custom-select-checkbox-wrapper {
-            position: relative;
-        }
-        .custom-select-checkbox-trigger {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--gray-300);
-            border-radius: 0.375rem;
-            background-color: var(--white);
-            text-align: left;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-            min-height: 42px; 
-        }
-        .custom-select-checkbox-trigger:focus {
-             outline: none;
-            border-color: var(--theme-orange) !important;
-            box-shadow: 0 0 0 0.2rem rgba(209, 91, 40, 0.25);
-        }
-        .custom-select-checkbox-trigger .placeholder {
-            color: var(--gray-500);
-        }
-         .custom-select-checkbox-trigger .arrow {
-            border: solid var(--gray-500);
-            border-width: 0 2px 2px 0;
-            display: inline-block;
-            padding: 3px;
-            transform: rotate(45deg);
-            transition: transform 0.2s ease-in-out;
-        }
-        .custom-select-checkbox-trigger.open .arrow {
-             transform: rotate(-135deg);
-        }
-
-        .custom-select-checkbox-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: var(--white);
-            border: 1px solid var(--gray-300);
-            border-top: none; /* To connect with trigger */
-            border-radius: 0 0 0.375rem 0.375rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            z-index: 10;
-            max-height: 200px; /* Increased max height for search and items */
-            overflow-y: auto;
-            display: none; 
-            padding: 0.5rem;
-        }
-        .custom-select-checkbox-dropdown.open {
-            display: block;
-        }
-        .custom-select-checkbox-dropdown .search-input {
-            width: calc(100% - 1rem); /* Full width minus padding */
-            padding: 0.5rem;
-            border: 1px solid var(--gray-300);
-            border-radius: 0.25rem;
-            margin: 0 0.25rem 0.5rem 0.25rem; /* Adjust margin to align with items */
-            box-sizing: border-box;
-        }
-
-        .custom-select-checkbox-dropdown .select-all-label,
-        .custom-select-checkbox-dropdown .checkbox-item-label { 
-            display: flex;
-            align-items: center;
-            padding: 0.5rem 0.25rem;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--gray-700);
-            word-break: break-word;
-        }
-        .custom-select-checkbox-dropdown .select-all-label {
-            border-bottom: 1px solid var(--gray-200);
-            margin-bottom: 0.25rem;
-        }
-        .custom-select-checkbox-dropdown .checkbox-item-label:hover {
-            background-color: var(--gray-100);
-        }
-        .custom-select-checkbox-dropdown input[type="checkbox"] {
-            margin-right: 0.75rem;
-            accent-color: var(--theme-orange);
-            width: 1.1rem;
-            height: 1.1rem;
-            flex-shrink: 0;
-        }
-        .custom-select-checkbox-dropdown .checkbox-item-label.hidden-by-search {
-            display: none;
-        }
-        .custom-select-checkbox-dropdown::-webkit-scrollbar { width: 8px; }
-        .custom-select-checkbox-dropdown::-webkit-scrollbar-thumb { background-color: #A0AEC0; border-radius: 4px; }
-        .custom-select-checkbox-dropdown::-webkit-scrollbar-track { background-color: #f0f0f0; }
-
-        /* --- Buttons --- */
-        .button {
-            padding: 0.625rem 1rem; font-size: 0.875rem; font-weight: 500;
-            border-radius: 0.375rem; border: 1px solid transparent;
-            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-            cursor: pointer; width: 100%;
-        }
-        .button-primary { background-color: var(--theme-orange); color: var(--white); box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
-        .button-primary:hover { background-color: var(--theme-orange-dark); }
-        .button-primary:focus { outline: none; box-shadow: 0 0 0 0.2rem rgba(209, 91, 40, 0.35); }
-        .button-secondary { background-color: var(--gray-100); color: var(--gray-700); border-color: var(--gray-300); }
-        .button-secondary:hover { background-color: var(--gray-200); }
-        .button-secondary:focus { outline: none; border-color: var(--theme-orange); box-shadow: 0 0 0 0.2rem rgba(209, 91, 40, 0.25); }
-        .button-group { margin-top: 2rem; display: flex; flex-direction: column; justify-content: flex-end; }
-        .button-group > .button:not(:last-child) { margin-bottom: 0.5rem; }
-
-        /* --- Message Box --- */
-        .message-box {
-            margin-top: 1rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.875rem;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-            opacity: 0; visibility: hidden;
-        }
-        .message-box.visible { opacity: 1; visibility: visible; }
-        .message-box-success { background-color: var(--green-100); color: var(--green-700); }
-        .message-box-error { background-color: var(--red-100); color: var(--red-700); }
-        .message-box-warning { background-color: var(--yellow-100); color: var(--yellow-700); }
-        .message-box-info { background-color: var(--theme-tile-light); color: var(--theme-tile); }
-        .message-box a { font-weight: 600; text-decoration: underline; }
-        .message-box a:hover { color: var(--theme-orange); }
-
-        .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-
-        .spinner {
-            animation: spin 1s linear infinite; display: inline-block;
-            width: 1.25rem; height: 1.25rem; margin-right: 0.75rem; vertical-align: middle;
-        }
-        .spinner circle.opacity-25 { opacity: 0.25; }
-        .spinner path.opacity-75 { opacity: 0.75; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
-        .loading-text { font-style: italic; color: var(--gray-500); padding: 0.5rem 0.75rem; }
-
-        @media (min-width: 640px) {
-            .modal-content { padding: 2rem; }
-            .button { width: auto; }
-            .button-group { flex-direction: row; }
-            .button-group > .button:not(:last-child) { margin-bottom: 0; margin-right: 0.75rem; }
-        }
+      body { font-family: Arial, sans-serif; margin: 20px; }
+      h2 { color: #333; }
+      #fields div { margin-bottom: 5px; }
+      /* Removed #filterOptions styling as element is removed */
+      label { margin-left: 5px; cursor: pointer; }
+      button { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+      button:hover { background-color: #45a049; }
+      #statusMessage { margin-top: 15px; color: #555; }
     </style>
-</head>
-<body>
-
-    <div class="modal-content">
-        <div class="header-container">
-            <h1>Export Employee Data</h1>
-        </div>
-
-        <form id="exportForm">
-            <div class="space-y-4">
-                <div>
-                    <p class="info-text">This export will include <strong>Active Employees</strong> only (where 'Resign Date' is blank).</p>
-                </div>
-
-                <div>
-                    <label for="branchFilterTrigger" class="field-label">Branch</label>
-                    <div class="custom-select-checkbox-wrapper">
-                        <button type="button" id="branchFilterTrigger" class="custom-select-checkbox-trigger">
-                            <span class="selected-text placeholder">Select Branches</span>
-                            <span class="arrow"></span>
-                        </button>
-                        <div id="branchChecklistContainer" class="custom-select-checkbox-dropdown">
-                            {/* Content populated by JS */}
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <label for="organizationFilterTrigger" class="field-label">Directorate</label>
-                     <div class="custom-select-checkbox-wrapper">
-                        <button type="button" id="organizationFilterTrigger" class="custom-select-checkbox-trigger">
-                            <span class="selected-text placeholder">Select Directorates</span>
-                            <span class="arrow"></span>
-                        </button>
-                        <div id="organizationChecklistContainer" class="custom-select-checkbox-dropdown">
-                            {/* Content populated by JS */}
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <label for="sbuFilterTrigger" class="field-label">FOMOBO</label>
-                    <div class="custom-select-checkbox-wrapper">
-                        <button type="button" id="sbuFilterTrigger" class="custom-select-checkbox-trigger">
-                            <span class="selected-text placeholder">Select FOMOBO</span>
-                            <span class="arrow"></span>
-                        </button>
-                        <div id="sbuChecklistContainer" class="custom-select-checkbox-dropdown">
-                           {/* Content populated by JS */}
-                        </div>
-                    </div>
-                </div>
-
-                <div> 
-                    <label for="employeeDataFilterTrigger" class="field-label">Employee data (Fields to export)</label>
-                    <div class="custom-select-checkbox-wrapper">
-                        <button type="button" id="employeeDataFilterTrigger" class="custom-select-checkbox-trigger">
-                            <span class="selected-text placeholder">Select Employee data</span>
-                            <span class="arrow"></span>
-                        </button>
-                        <div id="employeeDataChecklistContainer" class="custom-select-checkbox-dropdown">
-                            {/* Search, Select All, and Checkboxes will be populated by JS here */}
-                        </div>
-                    </div>
-                     <p class="text-xs text-gray-500 mt-1">Select the fields you want to include in the export.</p>
-                </div>
-            </div>
-
-            <div class="button-group">
-                <button type="button" onclick="resetFormAndState()" class="button button-secondary">
-                    Reset
-                </button>
-                <button type="submit" id="exportButton" class="button button-primary">
-                    Export Active Employees
-                </button>
-            </div>
-        </form>
-        <div id="messageBox" class="message-box"></div>
-    </div>
-
     <script>
-        const SCRIPT_URL = "https://script.google.com/a/macros/hibank.co.id/s/AKfycbzJXqXEhUei__67M7h3_7v45bF0mraBYIqeSS435ZLANg2bNeGwGGo3Wx6HAn-DnH9r0w/exec";
+      // downloadCSV and loadFields functions remain the same as the last full version.
+      // Ensure they are present here.
 
-        const exportForm = document.getElementById('exportForm');
-        const messageBox = document.getElementById('messageBox');
-        const exportButton = document.getElementById('exportButton');
-        
-        const allFilterConfigs = [
-            {
-                triggerId: 'branchFilterTrigger',
-                dropdownId: 'branchChecklistContainer',
-                groupName: 'branch_filter', 
-                placeholder: 'Select Branches',
-                dataKey: 'branches', 
-                searchPlaceholder: 'Search Branches...' 
-            },
-            {
-                triggerId: 'organizationFilterTrigger',
-                dropdownId: 'organizationChecklistContainer',
-                groupName: 'organization_filter',
-                placeholder: 'Select Directorates', 
-                dataKey: 'organizations', 
-                searchPlaceholder: 'Search Directorates...' 
-            },
-            {
-                triggerId: 'sbuFilterTrigger',
-                dropdownId: 'sbuChecklistContainer',
-                groupName: 'sbu_filter',
-                placeholder: 'Select FOMOBO', 
-                dataKey: 'sbus', 
-                searchPlaceholder: 'Search FOMOBO...' 
-            },
-            {
-                triggerId: 'employeeDataFilterTrigger', 
-                dropdownId: 'employeeDataChecklistContainer', 
-                groupName: 'employeeDataFields', 
-                placeholder: 'Select Employee data',
-                dataKey: 'fieldsToExport', 
-                dataSource: 'employeeExportFields', 
-                searchPlaceholder: 'Search fields...' 
-            }
-        ];
-
-        const employeeExportFields = [ 
-            { value: "employee_id", text: "Employee ID" }, { value: "full_name", text: "Full Name" },
-            { value: "email", text: "Email (HiBank)" }, { value: "phone_number", text: "Mobile Phone" },
-            { value: "department", text: "Department" }, { value: "job_title", text: "Job Position" },
-            { value: "hire_date", text: "Join Date" }, { value: "joblevel", text: "Job Level"},
-            { value: "statusemployee", text: "Employment Status (Raw)"}, { value: "emailpersonal", text: "Email (Personal)"},
-            { value: "nik", text: "NIK"}, { value: "branch", text: "Branch (Data)"}, 
-            { value: "resigndate", text: "Resign Date"},
-        ];
-        
-        function initializeCustomSelectCheckboxes() {
-            allFilterConfigs.forEach(config => {
-                const trigger = document.getElementById(config.triggerId);
-                const dropdown = document.getElementById(config.dropdownId);
-                const selectedTextSpan = trigger.querySelector('.selected-text');
-
-                if (!trigger || !dropdown) {
-                    console.error("Missing elements for custom select:", config.triggerId);
-                    return;
+      function downloadCSV(data, filename) { /* ... same as before ... */
+        console.log("Client: downloadCSV called. Preparing CSV. Rows:", data.length, "Filename:", filename);
+        let csv = "";
+        if (Array.isArray(data) && data.length > 0) {
+            csv = data.map(row => {
+                if (!Array.isArray(row)) {
+                    console.warn("Client: downloadCSV found a row that is not an array:", row);
+                    return ""; 
                 }
-                
-                selectedTextSpan.textContent = config.placeholder;
-                selectedTextSpan.classList.add('placeholder');
-
-                trigger.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    const currentlyOpen = dropdown.classList.contains('open');
-                    allFilterConfigs.forEach(otherConfig => {
-                        document.getElementById(otherConfig.dropdownId).classList.remove('open');
-                        document.getElementById(otherConfig.triggerId).classList.remove('open');
-                        if (otherConfig.dropdownId !== config.dropdownId && document.getElementById(otherConfig.dropdownId).wasOpen) {
-                             updateCustomSelectTriggerText(otherConfig);
-                             document.getElementById(otherConfig.dropdownId).wasOpen = false;
-                        }
-                    });
-                    if (!currentlyOpen) {
-                        dropdown.classList.add('open');
-                        trigger.classList.add('open');
-                        dropdown.wasOpen = true; 
-                        const searchInput = dropdown.querySelector('.search-input');
-                        if(searchInput) searchInput.focus();
-                        
-                    } else {
-                        updateCustomSelectTriggerText(config);
-                        dropdown.wasOpen = false;
-                    }
-                });
-            });
-
-            document.addEventListener('click', (event) => {
-                allFilterConfigs.forEach(config => {
-                    const trigger = document.getElementById(config.triggerId);
-                    const dropdown = document.getElementById(config.dropdownId);
-                    if (dropdown.classList.contains('open') && !trigger.contains(event.target) && !dropdown.contains(event.target)) {
-                        dropdown.classList.remove('open');
-                        trigger.classList.remove('open');
-                        updateCustomSelectTriggerText(config);
-                        dropdown.wasOpen = false;
-                    }
-                });
-            });
+                return row.map(cell => {
+                    let cellString = (cell === null || typeof cell === 'undefined') ? "" : String(cell);
+                    return `"${cellString.replace(/"/g, '""')}"`;
+                }).join(",");
+            }).join("\n");
+        } else {
+            console.warn("Client: downloadCSV called with empty or invalid data. CSV will be empty.");
         }
-        
-        function populateCustomSelectCheckboxGroup(config, optionsArray) {
-            const dropdown = document.getElementById(config.dropdownId);
-            if (!dropdown) return;
-            dropdown.innerHTML = ''; 
+        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        console.log("Client: Download initiated for", filename);
+      }
 
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.placeholder = config.searchPlaceholder || 'Search...';
-            searchInput.className = 'search-input';
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                dropdown.querySelectorAll('.checkbox-item-label').forEach(label => {
-                    const text = label.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        label.classList.remove('hidden-by-search');
-                    } else {
-                        label.classList.add('hidden-by-search');
-                    }
-                });
-                updateCustomSelectGroupSelectAllState(config); 
-            });
-            dropdown.appendChild(searchInput);
+      function loadFields() { /* ... same as before ... */
+        console.log("Client: loadFields called. Requesting headers.");
+        document.getElementById("statusMessage").textContent = "Loading fields...";
+        google.script.run
+          .withSuccessHandler(function(fields) {
+            console.log("Client: Headers received from server:", fields);
+            const statusElement = document.getElementById("statusMessage");
+            if (!fields || !Array.isArray(fields)) {
+                console.error("Client: Received null, undefined, or non-array fields from getHeaders:", fields);
+                alert("Error: Could not load column fields. Please check server logs or script configuration.");
+                statusElement.textContent = "Error loading fields.";
+                return;
+            }
             
-            const selectAllLabel = document.createElement('label');
-            selectAllLabel.className = 'select-all-label';
-            const selectAllCheckbox = document.createElement('input');
-            selectAllCheckbox.type = 'checkbox';
-            selectAllCheckbox.id = `${config.groupName}_select_all`;
-            selectAllCheckbox.addEventListener('change', function() {
-                const allCheckboxesInGroup = dropdown.querySelectorAll(`input[name="${config.groupName}"]`);
-                allCheckboxesInGroup.forEach(cb => {
-                    cb.checked = this.checked;
-                });
-                updateCustomSelectTriggerText(config);
-            });
-            selectAllLabel.appendChild(selectAllCheckbox);
-            selectAllLabel.appendChild(document.createTextNode(' Select/Deselect All'));
-            dropdown.appendChild(selectAllLabel);
+            const container = document.getElementById("fields");
+            container.innerHTML = ''; 
 
-            if (optionsArray && optionsArray.length > 0) {
-                optionsArray.forEach(option => { 
-                    const value = config.dataSource === 'employeeExportFields' ? option.value : option;
-                    const text = config.dataSource === 'employeeExportFields' ? option.text : option;
-                    if (value !== undefined && value !== null) { // Ensure value exists
-                        const label = document.createElement('label');
-                        label.className = 'checkbox-item-label';
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.name = config.groupName;
-                        checkbox.value = value;
-                        checkbox.addEventListener('change', () => {
-                            updateCustomSelectGroupSelectAllState(config);
-                            // Do not update trigger text on individual change to avoid closing dropdown prematurely
-                        });
-                        label.appendChild(checkbox);
-                        label.appendChild(document.createTextNode(` ${text}`));
-                        dropdown.appendChild(label);
-                    }
-                });
+            if (fields.length === 0) {
+                console.warn("Client: No headers found in the sheet or sheet is empty.");
+                statusElement.textContent = "No fields (headers) found in the configured sheet.";
+                return;
+            }
+
+            fields.forEach(field => {
+              const fieldStr = String(field);
+              const checkbox = document.createElement("input");
+              checkbox.type = "checkbox";
+              checkbox.name = "field";
+              checkbox.value = fieldStr;
+              checkbox.id = "field_" + fieldStr.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+              const label = document.createElement("label");
+              label.htmlFor = checkbox.id;
+              label.textContent = fieldStr;
+
+              const div = document.createElement("div");
+              div.appendChild(checkbox);
+              div.appendChild(label);
+              container.appendChild(div);
+            });
+            statusElement.textContent = "Fields loaded. Select fields and click 'Download CSV'. (Note: Data is pre-filtered for empty Resign Dates)";
+          })
+          .withFailureHandler(function(error) {
+            console.error("Client: Error in getHeaders:", error);
+            alert("Failed to load fields: " + (error && error.message ? error.message : "Unknown error."));
+            document.getElementById("statusMessage").textContent = "Error loading fields: " + (error && error.message ? error.message : "Check script configuration.");
+          })
+          .getHeaders();
+      }
+      
+      /**
+       * Handles the download process. Data will be pre-filtered by the server
+       * for records where Resign Date is empty.
+       */
+      function handleDownload() {
+        const selectedFields = Array.from(document.querySelectorAll("input[name='field']:checked"))
+                                  .map(cb => cb.value);
+        console.log("Client: handleDownload called. Selected fields:", JSON.stringify(selectedFields));
+        const statusElement = document.getElementById("statusMessage");
+
+        if (selectedFields.length === 0) {
+          alert("Please select at least one field to download.");
+          statusElement.textContent = "No fields selected. Please select fields to download.";
+          return;
+        }
+
+        // Filter options are no longer sent from client for this default behavior
+        console.log("Client: Calling google.script.run.getFilteredData. Server will apply default 'Resign Date is null' filter.");
+        statusElement.textContent = "Processing (with default Resign Date filter) and downloading, please wait...";
+
+        google.script.run
+          .withSuccessHandler(function(dataFromServer) {
+            // This success handler remains the same as the robust one from the "full code" version
+            console.log("Client: getFilteredData - SuccessHandler triggered.");
+            console.log("Client: Data received from server (raw):", dataFromServer);
+
+            let dataForCsv;
+            let downloadFilename = "filtered_data_empty_resign_date.csv"; // Update filename to reflect default filter
+            let userMessage = "";
+
+            if (dataFromServer === null) {
+              console.warn("Client: Data from server is NULL. Proceeding to download CSV with selected headers only.");
+              userMessage = "Warning: Data from server was missing or a server processing error occurred. Downloading a CSV with selected headers only.";
+              dataForCsv = [selectedFields];
+              downloadFilename = "data_headers_only_server_null.csv";
+            } else if (!Array.isArray(dataFromServer)) {
+              console.error("Client: Data received from server is not an array. Proceeding with headers only.");
+              userMessage = "Warning: Unexpected data format from server. Downloading a CSV with selected headers only.";
+              dataForCsv = [selectedFields];
+              downloadFilename = "data_headers_only_bad_format.csv";
+            } else if (dataFromServer.length === 0 || (dataFromServer.length === 1 && dataFromServer[0].length === 0) ) {
+              console.warn("Client: Server returned an empty dataset (possibly all records had a Resign Date or no data met other criteria). Downloading CSV with selected headers only.");
+              userMessage = "No data rows found for your selection (data is pre-filtered for empty Resign Dates). Downloading a CSV with selected headers only.";
+              dataForCsv = [selectedFields];
+              // Keep filename reflective of default filter
             } else {
-                const noOptionsP = document.createElement('p');
-                noOptionsP.className = 'loading-text';
-                noOptionsP.textContent = 'No options available.';
-                dropdown.appendChild(noOptionsP);
-            }
-            updateCustomSelectGroupSelectAllState(config);
-        }
-
-        function updateCustomSelectGroupSelectAllState(config) {
-            const dropdown = document.getElementById(config.dropdownId);
-            if (!dropdown) return;
-
-            const selectAllCb = dropdown.querySelector(`#${config.groupName}_select_all`);
-            const itemCheckboxes = dropdown.querySelectorAll(`input[name="${config.groupName}"]`);
-            if (!selectAllCb || itemCheckboxes.length === 0) {
-                if(selectAllCb) {
-                    selectAllCb.checked = false;
-                    selectAllCb.indeterminate = false;
-                }
-                return;
+              dataForCsv = dataFromServer;
+              userMessage = "Download complete (data pre-filtered for empty Resign Dates).";
+              console.log("Client: Data is valid. Number of rows (server data includes headers):", dataForCsv.length);
             }
             
-            const allChecked = Array.from(itemCheckboxes).every(cb => cb.checked);
-            const someChecked = Array.from(itemCheckboxes).some(cb => cb.checked);
+            statusElement.textContent = userMessage;
+            downloadCSV(dataForCsv, downloadFilename);
+          })
+          .withFailureHandler(function(error) {
+            // This failure handler also remains the same
+            console.error("Client: getFilteredData - FailureHandler triggered. Error:", error);
+            let userMessage = "Error: Server communication failed (" + (error && error.message ? error.message : "Unknown error") + ").";
+            let downloadFilename = "data_server_error_headers_only.csv";
 
-            selectAllCb.checked = allChecked;
-            selectAllCb.indeterminate = !allChecked && someChecked;
-        }
-        
-        function updateCustomSelectTriggerText(config) {
-            const trigger = document.getElementById(config.triggerId);
-            const selectedTextSpan = trigger.querySelector('.selected-text');
-            const dropdown = document.getElementById(config.dropdownId);
-            const selectedValues = []; 
-            const selectedDisplayTexts = []; 
-
-            dropdown.querySelectorAll(`input[name="${config.groupName}"]:checked`).forEach(cb => {
-                selectedValues.push(cb.value);
-                const label = cb.closest('.checkbox-item-label');
-                if (label) {
-                    let itemText = '';
-                    // Iterate child nodes to get text, skipping the checkbox input itself
-                    label.childNodes.forEach(node => {
-                        if(node.nodeType === Node.TEXT_NODE) {
-                            itemText += node.textContent.trim();
-                        } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'INPUT') {
-                            itemText += node.textContent.trim(); // For any other elements within label
-                        }
-                    });
-                    selectedDisplayTexts.push(itemText || cb.value); 
-                } else {
-                    selectedDisplayTexts.push(cb.value);
-                }
-            });
-            
-            const totalItems = dropdown.querySelectorAll(`input[name="${config.groupName}"]`).length;
-
-            if (selectedValues.length === 0) {
-                selectedTextSpan.textContent = config.placeholder;
-                selectedTextSpan.classList.add('placeholder');
-            } else if (totalItems > 0 && selectedValues.length === totalItems) {
-                 let allSelectedText = `All ${config.placeholder.replace('Select ', '')}`;
-                 if (!allSelectedText.toLowerCase().includes('selected')) { 
-                    allSelectedText += ' Selected';
-                 }
-                 selectedTextSpan.textContent = allSelectedText;
-                 selectedTextSpan.classList.remove('placeholder');
-            } else if (selectedValues.length <= 2) { 
-                selectedTextSpan.textContent = selectedDisplayTexts.join(', ');
-                selectedTextSpan.classList.remove('placeholder');
-            } else { 
-                let itemType = config.placeholder.replace('Select ', '');
-                if (itemType.endsWith('s') && selectedValues.length === 1) { 
-                     itemType = itemType.substring(0, itemType.length -1);
-                } else if (!itemType.endsWith('s') && selectedValues.length > 1) { 
-                    // Special handling for "FOMOBO" to avoid "FOMOBOS"
-                    if (itemType.toUpperCase() !== 'FOMOBO') {
-                        itemType += 's';
-                    }
-                }
-                selectedTextSpan.textContent = `${selectedValues.length} ${itemType} Selected`;
-                selectedTextSpan.classList.remove('placeholder');
-            }
-        }
-
-        function onDropdownDataSuccess(data) { 
-            if (data.error) {
-                showMessage('Error loading filter options: ' + data.error, 'error', false);
-                allFilterConfigs.filter(c => c.dataSource !== 'employeeExportFields').forEach(config => {
-                    const dropdown = document.getElementById(config.dropdownId);
-                    if(dropdown) dropdown.innerHTML = '<p class="loading-text">Error loading options.</p>';
-                });
-                return;
-            }
-            
-            allFilterConfigs.filter(c => c.dataSource !== 'employeeExportFields').forEach(config => {
-                populateCustomSelectCheckboxGroup(config, data[config.dataKey]);
-                updateCustomSelectTriggerText(config); 
-            });
-            
-            showMessage('Filter options loaded.', 'success');
-        }
-
-        function onDropdownDataFailure(error) { 
-            showMessage('Failed to load filter options: ' + error.message, 'error', false);
-            allFilterConfigs.filter(c => c.dataSource !== 'employeeExportFields').forEach(config => {
-                const dropdown = document.getElementById(config.dropdownId);
-                if(dropdown) dropdown.innerHTML = '<p class="loading-text">Failed to load options.</p>';
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const employeeDataConfig = allFilterConfigs.find(c => c.dataSource === 'employeeExportFields');
-            if (employeeDataConfig) {
-                populateCustomSelectCheckboxGroup(employeeDataConfig, employeeExportFields);
-                updateCustomSelectTriggerText(employeeDataConfig);
-            }
-            
-            initializeCustomSelectCheckboxes(); 
-
-            showMessage('Loading filter options...', 'info', false);
-
-            if (typeof google !== "undefined" && google.script && google.script.run) {
-                google.script.run
-                    .withSuccessHandler(onDropdownDataSuccess)
-                    .withFailureHandler(onDropdownDataFailure)
-                    .getDropdownOptions(); 
+            if (selectedFields.length > 0) {
+              const headersOnlyData = [selectedFields];
+              downloadCSV(headersOnlyData, downloadFilename);
+              userMessage += " Attempted to download a CSV with selected headers only.";
             } else {
-                showMessage('Google Script environment not found. Cannot load filter options.', 'error', false);
-                 allFilterConfigs.filter(c => c.dataSource !== 'employeeExportFields').forEach(config => {
-                    const dropdown = document.getElementById(config.dropdownId);
-                    if(dropdown) dropdown.innerHTML = '<p class="loading-text">Cannot load options.</p>';
-                });
+              userMessage += " No fields were selected to create a fallback header file.";
             }
-        });
+            statusElement.textContent = userMessage;
+          })
+          .getFilteredData(selectedFields); // Call without the filterOptions object
+      }
 
-        function getSelectedCheckboxValues(groupName) {
-            const selected = [];
-            const config = allFilterConfigs.find(c => c.groupName === groupName);
-            if (config) {
-                const dropdown = document.getElementById(config.dropdownId);
-                if (dropdown) {
-                    dropdown.querySelectorAll(`input[name="${groupName}"]:checked`).forEach(checkbox => {
-                        selected.push(checkbox.value);
-                    });
-                }
-            }
-            return selected.join(',');
+      window.onload = function() {
+        loadFields();
+        // Updated initial status message
+        const statusElement = document.getElementById("statusMessage");
+        if (statusElement && !statusElement.textContent) {
+            statusElement.textContent = "Select fields and click 'Download CSV'. Data will be filtered for records with an empty Resign Date.";
         }
-
-        exportForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            allFilterConfigs.forEach(config => {
-                document.getElementById(config.dropdownId).classList.remove('open');
-                document.getElementById(config.triggerId).classList.remove('open');
-                updateCustomSelectTriggerText(config); 
-            });
-
-            showMessage('Processing your request...', 'info', false);
-
-            const selectedExportFields = getSelectedCheckboxValues('employeeDataFields');
-            if (selectedExportFields.length === 0) { 
-                showMessage('Please select at least one "Employee data" field to export.', 'error');
-                return;
-            }
-
-            const dataForPost = {
-                fieldsToExport: selectedExportFields
-            };
-            allFilterConfigs.filter(c => c.dataSource !== 'employeeExportFields').forEach(config => {
-                dataForPost[config.dataKey] = getSelectedCheckboxValues(config.groupName);
-            });
-
-
-            exportButton.disabled = true;
-            exportButton.innerHTML = `
-                <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg> Exporting...`;
-
-            fetch(SCRIPT_URL, {
-                method: 'POST', cache: 'no-cache',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(dataForPost).toString()
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        try { const errData = JSON.parse(text); throw new Error(errData.error || `Server error: ${response.statusText} (Status: ${response.status}). Response: ${text.substring(0,100)}`); }
-                        catch (e) { throw new Error(`Network error or non-JSON error response: ${response.statusText} (Status: ${response.status}). Response: ${text.substring(0,100)}`); }
-                    });
-                }
-                return response.json();
-            })
-            .then(result => {
-                if (result.success && result.fileUrl) { showMessage(`Export successful! File created. Click <a href="${result.fileUrl}" target="_blank">here to open</a>.`, 'success', false); }
-                else if (result.success && result.message) { showMessage(result.message, 'warning', false); }
-                else { showMessage(result.error || 'An unknown error occurred during export.', 'error', false); }
-            })
-            .catch(error => { console.error('Error during export fetch:', error); showMessage(`Export failed: ${error.message}`, 'error', false); })
-            .finally(() => { exportButton.disabled = false; exportButton.innerHTML = 'Export Active Employees'; });
-        });
-
-        function showMessage(htmlMessage, type = 'info', autoDismiss = true) {
-            messageBox.innerHTML = htmlMessage;
-            messageBox.classList.remove('message-box-success', 'message-box-error', 'message-box-warning', 'message-box-info');
-            const typeToClass = { success: 'message-box-success', error: 'message-box-error', warning: 'message-box-warning', info: 'message-box-info' };
-            messageBox.classList.add(typeToClass[type] || typeToClass.info);
-            messageBox.classList.add('visible');
-            if (autoDismissTimer) clearTimeout(autoDismissTimer);
-            if (autoDismiss) { autoDismissTimer = setTimeout(() => { messageBox.classList.remove('visible'); }, 7000); }
-        }
-        let autoDismissTimer = null;
-        
-        function resetFormAndState() {
-            exportForm.reset(); 
-            
-            allFilterConfigs.forEach(config => {
-                const dropdown = document.getElementById(config.dropdownId);
-                dropdown.querySelectorAll(`input[type="checkbox"]`).forEach(checkbox => { checkbox.checked = false; }); 
-                const searchInput = dropdown.querySelector('.search-input');
-                if (searchInput) {
-                    searchInput.value = ''; 
-                    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-                }
-                updateCustomSelectGroupSelectAllState(config); 
-                updateCustomSelectTriggerText(config);      
-                dropdown.classList.remove('open');          
-                document.getElementById(config.triggerId).classList.remove('open');
-            });
-
-            messageBox.classList.remove('visible');
-            if (autoDismissTimer) clearTimeout(autoDismissTimer);
-            exportButton.disabled = false; exportButton.innerHTML = 'Export Active Employees';
-        }
+      };
     </script>
-</body>
+  </head>
+  <body>
+    <h2>Select Fields to Download</h2>
+    <form id="fields">
+      </form>
+    
+    <button type="button" onclick="handleDownload()">Download CSV</button>
+    <p id="statusMessage">Initializing...</p>
+  </body>
 </html>
+
+
+<!-- Code.gs -->
+ <!-- //******************************************************************
+// ***** CONFIGURATION: Set your target sheet name here *****
+//******************************************************************
+const TARGET_SHEET_NAME = "MD"; // <--- IMPORTANT: Change this!
+const RESIGN_DATE_COLUMN_NAME = "Resign Date";      // <--- CONFIRM OR CHANGE THIS!
+const COLUMNS_TO_EXCLUDE_FROM_SELECTION = [
+  "Employee Active/Not Active",
+  "Resign Date"
+];
+// Add exact header names you want to hide
+// Make sure spelling and case match your sheet headers
+//******************************************************************
+
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile("dataHub")
+    .setTitle("Data Hub - HCIH")
+    .setFaviconUrl('https://cdn.hibank.co.id/hcih/logo-white-HCIH.png');
+}
+
+/**
+ * Helper function to get the target sheet and handle errors if not found.
+ * @return {Sheet} The target Google Sheet object.
+ * @private
+ */
+function getTargetSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(TARGET_SHEET_NAME);
+  if (!sheet) {
+    const errorMessage = "Sheet named '" + TARGET_SHEET_NAME + "' not found. Please check the TARGET_SHEET_NAME constant in Code.gs.";
+    console.error("Server: getTargetSheet_ - " + errorMessage);
+    throw new Error(errorMessage);
+  }
+  // console.log("Server: getTargetSheet_ - Successfully accessed sheet: " + TARGET_SHEET_NAME); // Can be verbose
+  return sheet;
+}
+
+// ... (Keep TARGET_SHEET_NAME, doGet, getTargetSheet_ as they were in the "full code" version)
+// ... (Ensure getHeaders is providing ALL headers you want to be selectable, including "Join Date", "Resign Date")
+
+/**
+ * Gets the headers from the first row of the target sheet.
+ * @return {Array<String>} An array of header strings.
+ */
+function getHeaders() {
+  console.log("Server: getHeaders called for sheet: " + TARGET_SHEET_NAME +
+              ". Excluding columns from selection: " + JSON.stringify(COLUMNS_TO_EXCLUDE_FROM_SELECTION));
+  try {
+    const sheet = getTargetSheet_();
+    if (sheet.getLastColumn() === 0) {
+      console.warn("Server: getHeaders - Sheet '" + TARGET_SHEET_NAME + "' has no columns or is empty.");
+      return [];
+    }
+    const allHeadersFromSheet = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    const allHeadersAsStrings = allHeadersFromSheet.map(String); // Ensure all headers are strings
+
+    // Filter out the columns specified in COLUMNS_TO_EXCLUDE_FROM_SELECTION
+    const selectableHeaders = allHeadersAsStrings.filter(header => !COLUMNS_TO_EXCLUDE_FROM_SELECTION.includes(header));
+
+    console.log("Server: getHeaders - Original headers from sheet: " + JSON.stringify(allHeadersAsStrings));
+    console.log("Server: getHeaders - Selectable headers after exclusion: " + JSON.stringify(selectableHeaders));
+    return selectableHeaders;
+  } catch (e) {
+    console.error("Server: Error in getHeaders: " + e.toString() + (e.stack ? " Stack: " + e.stack : ""));
+    throw e; // Re-throw to be caught by client's withFailureHandler
+  }
+}
+
+
+/**
+ * Gets filtered data from the target sheet.
+ * Can filter rows where Resign Date is null/empty if specified in filterOptions.
+ * Converts null cell values to empty strings and Date objects to 'YYYY-MM-DD' strings.
+ * @param {Array<String>} selectedFields An array of header names to include.
+ * @param {Object} filterOptions An object with filter preferences (e.g., { resignDateIsNull: true }).
+ * @return {Array<Array<String|Number|Boolean>>} A 2D array of data, including headers as the first row.
+ */
+function getFilteredData(selectedFields) { // filterOptions parameter removed
+  console.log("Server: getFilteredData called with selectedFields: " + JSON.stringify(selectedFields) +
+              ". 'Resign Date is null' filter is ALWAYS APPLIED for column: '" + RESIGN_DATE_COLUMN_NAME + "'." +
+              " Sheet: " + TARGET_SHEET_NAME);
+  try {
+    const sheet = getTargetSheet_();
+    const dataRange = sheet.getDataRange();
+
+    if (!dataRange || dataRange.getNumRows() === 0) {
+        console.warn("Server: No data range found or sheet is empty. Sheet: " + TARGET_SHEET_NAME + ". Returning [].");
+        return [];
+    }
+    const allSheetData = dataRange.getValues();
+    console.log("Server: Full sheet data retrieved. Number of rows (including header): " + allSheetData.length);
+
+    if (!allSheetData || allSheetData.length === 0) {
+      console.warn("Server: Sheet data array is empty after getValues(). Returning [].");
+      return [];
+    }
+
+    const headers = allSheetData[0].map(String);
+    console.log("Server: Headers extracted from sheet data: " + JSON.stringify(headers));
+
+    if (!Array.isArray(headers)) {
+        console.error("Server: Headers row is not an array. headers: " + JSON.stringify(headers) + ". Returning [].");
+        return [];
+    }
+
+    // --- Start: Default filter for Resign Date is null/empty ---
+    console.log("Server: Applying default filter: rows where '" + RESIGN_DATE_COLUMN_NAME + "' is null/empty.");
+    const resignDateColumnIndex = headers.indexOf(RESIGN_DATE_COLUMN_NAME);
+    let dataAfterResignDateFilter = allSheetData;
+
+    if (resignDateColumnIndex === -1) {
+      console.warn("Server: DEFAULT FILTER WARNING - Column '" + RESIGN_DATE_COLUMN_NAME + "' not found in headers. The 'Resign Date is null' default filter CANNOT be applied. Proceeding with all rows for selected columns.");
+      // If this filter is critical, you might want to throw an error or return an empty array:
+      // throw new Error("Configuration Error: The column '" + RESIGN_DATE_COLUMN_NAME + "' required for default filtering was not found.");
+      // Or return an empty dataset to indicate failure of the default filter:
+      // return [headers.map(h => selectedFields.includes(h) ? h : undefined).filter(h => h)]; // Or just []
+    } else {
+      const headerRow = allSheetData[0]; // Keep the header row
+      const dataRowsOnly = allSheetData.slice(1); // Get only data rows to filter
+
+      const filteredDataRows = dataRowsOnly.filter(row => {
+        const resignDateValue = row[resignDateColumnIndex];
+        return resignDateValue === null || typeof resignDateValue === 'undefined' || String(resignDateValue).trim() === "";
+      });
+      dataAfterResignDateFilter = [headerRow, ...filteredDataRows];
+      console.log("Server: After default 'Resign Date is null' filter, rows: " + dataAfterResignDateFilter.length + " (incl. header).");
+    }
+    // --- End: Default filter ---
+
+    // Now, select columns based on selectedFields from the (now row-filtered) dataAfterResignDateFilter
+    const selectedIndexes = selectedFields.map(field => headers.indexOf(String(field)));
+    const validSelectedIndexes = selectedIndexes.filter(index => index !== -1);
+    console.log("Server: validSelectedIndexes for column projection: " + JSON.stringify(validSelectedIndexes));
+
+    if (selectedFields.length > 0 && validSelectedIndexes.length === 0) {
+      console.warn("Server: None of the selectedFields were found in the sheet headers. Returning [].");
+      return [];
+    }
+    
+    let filteredDataByColumn = dataAfterResignDateFilter.map(row => {
+      if (!Array.isArray(row)) {
+          console.warn("Server: Encountered a data row that is not an array during column projection: " + JSON.stringify(row));
+          return validSelectedIndexes.map(() => "");
+      }
+      return validSelectedIndexes.map(index => row[index]);
+    });
+    console.log("Server: Data after column selection. Rows: " + filteredDataByColumn.length);
+
+    const processedFinalData = filteredDataByColumn.map(row => {
+      return row.map(cell => {
+        if (cell === null) return "";
+        if (cell instanceof Date) {
+          try {
+            let year = cell.getFullYear();
+            let month = ('0' + (cell.getMonth() + 1)).slice(-2);
+            let day = ('0' + cell.getDate()).slice(-2);
+            return `${year}-${month}-${day}`;
+          } catch (dateErr) {
+            console.warn("Server: Error formatting date cell:", cell, dateErr);
+            return String(cell);
+          }
+        }
+        return cell;
+      });
+    });
+
+    if (processedFinalData.length > 0) {
+      console.log("Server: Sample of processedFinalData (first row, likely headers): " + JSON.stringify(processedFinalData[0]));
+    }
+    console.log("Server: Returning processedFinalData.");
+    return processedFinalData;
+
+  } catch (e) {
+    console.error("Server: CRITICAL Error in getFilteredData: " + e.toString() + (e.stack ? " Stack: " + e.stack : ""));
+    if (!(e instanceof Error)) {
+        console.error("Server: Caught object that is not an Error instance: " + JSON.stringify(e));
+    }
+    throw e;
+  }
+} -->
