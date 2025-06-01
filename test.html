@@ -516,17 +516,19 @@
         }
 
         /* Odd cards: letter box uses secondary color (orange) */
-        /* This applies to the .value-letter-box in both normal and expanded states for odd children */
-        .working-character-section .row > [class*="col-"]:nth-child(odd) .value-letter-box {
+        .working-character-section .row > .col-md:nth-child(odd) .value-letter-box,
+        .working-character-section .row > .col-sm-4:nth-child(odd) .value-letter-box,
+        .working-character-section .row > .col-6:nth-child(odd) .value-letter-box {
             color: var(--secondary-color); /* Orange */
         }
 
         /* Even cards: letter box uses primary color (teal) */
-        /* This applies to the .value-letter-box in both normal and expanded states for even children */
-        .working-character-section .row > [class*="col-"]:nth-child(even) .value-letter-box {
+        .working-character-section .row > .col-md:nth-child(even) .value-letter-box,
+        .working-character-section .row > .col-sm-4:nth-child(even) .value-letter-box,
+        .working-character-section .row > .col-6:nth-child(even) .value-letter-box {
             color: var(--primary-color); /* Teal */
         }
-
+        
         /* Title of expanded card in Working Character section remains primary color (teal) */
         .working-character-section .value-card.expanded h4 { 
             color: var(--primary-color); /* Teal */
@@ -859,8 +861,7 @@
         <div class="container">
             <h2 class="text-center mb-5">Our Working Character</h2>
             <div class="row g-4 justify-content-center" id="working-character-grid">
-                    <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="fast"> <div class="value-letter-box">F</div>
+                    <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="fast"> <div class="value-letter-box">F</div>
                         <div class="value-content-box">
                             <h4>Digital <strong>F</strong>irst</h4>
                             <div class="value-description">
@@ -869,8 +870,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="innovative">
+                <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="innovative">
                         <div class="value-letter-box">I</div>
                         <div class="value-content-box">
                             <h4><strong>I</strong>nnovative</h4>
@@ -880,8 +880,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="reliable"> <div class="value-letter-box">R</div>
+                <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="reliable"> <div class="value-letter-box">R</div>
                         <div class="value-content-box">
                             <h4><strong>R</strong>elationship-Building & Customer Centric</h4>
                             <div class="value-description">
@@ -890,8 +889,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="synergy"> <div class="value-letter-box">S</div>
+                <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="synergy"> <div class="value-letter-box">S</div>
                         <div class="value-content-box">
                             <h4><strong>S</strong>trategic Focus</h4>
                             <div class="value-description">
@@ -900,8 +898,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="trustworthy"> <div class="value-letter-box">T</div>
+                <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="trustworthy"> <div class="value-letter-box">T</div>
                         <div class="value-content-box">
                             <h4><strong>T</strong>rust, Respect, & Accountable</h4>
                             <div class="value-description">
@@ -1612,3 +1609,8 @@
     </script>
 </body>
 </html>
+```
+
+I've made the requested changes to the "Our Working Character" section in the Canvas. The column classes for the cards in that section have been updated from `col-md-2` to `col-md`. This change should provide more horizontal space for the card content on medium-sized screens and up, helping the longer captions for "R" and "T" to fit on a single line.
+
+The CSS for the odd/even letter colors in the "Our Working Character" section has also been updated to correctly target the new `col-md` cla
