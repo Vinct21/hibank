@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
@@ -12,13 +13,17 @@
             --primary-color: #176980;
             --secondary-color: #D15B28;
             --bg-gradient: #176980; /* Background for the body and hero section */
+            --text-muted-custom: #6c757d; /* For footer text */
+            --footer-bg-color: #f8f9fa; /* Light background for footer */
+            --footer-border-color: #e9ecef;
+            --biru-tua: #1F2855;
         }
 
         body {
             font-family: 'Jost', sans-serif;
             overflow-x: hidden;
             margin: 0;
-            padding: 0;
+            padding-top: 0;
             background: var(--bg-gradient); /* Ensure body background is set */
         }
 
@@ -33,23 +38,38 @@
             opacity: 0.8;
         }
 
+        /* Navbar Specific Styles */
+        /* Navbar Specific Styles */
         .navbar {
+            font-family: 'Sora', sans-serif; /* Font family applied directly to navbar */
             background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
             backdrop-filter: blur(10px); /* Frosted glass effect */
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding-top: 0.8rem;
             padding-bottom: 0.8rem;
-            transition: top 0.3s ease-in-out; /* This creates the smooth transition */
+            transition: top 0.3s ease-in-out; /* Smooth transition for hiding/showing */
         }
 
         .navbar.navbar-hidden {
-            top: -100px; 
+            top: -100px; /* Adjust this value if navbar height is different, to hide it completely */
         }
 
-        .navbar-brand {
+        .navbar-brand-logo {
+            width: 50px;
+            margin-right: 10px;
+            border-radius: 0.25rem; /* Optional: slightly rounded corners for the logo */
+        }
+
+        .navbar-brand-text {
             color: var(--primary-color);
-            font-weight: 600;
-            font-size: 1.5rem; /* Responsive font size */
+            font-weight: 500; /* This already makes it bold, <strong> tag reinforces semantic meaning */
+            font-size: 1.4rem; /* Adjusted for balance */
+            /* font-family: 'Jost', sans-serif; /* Ensure font is inherited or explicitly set */
+        }
+
+        .navbar-brand-text .brand-acronym {
+            color: var(--secondary-color);
+            font-weight: 600; /* Ensure it remains bold if needed, or adjust as per strong tag */
         }
 
         .nav-link {
@@ -59,6 +79,8 @@
             padding-left: 0.8rem !important;
             padding-right: 0.8rem !important;
             position: relative;
+            border-radius: 0.25rem; /* Slight rounding for nav links */
+            /* font-family: 'Jost', sans-serif; /* Ensure font is inherited or explicitly set */
         }
 
         .nav-link > span {
@@ -66,18 +88,20 @@
             display: inline-block;
         }
 
-        .nav-link:not(.auth-btn) > span::after {
+        .nav-link:not(.auth-btn) > span::after { /* Assuming .auth-btn might be a button-styled link */
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
             bottom: -5px;
-            left: 0;
+            left: 0; /* Changed from 50% */
+            /* transform: translateX(-50%); */ /* Removed transform */
             background-color: var(--secondary-color);
             transition: width 0.3s ease;
         }
 
-        .nav-link:not(.auth-btn):hover > span::after {
+        .nav-link:not(.auth-btn):hover > span::after,
+        .nav-link.active:not(.auth-btn) > span::after {
             width: 100%;
         }
 
@@ -86,29 +110,37 @@
             color: var(--secondary-color) !important;
         }
 
-        .dropdown-item:hover {
-            color: var(--secondary-color);
-        }
-
         .dropdown-menu {
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 1px solid rgba(0,0,0,0.05);
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
+            /* font-family: 'Jost', sans-serif; /* Ensure font is inherited or explicitly set for dropdown items */
         }
+
         .dropdown-item {
             font-weight: 500;
             padding: 0.5rem 1.2rem;
             transition: background-color 0.2s ease, color 0.2s ease;
+            border-radius: 0.25rem; /* Slight rounding for dropdown items */
+            /* font-family: 'Jost', sans-serif; /* Ensure font is inherited or explicitly set */
         }
-        .dropdown-item:hover {
-            background-color: rgba(209, 91, 40, 0.05); /* Light orange tint on hover */
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            color: var(--secondary-color);
+            background-color: rgba(209, 91, 40, 0.05); /* Light orange tint on hover/focus */
         }
+        .dropdown-item.active {
+             color: white;
+             background-color: var(--secondary-color);
+        }
+
 
         .nav-item.dropdown > .nav-link.dropdown-toggle::after {
             content: '\f078'; /* Font Awesome caret down */
-            font-family: 'Font Awesome 6 Free';
+            font-family: 'Font Awesome 6 Free'; /* This should remain for the icon */
             font-weight: 900;
             display: inline-block;
             margin-left: 0.35em;
@@ -116,9 +148,29 @@
             border: none; /* Remove default Bootstrap arrow */
             transition: transform 0.3s ease;
         }
+
         .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
             transform: rotate(180deg); /* Rotate arrow when dropdown is open */
         }
+
+        /* Responsive adjustments for navbar */
+        @media (max-width: 991.98px) { /* lg breakpoint */
+            .navbar-brand-text {
+                font-size: 1.2rem;
+            }
+            .navbar-nav {
+                margin-top: 1rem;
+            }
+            .nav-link {
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+            }
+        }
+         @media (max-width: 768px) {
+            body {
+                padding-top: 70px; /* Adjust if navbar height changes on mobile */
+            }
+         }
 
         .hero-section {
             min-height: 100vh; /* Full viewport height */
@@ -161,13 +213,13 @@
         }
 
         .hero-title {
-            font-size: 3.2rem; 
+            font-size: 1.8rem; 
             font-weight: 600;
             margin-bottom: 1.5rem;
         }
 
         .hero-text {
-            font-size: 1.2rem; 
+            font-size: 0.8rem; 
             opacity: 0.9;
             margin-bottom: 2rem;
         }
@@ -213,7 +265,7 @@
                  padding-right: 15px;
             }
             .hero-title {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
             .hero-text {
                 font-size: 1.1rem;
@@ -443,6 +495,39 @@
             color: #333; 
         }
 
+        /* START: Custom Color Sync for Culture Section with Biru Tua */
+        .culture-section h2 {
+            color: var(--biru-tua); /* Biru Tua: #1F2855 */
+        }
+
+        .culture-section .value-letter-box { /* Applies to non-expanded card letter in Culture section */
+            color: var(--biru-tua); /* Biru Tua: #1F2855 */
+        }
+        
+        .culture-section .value-card.expanded .value-letter-box { /* Applies to expanded card letter in Culture section */
+            color: var(--biru-tua); /* Biru Tua: #1F2855 */
+        }
+
+        .culture-section .value-card.expanded h4 { /* Applies to expanded card title in Culture section */
+            color: var(--biru-tua); /* Biru Tua: #1F2855 */
+        }
+
+        /* Ensure "Our Working Character" section uses its original/default styling */
+        /* (These will override the generic .value-card styles if needed, or confirm defaults) */
+        .working-character-section h2 {
+            color: #333; /* Default heading color */
+        }
+        .working-character-section .value-letter-box { /* Non-expanded card letter */
+            color: var(--secondary-color); /* Original orange */
+        }
+        .working-character-section .value-card.expanded .value-letter-box { /* Expanded card letter */
+            color: var(--secondary-color); /* Original orange */
+        }
+        .working-character-section .value-card.expanded h4 { /* Expanded card title */
+            color: var(--primary-color); /* Original teal */
+        }
+        /* END: Custom Color Sync */
+
 
         .error-message {
             color: #f8d7da;
@@ -524,30 +609,60 @@
             font-weight: 500;
         }
 
-
-        footer.bg-white {
+        /* Footer Specific Styles */
+        .site-footer {
+            font-family: 'Sora', sans-serif; /* Changed font family to Sora */
+            background-color: var(--footer-bg-color);
             padding-top: 3rem;
             padding-bottom: 3rem;
-            border-top: 1px solid #e9ecef; 
+            border-top: 1px solid var(--footer-border-color);
+            color: var(--text-muted-custom);
+            font-size: 0.9rem; /* Slightly smaller font for footer */
         }
-        footer h5, footer h6 {
+
+        .site-footer h5, .site-footer h6 {
             color: var(--primary-color);
             font-weight: 600;
+            margin-bottom: 1rem;
         }
-        footer .text-muted {
-            color: #6c757d !important; 
-            font-size: 0.9rem;
+
+        .site-footer p {
+            margin-bottom: 0.5rem;
         }
-        footer .social-links a {
-            color: var(--primary-color);
+
+        .site-footer .list-unstyled a {
+            color: var(--text-muted-custom);
+            text-decoration: none;
             transition: color 0.3s ease;
         }
-        footer .social-links a:hover {
+
+        .site-footer .list-unstyled a:hover,
+        .site-footer .list-unstyled a:focus {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .site-footer .social-links a {
+            color: var(--primary-color);
+            font-size: 1.25rem; /* Slightly larger social icons */
+            margin-right: 0.75rem;
+            transition: color 0.3s ease;
+        }
+        .site-footer .social-links a:last-child {
+            margin-right: 0;
+        }
+
+        .site-footer .social-links a:hover,
+        .site-footer .social-links a:focus {
             color: var(--secondary-color);
         }
-        footer .list-unstyled a.text-muted:hover {
-            color: var(--secondary-color) !important;
-            text-decoration: underline !important;
+
+        .site-footer hr {
+            border-top-color: var(--footer-border-color);
+        }
+
+        .site-footer .copyright-text {
+            color: var(--text-muted-custom);
         }
 
         .modal-header {
@@ -592,27 +707,46 @@
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <img src="https://cdn.hibank.co.id/hcih/hi-by-hibank-logo.png" alt="Logo" loading="lazy" style="width: 50px; margin-right: 10px;"  onerror="this.onerror=null;">
-            <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand d-flex align-items-center" href="#"> <img src="https://cdn.hibank.co.id/hcih/logo-HCIH.png"
+                     alt="Human Capital Innovation Hub Logo"
+                     class="navbar-brand-logo"
+                     onerror="this.onerror=null; this.src='https://placehold.co/50x50/176980/FFFFFF?text=Logo';">
+                <span class="navbar-brand-text"><strong>Human Capital Innovation Hub <span class="brand-acronym">(HCIH)</span></strong></span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#"><span>Home</span></a></li>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><span>Home</span></a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span>Services</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
-                            <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_top">Loan Simulation</a></li>
-                            </ul>
+                            <li><a class="dropdown-item" href="loan_simulation.html">Loan Simulation</a></li>
+                            <li><a class="dropdown-item" href="internal_mobility.html">Internal Mobility Hub</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="all_services.html">All Services</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec" target="_top"><span>HC hiro</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx-HGsao6BRcWDTYxkfY8Xdeua8VSbhKgS0V1jNN2EOpnRInw6EOsNKMp1IiL-FRTLY_w/exec" target="_top"><span>Gallery</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" target="_top"><span>Policy</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a></li>
-                </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="hc_hiro.html"><span>Your HC</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="gallery.html"><span>Life@hibank</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="policy.html"><span>Policy</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="faq.html"><span>FAQ</span></a>
+                    </li>
+                    </ul>
             </div>
         </div>
     </nav>
@@ -627,9 +761,15 @@
                         </div>
                     </div>
 
-                    <h1 class="hero-title">Human Capital Innovation Hub</h1>
-                    <p class="hero-text">Your centralized platform for managing and developing human capital. We streamline employee management, facilitate career growth, and optimize workforce potential through innovative digital solutions.</p>
-                    <a href="#services" class="btn btn-primary btn-lg">Discover Services</a>
+                    <h2 class="hero-title">Human Capital Innovation Hub</h2>
+                    <p class="hero-text">Welcome to HCIH – Human Capital Innovation Hub</p>
+                    <p class="hero-text">
+                    Your all-in-one hub for all Human Capital service at Hibank.
+                    Experience a smarter, faster way to manage HC services; From accessing policies, employees dashboard, 
+                    benefit simulation, HCIH is designed to support you at every step. Plus, meet HIRA, our friendly chatbot — 
+                    always ready to help hiro find answers, solve issues, and navigate HC services with ease.</p>
+                    <p class="hero-text">One hub. Endless support. All for hiro’s seamless experience — powered by Human Capital</p>
+                    <a href="#services" class="btn btn-primary btn-lg">See What’s Inside</a>
                 </div>
                 </div>
         </div>
@@ -637,7 +777,7 @@
 
     <section class="culture-section">
         <div class="container">
-            <h2 class="text-center mb-5">Our Culture (AKHLAK)</h2>
+            <h2 class="text-center mb-5">Our Culture</h2>
             <div class="row g-4 justify-content-center" id="culture-grid">
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="value-card" data-value="amanah">
@@ -711,7 +851,7 @@
 
     <section class="working-character-section">
         <div class="container">
-            <h2 class="text-center mb-5">Our Working Character (FIRST)</h2>
+            <h2 class="text-center mb-5">Our Working Character</h2>
             <div class="row g-4 justify-content-center" id="working-character-grid">
                  <div class="col-md-2 col-sm-4 col-6">
                     <div class="value-card" data-value="fast"> <div class="value-letter-box">F</div>
@@ -823,49 +963,54 @@
         </div>
     </section>
     
-    <footer class="bg-white py-5">
-        <div class="container">
+    <footer class="site-footer mt-auto"> <div class="container">
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6">
-                    <h5 class="mb-3">Human Capital Innovation Hub</h5>
-                    <p class="text-muted mb-3">Pioneering digital solutions for human capital development and management.</p>
-                    <div class="social-links">
-                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
-                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" class="me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                    <h5>Human Capital Innovation Hub (HCIH)</h5>
+                    <p>Pioneering digital solutions for human capital development and management.</p>
+                    <div class="social-links mt-3">
+                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                         </div>
                 </div>
+
                 <div class="col-lg-2 col-md-6">
-                    <h6 class="mb-3 fw-bold">Quick Links</h6>
+                    <h6>Quick Links</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec" class="text-muted text-decoration-none" target="_top">HC hiro</a></li>
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx-HGsao6BRcWDTYxkfY8Xdeua8VSbhKgS0V1jNN2EOpnRInw6EOsNKMp1IiL-FRTLY_w/exec" class="text-muted text-decoration-none" target="_top">Gallery</a></li>
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" class="text-muted text-decoration-none" target="_top">Policy</a></li>
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" class="text-muted text-decoration-none" target="_top">FAQ</a></li>
+                        <li><a href="hc_hiro.html">Your HC</a></li>
+                        <li><a href="gallery.html">Life@hibank</a></li>
+                        <li><a href="policy.html">Policy</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
                     </ul>
                 </div>
+
                 <div class="col-lg-2 col-md-6">
-                    <h6 class="mb-3 fw-bold">Our Services</h6>
+                    <h6>Our Services</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" class="text-muted text-decoration-none" target="_top">Loan Simulation</a></li>
-                        <li class="mb-2"><a href="#services" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="More Services">More Coming Soon</a></li>
+                        <li><a href="loan_simulation.html">Loan Simulation</a></li>
+                        <!-- <li><a href="internal_mobility.html">Internal Mobility</a></li>
+                        <li><a href="all_services.html">More Services</a></li> -->
                     </ul>
                 </div>
+
                 <div class="col-lg-4 col-md-6">
-                     <h6 class="mb-3 fw-bold">Contact Us</h6>
-                     <p class="text-muted mb-1">PT Bank Hibank Indonesia</p>
-                     <p class="text-muted mb-1">Rajawali Place, Lantai 22-23<br>
-                                                 Jl. H.R. Rasuna Said Kav. B.4<br>
-                                                 Setiabudi, Jakarta Selatan - 12910</p>
-                     <p class="text-muted">Email: <a href="mailto:humancapital@hibank.co.id" class="text-muted text-decoration-none">humancapital@hibank.co.id</a></p>
+                    <h6>Contact Us</h6>
+                    <p class="mb-1">PT Bank Hibank Indonesia</p>
+                    <p class="mb-1">Rajawali Place, Lantai 22-23<br>
+                                    Jl. H.R. Rasuna Said Kav. B.4<br>
+                                    Setiabudi, Jakarta Selatan - 12910</p>
+                    <p>Email: <a href="mailto:humancapital@hibank.co.id">humancapital@hibank.co.id</a></p>
                 </div>
             </div>
             <hr class="my-4">
             <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0 text-muted">&copy; <span id="currentYear"></span> Human Capital Innovation Hub. All rights reserved.</p>
+                <div class="col-md-6 text-md-start">
+                    <p class="mb-0 copyright-text">&copy; <span id="currentYear"></span> Human Capital Innovation Hub. All rights reserved.</p>
                 </div>
-                <div class="col-md-6 text-center text-md-end">
-                    </div>
+                <div class="col-md-6 text-md-end">
+                    <!-- <a href="privacy.html" class="text-muted text-decoration-none me-3">Privacy Policy</a>
+                    <a href="terms.html" class="text-muted text-decoration-none">Terms of Service</a> -->
+                </div>
             </div>
         </div>
     </footer>
@@ -956,6 +1101,110 @@
                     });
                 }
             });
+        });
+
+        // 1. Navbar hiding on scroll
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        const navbarHeight = navbar ? navbar.offsetHeight : 70; // Default to 70px if navbar not found early
+        const scrollThreshold = 5;
+
+        if (navbar) {
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
+                    // Scrolling Down
+                    if (!navbar.classList.contains('navbar-hidden')) {
+                        navbar.classList.add('navbar-hidden');
+                    }
+                } else {
+                    // Scrolling Up or at the top
+                    if (navbar.classList.contains('navbar-hidden')) {
+                        navbar.classList.remove('navbar-hidden');
+                    }
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            }, false);
+        }
+
+        // 2. Auto-close collapsed navbar when a link is clicked or when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarCollapse = document.querySelector('#mainNavbar'); // Ensure this ID matches your navbar collapse div
+
+            if (navbarToggler && navbarCollapse) {
+                // Close on link click
+                const navLinks = navbarCollapse.querySelectorAll('.nav-link, .dropdown-item');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (navbarCollapse.classList.contains('show')) {
+                            // Check if the link is a dropdown toggle, if so, don't close, Bootstrap handles it
+                            if (!link.classList.contains('dropdown-toggle')) {
+                                navbarToggler.click();
+                            }
+                        }
+                    });
+                });
+
+                // Close when clicking outside
+                document.addEventListener('click', function(event) {
+                    const isClickInsideNav = navbarCollapse.contains(event.target);
+                    const isToggler = navbarToggler.contains(event.target);
+                    if (!isClickInsideNav && !isToggler && navbarCollapse.classList.contains('show')) {
+                        navbarToggler.click();
+                    }
+                });
+            }
+
+            // 3. Active Nav Link Highlighter
+            // This script finds the nav link that matches the current page URL and adds 'active' class.
+            const currentPath = window.location.pathname.split("/").pop() || "index.html"; // Get current page filename
+            const navLinksForActiveState = document.querySelectorAll('#mainNavbar .nav-link');
+
+            navLinksForActiveState.forEach(link => {
+                const linkPath = link.getAttribute('href').split("/").pop();
+                if (linkPath === currentPath) {
+                    link.classList.add('active');
+
+                    // If the active link is inside a dropdown, also activate the dropdown toggle
+                    const parentDropdown = link.closest('.nav-item.dropdown');
+                    if (parentDropdown) {
+                        const dropdownToggle = parentDropdown.querySelector('.nav-link.dropdown-toggle');
+                        if (dropdownToggle) {
+                            dropdownToggle.classList.add('active');
+                        }
+                        // Also add active to the dropdown item itself if it's the one matching
+                        if(link.classList.contains('dropdown-item')){
+                            link.classList.add('active');
+                        }
+                    }
+                } else {
+                    link.classList.remove('active'); // Remove active from others
+                     if(link.classList.contains('dropdown-item')){
+                        link.classList.remove('active');
+                    }
+                }
+            });
+             // Special handling for dropdown items to ensure only the correct one is active
+            const activeDropdownItems = document.querySelectorAll('#mainNavbar .dropdown-item');
+            activeDropdownItems.forEach(item => {
+                const itemPath = item.getAttribute('href').split("/").pop();
+                if (itemPath === currentPath) {
+                    item.classList.add('active');
+                     const parentDropdown = item.closest('.nav-item.dropdown');
+                    if (parentDropdown) {
+                        const dropdownToggle = parentDropdown.querySelector('.nav-link.dropdown-toggle');
+                        if (dropdownToggle) {
+                            dropdownToggle.classList.add('active'); // Keep parent toggle active
+                        }
+                    }
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+
         });
 
         // Set current year in footer
@@ -1232,22 +1481,6 @@
                 retryButton.addEventListener('click', fetchUserData);
             }
 
-            const navbarToggler = document.querySelector('.navbar-toggler');
-            const navbarCollapse = document.querySelector('.navbar-collapse');
-            if (navbarToggler && navbarCollapse) {
-                navbarToggler.addEventListener('click', function() {
-                    navbarCollapse.classList.toggle('show');
-                });
-
-                document.addEventListener('click', function(event) {
-                    const isClickInsideNav = navbarCollapse.contains(event.target);
-                    const isToggler = navbarToggler.contains(event.target);
-                    if (!isClickInsideNav && !isToggler && navbarCollapse.classList.contains('show')) {
-                        navbarCollapse.classList.remove('show');
-                    }
-                });
-            }
-
             const comingSoonModalEl = document.getElementById('comingSoonModal');
             if (comingSoonModalEl) {
                 comingSoonModalEl.addEventListener('show.bs.modal', function (event) {
@@ -1376,62 +1609,6 @@
                 });
             }
         });
-
-
-        // Navbar hiding on scroll & scroll animations
-        let lastScrollTop = 0;
-        const navbar = document.querySelector('.navbar');
-        const navbarHeight = navbar ? navbar.offsetHeight : 0; 
-        const scrollThreshold = 5; 
-        const scrollElements = document.querySelectorAll(".animate-on-scroll");
-
-        const elementInView = (el, dividend = 1) => {
-            const elementTop = el.getBoundingClientRect().top;
-            return (
-                elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
-            );
-        };
-
-        const displayScrollElement = (element) => {
-            element.classList.add("is-visible");
-        };
-
-        const handleScrollAnimation = () => {
-            scrollElements.forEach((el) => {
-                if (elementInView(el, 1.15)) { // Trigger animation a bit earlier
-                    displayScrollElement(el);
-                }
-            });
-        };
-
-        if (navbar) { 
-            window.addEventListener('scroll', function() {
-                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-                // Navbar hiding logic
-                if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
-                    if (!navbar.classList.contains('navbar-hidden')) {
-                         navbar.classList.add('navbar-hidden');
-                    }
-                    navbar.classList.remove('navbar-scrolled');
-                } else {
-                    if (navbar.classList.contains('navbar-hidden')) {
-                        navbar.classList.remove('navbar-hidden');
-                    }
-                    if (scrollTop > scrollThreshold) {
-                        navbar.classList.add('navbar-scrolled');
-                    } else {
-                        navbar.classList.remove('navbar-scrolled');
-                    }
-                }
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
-
-                // Scroll animations for sections
-                handleScrollAnimation();
-            }, false);
-        }
-        // Initial check for scroll animations on page load
-        handleScrollAnimation();
 
     </script>
 </body>

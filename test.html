@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        :root {
+            --primary-color: #176980; /* Original primary color (Teal) */
+            --secondary-color: #D15B28; /* Original secondary color (Orange) */
+            --bg-gradient: #176980; /* Background for the body and hero section */
+            --text-muted-custom: #6c757d; /* For footer text */
+            --footer-bg-color: #f8f9fa; /* Light background for footer */
+            --footer-border-color: #e9ecef;
+
+            /* New Colors */
+            --biru-tua: #1F2855;
+            --biru-muda: #0093AD; /* Kept in case needed elsewhere */
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            padding-top: 0;
+            background: var(--bg-gradient); /* Ensure body background is set */
+        }
+
+        #canvas-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Ensure it's behind all content */
+            filter: blur(2px);
+            opacity: 0.8;
+        }
+
+        /* Navbar Specific Styles */
+        .navbar {
+            font-family: 'Sora', sans-serif; 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px); 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding-top: 0.8rem;
+            padding-bottom: 0.8rem;
+            transition: top 0.3s ease-in-out; 
+        }
+
+        .navbar.navbar-hidden {
+            top: -100px; 
+        }
+
+        .navbar-brand-logo {
+            width: 50px;
+            margin-right: 10px;
+            border-radius: 0.25rem; 
+        }
+
+        .navbar-brand-text {
+            color: var(--primary-color);
+            font-weight: 500; 
+            font-size: 1.4rem; 
+        }
+
+        .navbar-brand-text .brand-acronym {
+            color: var(--secondary-color);
+            font-weight: 600; 
+        }
+
+        .nav-link {
+            color: var(--primary-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding-left: 0.8rem !important;
+            padding-right: 0.8rem !important;
+            position: relative;
+            border-radius: 0.25rem; 
+        }
+
+        .nav-link > span {
+            position: relative;
+            display: inline-block;
+        }
+
+        .nav-link:not(.auth-btn) > span::after { 
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0; 
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:not(.auth-btn):hover > span::after,
+        .nav-link.active:not(.auth-btn) > span::after {
+            width: 100%;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--secondary-color) !important;
+        }
+
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .dropdown-item {
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            border-radius: 0.25rem; 
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            color: var(--secondary-color);
+            background-color: rgba(209, 91, 40, 0.05); 
+        }
+        .dropdown-item.active {
+            color: white;
+            background-color: var(--secondary-color);
+        }
+
+
+        .nav-item.dropdown > .nav-link.dropdown-toggle::after {
+            content: '\f078'; 
+            font-family: 'Font Awesome 6 Free'; 
+            font-weight: 900;
+            display: inline-block;
+            margin-left: 0.35em;
+            vertical-align: 0.05em;
+            border: none; 
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
+            transform: rotate(180deg); 
+        }
+
+        /* Responsive adjustments for navbar */
+        @media (max-width: 991.98px) { 
+            .navbar-brand-text {
+                font-size: 1.2rem;
+            }
+            .navbar-nav {
+                margin-top: 1rem;
+            }
+            .nav-link {
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+            }
+        }
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px; 
+            }
+        }
+
+        .hero-section {
+            min-height: 100vh; 
+            padding-top: 100px; 
+            padding-bottom: 40px; 
+            display: flex;
+            align-items: center; 
+            color: white; 
+            position: relative; 
+            overflow: hidden; 
+            background: transparent; 
+        }
+
+        .hero-content {
+            position: relative; 
+            z-index: 2; 
+        }
+
+        #user-greeting-status-area {
+            min-height: 50px; 
+            position: relative; 
+            z-index: 2; 
+            margin-bottom: 1rem; 
+        }
+
+        #user-greeting-status-area .container {
+            padding-left: 0; 
+            padding-right: 0;
+        }
+
+        #greetingContainer, #typewriterCursor {
+            font-size: 1.6rem; 
+            color: white;
+            font-weight: 500;
+        }
+        #statusMessage {
+            font-size: 0.9rem;
+            color: #ffdddd; 
+            margin-top: 5px;
+        }
+
+        .hero-title {
+            font-size: 1.8rem; 
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-text {
+            font-size: 0.8rem; 
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary, .btn-secondary-custom { 
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px; 
+            color: white; 
+            text-decoration: none; 
+        }
+        .btn-primary:hover, .btn-secondary-custom:hover {
+            background-color: #b94f23; 
+            border-color: #b94f23;
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(209, 91, 40, 0.3); 
+            color: white; 
+        }
+
+
+        @media (max-width: 992px) { 
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            #greetingContainer, #typewriterCursor {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 768px) { 
+            .hero-section {
+                padding-top: 80px; 
+                text-align: center; 
+            }
+            .hero-content {
+                text-align: center; 
+            }
+            #user-greeting-status-area .container {
+                padding-left: 15px; 
+                padding-right: 15px;
+            }
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            .hero-text {
+                font-size: 1.1rem;
+            }
+            #greetingContainer, #typewriterCursor {
+                font-size: 1.3rem;
+            }
+            .value-card {
+                min-height: 120px;
+                margin-bottom: 1rem;
+            }
+            .value-card.expanded {
+                left: 5%;
+                width: 90%;
+                flex-direction: column;
+            }
+            .value-card.expanded .value-letter-box {
+                width: 100%;
+                padding: 1.5rem;
+                border-right: none;
+                border-bottom: 1px solid #ccc;
+            }
+            .value-card.expanded .value-content-box {
+                width: 100%;
+                padding: 1.5rem;
+            }
+            .feature-card {
+                margin-bottom: 1.5rem;
+            }
+            .navbar-nav {
+                margin-top: 1rem; 
+            }
+            .nav-link.auth-btn { 
+                margin: 0.5rem 0;
+                width: 100%;
+            }
+            #feedbackFormModal .col-form-label {
+                text-align: left !important; 
+            }
+        }
+
+        @media (max-width: 576px) { 
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            .hero-text {
+                font-size: 1rem;
+            }
+            #greetingContainer, #typewriterCursor {
+                font-size: 1.2rem;
+            }
+        }
+
+        .features-section {
+            padding: 5rem 0;
+            background: #f8f9fa; 
+        }
+
+        .feature-card {
+            display: block; 
+            text-decoration: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            transition: all 0.3s ease-in-out;
+            color: inherit; 
+            height: 100%; 
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12); 
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.25rem; 
+            margin-bottom: 1rem;
+        }
+
+        #culture-grid, #working-character-grid {
+            transition: all 0.5s ease;
+        }
+
+        .value-card {
+            background: rgba(255, 255, 255, 0.8); 
+            border-radius: 15px;
+            padding: 1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(0, 0, 0, 0.1); 
+            height: 100%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            will-change: transform, opacity;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+        }
+
+        .value-card:hover:not(.expanded) {
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(255, 255, 255, 0.95); 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .value-letter-box { /* Default for all value-letter-box elements */
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--secondary-color); /* Default to orange */
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); 
+            transition: all 0.5s ease;
+        }
+
+        .value-content-box {
+            transition: all 0.5s ease;
+        }
+
+        .value-card h4 { /* Non-expanded card title, default for all */
+            color: #333; 
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 500;
+            transition: all 0.5s ease;
+        }
+
+        .value-description {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+            text-align: left;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #555;
+            transform: translateY(5px);
+            will-change: opacity, transform;
+        }
+
+        .value-card.expanded {
+            position: absolute;
+            left: 2.5%; 
+            width: 95%;
+            max-width: none;
+            margin: 0;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: flex-start;
+            padding: 0;
+            background: #fdfdfd; 
+            border: 1px solid #ddd; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            height: auto; 
+            min-height: 120px; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+            transform-origin: center center;
+        }
+
+        .value-card.expanded .value-letter-box { /* Default for expanded letter box */
+            font-size: 3.5rem;
+            padding: 2.5rem;
+            margin-bottom: 0;
+            border-right: 1px solid #ddd;
+            background: #e9ecef; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            flex-shrink: 0;
+        }
+
+        .value-card.expanded .value-content-box {
+            padding: 2.5rem;
+            text-align: left;
+            flex-grow: 1;
+            width: calc(100% - 150px);
+        }
+
+        .value-card.expanded h4 { /* Default for expanded card title */
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem; 
+            color: var(--primary-color); /* Default to teal */
+        }
+
+        .value-card.expanded .value-description {
+            display: block;
+            opacity: 1;
+            transform: translateY(0); 
+        }
+
+        #culture-grid.expanded-view .value-card:not(.expanded),
+        #working-character-grid.expanded-view .value-card:not(.expanded) {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        #culture-grid.expanded-view,
+        #working-character-grid.expanded-view {
+            min-height: 200px; 
+            position: relative; 
+        }
+
+        .culture-section, .working-character-section {
+            position: relative; 
+            z-index: 1; 
+            padding: 5rem 0; 
+            background-color: white; 
+        }
+        .culture-section h2, .working-character-section h2 { /* Default for both section titles */
+            color: #333; 
+        }
+
+        /* START: Custom Color Sync for Culture Section with Biru Tua */
+        .culture-section h2 {
+            color: var(--biru-tua); 
+        }
+
+        .culture-section .value-letter-box { 
+            color: var(--biru-tua); 
+        }
+        
+        .culture-section .value-card.expanded .value-letter-box { 
+            color: var(--biru-tua); 
+        }
+
+        .culture-section .value-card.expanded h4 { 
+            color: var(--biru-tua); 
+        }
+        /* END: Custom Color Sync for Culture Section */
+
+        /* START: Custom Color Sync for Working Character Section (Odd/Even) */
+        .working-character-section h2 {
+            color: #333; /* Default heading color, not Biru Tua */
+        }
+
+        /* Odd cards: letter box uses secondary color (orange) */
+        /* This applies to the .value-letter-box in both normal and expanded states for odd children */
+        .working-character-section .row > [class*="col-"]:nth-child(odd) .value-letter-box {
+            color: var(--secondary-color); /* Orange */
+        }
+
+        /* Even cards: letter box uses primary color (teal) */
+        /* This applies to the .value-letter-box in both normal and expanded states for even children */
+        .working-character-section .row > [class*="col-"]:nth-child(even) .value-letter-box {
+            color: var(--primary-color); /* Teal */
+        }
+
+        /* Title of expanded card in Working Character section remains primary color (teal) */
+        .working-character-section .value-card.expanded h4 { 
+            color: var(--primary-color); /* Teal */
+        }
+        /* Non-expanded card titles in Working Character section will use the default .value-card h4 style (color: #333) */
+        /* END: Custom Color Sync for Working Character Section */
+
+
+        .error-message {
+            color: #f8d7da;
+            background-color: #721c24;
+            padding: 8px 12px; 
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 0.9rem; 
+        }
+
+        .feedback-section {
+            padding: 5rem 0;
+            background-color: white; 
+            color: #333; 
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .feedback-section h2 {
+            color: var(--primary-color); 
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        .feedback-section p {
+            font-size: 1.1rem;
+            color: #555; 
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #feedbackFormModal .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #feedbackFormModal .modal-header .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        #feedbackFormModal .form-label:not(.textarea-label) { 
+            font-weight: 500;
+            color: #333;
+        }
+        #feedbackFormModal .textarea-label { 
+            font-weight: 500;
+            color: #333;
+            display: block; 
+            margin-bottom: 0.5rem;
+        }
+
+        #feedbackFormModal .form-control,
+        #feedbackFormModal .form-select {
+            border-radius: 0.5rem;
+            border: 1px solid #ced4da;
+        }
+        #feedbackFormModal .form-control:focus,
+        #feedbackFormModal .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(209, 91, 28, 0.25);
+        }
+        #feedbackFormModal #feedbackSubmitBtn {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        #feedbackFormModal #feedbackSubmitBtn:hover {
+            background-color: #b94f23;
+            border-color: #b94f23;
+        }
+        #feedbackFormModal .modal-footer .btn-outline-secondary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        #feedbackFormModal .modal-footer .btn-outline-secondary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #feedbackStatus {
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        /* Footer Specific Styles */
+        .site-footer {
+            font-family: 'Sora', sans-serif; 
+            background-color: var(--footer-bg-color);
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            border-top: 1px solid var(--footer-border-color);
+            color: var(--text-muted-custom);
+            font-size: 0.9rem; 
+        }
+
+        .site-footer h5, .site-footer h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .site-footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        .site-footer .list-unstyled a {
+            color: var(--text-muted-custom);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .site-footer .list-unstyled a:hover,
+        .site-footer .list-unstyled a:focus {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .site-footer .social-links a {
+            color: var(--primary-color);
+            font-size: 1.25rem; 
+            margin-right: 0.75rem;
+            transition: color 0.3s ease;
+        }
+        .site-footer .social-links a:last-child {
+            margin-right: 0;
+        }
+
+        .site-footer .social-links a:hover,
+        .site-footer .social-links a:focus {
+            color: var(--secondary-color);
+        }
+
+        .site-footer hr {
+            border-top-color: var(--footer-border-color);
+        }
+
+        .site-footer .copyright-text {
+            color: var(--text-muted-custom);
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom: none; 
+        }
+        .modal-header .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%); 
+        }
+        .modal-title {
+            font-weight: 500;
+        }
+        .modal-body {
+            padding: 2rem;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        .modal-content {
+            border-radius: 10px; 
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .modal-footer {
+            border-top: none; 
+            justify-content: center; 
+        }
+        .modal-footer .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+        .modal-footer .btn-secondary:hover {
+            background-color: #b94f23; 
+            border-color: #b94f23;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#"> <img src="https://cdn.hibank.co.id/hcih/logo-HCIH.png"
+                    alt="Human Capital Innovation Hub Logo"
+                    class="navbar-brand-logo"
+                    onerror="this.onerror=null; this.src='https://placehold.co/50x50/176980/FFFFFF?text=Logo';">
+                <span class="navbar-brand-text"><strong>Human Capital Innovation Hub <span class="brand-acronym">(HCIH)</span></strong></span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><span>Home</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span>Services</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
+                            <li><a class="dropdown-item" href="loan_simulation.html">Loan Simulation</a></li>
+                            <li><a class="dropdown-item" href="internal_mobility.html">Internal Mobility Hub</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="all_services.html">All Services</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="hc_hiro.html"><span>Your HC</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="gallery.html"><span>Life@hibank</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="policy.html"><span>Policy</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="faq.html"><span>FAQ</span></a>
+                    </li>
+                    </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 hero-content"> <div id="user-greeting-status-area">
+                        <div class="container"> <span id="greetingContainer"></span><span id="typewriterCursor" style="display: none;">|</span>
+                                <p id="statusMessage"></p>
+                                <button id="retryButton" class="btn btn-sm btn-outline-light mt-1" style="display:none;">Retry Authorization</button>
+                        </div>
+                    </div>
+
+                    <h2 class="hero-title">Human Capital Innovation Hub</h2>
+                    <p class="hero-text">Welcome to HCIH – Human Capital Innovation Hub</p>
+                    <p class="hero-text">
+                    Your all-in-one hub for all Human Capital service at Hibank.
+                    Experience a smarter, faster way to manage HC services; From accessing policies, employees dashboard, 
+                    benefit simulation, HCIH is designed to support you at every step. Plus, meet HIRA, our friendly chatbot — 
+                    always ready to help hiro find answers, solve issues, and navigate HC services with ease.</p>
+                    <p class="hero-text">One hub. Endless support. All for hiro’s seamless experience — powered by Human Capital</p>
+                    <a href="#services" class="btn btn-primary btn-lg">See What’s Inside</a>
+                </div>
+                </div>
+        </div>
+    </section>
+
+    <section class="culture-section">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Culture</h2>
+            <div class="row g-4 justify-content-center" id="culture-grid">
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="amanah">
+                        <div class="value-letter-box">A</div>
+                        <div class="value-content-box">
+                            <h4>Amanah</h4>
+                            <div class="value-description">
+                                <p>Memegang teguh kepercayaan yang diberikan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="kompeten">
+                        <div class="value-letter-box">K</div>
+                        <div class="value-content-box">
+                            <h4>Kompeten</h4>
+                            <div class="value-description">
+                                <p>Terus belajar dan mengembangkan kapabilitas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="harmonis">
+                        <div class="value-letter-box">H</div>
+                        <div class="value-content-box">
+                            <h4>Harmonis</h4>
+                            <div class="value-description">
+                                <p>Saling peduli dan menghargai perbedaan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="loyal">
+                        <div class="value-letter-box">L</div>
+                        <div class="value-content-box">
+                            <h4>Loyal</h4>
+                            <div class="value-description">
+                                <p>Berdedikasi dan mengutamakan kepentingan Bangsa dan Negara.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="adaptif">
+                        <div class="value-letter-box">A</div>
+                        <div class="value-content-box">
+                            <h4>Adaptif</h4>
+                            <div class="value-description">
+                                <p>Terus berinovasi dan antusias dalam menggerakkan ataupun menghadapi perubahan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="kolaboratif">
+                        <div class="value-letter-box">K</div>
+                        <div class="value-content-box">
+                            <h4>Kolaboratif</h4>
+                            <div class="value-description">
+                                <p>Membangun kerjasama yang sinergis.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="working-character-section">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Working Character</h2>
+            <div class="row g-4 justify-content-center" id="working-character-grid">
+                    <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="fast"> <div class="value-letter-box">F</div>
+                        <div class="value-content-box">
+                            <h4>Digital <strong>F</strong>irst</h4>
+                            <div class="value-description">
+                                <p>Mengedepankan proses dan produk berbasis digital dalam upaya untuk meningkatkan pengalaman pelanggan dengan Bank.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="innovative">
+                        <div class="value-letter-box">I</div>
+                        <div class="value-content-box">
+                            <h4><strong>I</strong>nnovative</h4>
+                            <div class="value-description">
+                                <p>Adaptif, kreatif, ulet dan berorientasi pada solusi dalam berinovasi.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="reliable"> <div class="value-letter-box">R</div>
+                        <div class="value-content-box">
+                            <h4><strong>R</strong>elationship-Building & Customer Centric</h4>
+                            <div class="value-description">
+                                <p>Berorientasi pada membina hubungan yang baik dengan pelanggan dengan terus berupaya menyediakan produk, proses, dan layanan terbaik bagi pelanggan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="synergy"> <div class="value-letter-box">S</div>
+                        <div class="value-content-box">
+                            <h4><strong>S</strong>trategic Focus</h4>
+                            <div class="value-description">
+                                <p>Fokus pada pemikiran yang strategis dan selangkah lebih maju untuk memastikan keberhasilan inovasi yang diterapkan terhadap kepuasan pelanggan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="value-card" data-value="trustworthy"> <div class="value-letter-box">T</div>
+                        <div class="value-content-box">
+                            <h4><strong>T</strong>rust, Respect, & Accountable</h4>
+                            <div class="value-description">
+                                <p>Menunjukan sikap yang dapat dipertanggungjawabkan dalam bekerja, saling percaya dan saling menghormati antar individu.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="features-section">
+        <div class="container">
+            <h2 class="text-center text-dark mb-5">Our Services</h2>
+            <div class="row g-4">
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_top" class="feature-card text-center">
+                        <i class="fas fa-calculator feature-icon"></i>
+                        <h3 class="feature-title">Loan Simulation</h3>
+                        <p>Calculate and plan your loan with our advanced simulation tools.</p>
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="#" class="feature-card text-center" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="Internal Mobility Hub"> <i class="fas fa-exchange-alt feature-icon"></i>
+                        <h3 class="feature-title">Internal Mobility Hub</h3>
+                        <p>Quick and secure employee transfers across departments.</p>
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="#" class="feature-card text-center" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="PDF Tools"> <i class="fas fa-file-pdf feature-icon"></i>
+                        <h3 class="feature-title">PDF Tools</h3>
+                        <p>Efficient tools for managing and processing PDF documents.</p>
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex align-items-stretch" id="dataHubFeatureContainer" style="display: none;">
+                    <a href="#" class="feature-card text-center" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="Data Hub"> <i class="fas fa-database feature-icon"></i>
+                        <h3 class="feature-title">Data Hub</h3>
+                        <p>Self-service platform for employee data access and export (for authorized personnel).</p>
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="#" class="feature-card text-center" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="Request Center"> <i class="fas fa-tasks feature-icon"></i>
+                        <h3 class="feature-title">Request Center</h3>
+                        <p>One system for managing all HC-related forms and requests.</p>
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <a href="#" class="feature-card text-center" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="Internal Job Board"> <i class="fas fa-briefcase feature-icon"></i>
+                        <h3 class="feature-title">Internal Job Board</h3>
+                        <p>Explore and apply for internal career opportunities across the organization.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="feedback" class="feedback-section">
+        <div class="container">
+            <h2>We Value Your Feedback</h2>
+            <p>Your opinions and suggestions are important to us. Help us improve our services and platform by sharing your thoughts.</p>
+            <button type="button" class="btn btn-secondary-custom btn-lg" data-bs-toggle="modal" data-bs-target="#feedbackFormModal">
+                <i class="fas fa-comments me-2"></i>Provide Feedback
+            </button>
+        </div>
+    </section>
+    
+    <footer class="site-footer mt-auto"> <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5>Human Capital Innovation Hub (HCIH)</h5>
+                    <p>Pioneering digital solutions for human capital development and management.</p>
+                    <div class="social-links mt-3">
+                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6>Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="hc_hiro.html">Your HC</a></li>
+                        <li><a href="gallery.html">Life@hibank</a></li>
+                        <li><a href="policy.html">Policy</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6>Our Services</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="loan_simulation.html">Loan Simulation</a></li>
+                        <!-- <li><a href="internal_mobility.html">Internal Mobility</a></li>
+                        <li><a href="all_services.html">More Services</a></li> -->
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <h6>Contact Us</h6>
+                    <p class="mb-1">PT Bank Hibank Indonesia</p>
+                    <p class="mb-1">Rajawali Place, Lantai 22-23<br>
+                                    Jl. H.R. Rasuna Said Kav. B.4<br>
+                                    Setiabudi, Jakarta Selatan - 12910</p>
+                    <p>Email: <a href="mailto:humancapital@hibank.co.id">humancapital@hibank.co.id</a></p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-md-start">
+                    <p class="mb-0 copyright-text">&copy; <span id="currentYear"></span> Human Capital Innovation Hub. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <!-- <a href="privacy.html" class="text-muted text-decoration-none me-3">Privacy Policy</a>
+                    <a href="terms.html" class="text-muted text-decoration-none">Terms of Service</a> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="comingSoonModal" tabindex="-1" aria-labelledby="comingSoonModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="comingSoonModalLabel"><i class="fas fa-rocket me-2"></i>Launching Soon!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Great things are brewing for the <strong id="modalServiceName">selected service</strong>!</p>
+                    <p>Our team is adding the finishing touches to this exciting new feature. It'll be ready for you very soon!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Got it!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="feedbackFormModal" tabindex="-1" aria-labelledby="feedbackFormModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackFormModalLabel"><i class="fas fa-paper-plane me-2"></i>Share Your Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm">
+                        <div class="row mb-3 align-items-center">
+                            <label for="feedbackEmail" class="col-sm-3 col-form-label text-sm-start">Email</label>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" id="feedbackEmail" placeholder="Enter your email address" required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid email address.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <label for="feedbackType" class="col-sm-3 col-form-label text-sm-start">Feedback Type</label>
+                            <div class="col-sm-9">
+                                <select class="form-select" id="feedbackType" aria-label="Feedback type" required>
+                                    <option selected value="General">General Feedback</option>
+                                    <option value="Technical Issues">Technical Issues</option>
+                                    <option value="Feature Request">Feature Request</option>
+                                    <option value="Compliment">Compliment</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select a feedback type.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedbackMessage" class="form-label textarea-label">Your Message</label>
+                            <textarea class="form-control" id="feedbackMessage" rows="4" placeholder="Tell us what you think..." required></textarea>
+                            <div class="invalid-feedback">
+                                Please enter your message.
+                            </div>
+                        </div>
+                        <div id="feedbackStatus" class="mt-3"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="feedbackSubmitBtn" form="feedbackForm">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 1. Navbar hiding on scroll
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        const navbarHeight = navbar ? navbar.offsetHeight : 70; // Default to 70px if navbar not found early
+        const scrollThreshold = 5;
+
+        if (navbar) {
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
+                    // Scrolling Down
+                    if (!navbar.classList.contains('navbar-hidden')) {
+                        navbar.classList.add('navbar-hidden');
+                    }
+                } else {
+                    // Scrolling Up or at the top
+                    if (navbar.classList.contains('navbar-hidden')) {
+                        navbar.classList.remove('navbar-hidden');
+                    }
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            }, false);
+        }
+
+        // 2. Auto-close collapsed navbar when a link is clicked or when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarCollapse = document.querySelector('#mainNavbar'); // Ensure this ID matches your navbar collapse div
+
+            if (navbarToggler && navbarCollapse) {
+                // Close on link click
+                const navLinks = navbarCollapse.querySelectorAll('.nav-link, .dropdown-item');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (navbarCollapse.classList.contains('show')) {
+                            // Check if the link is a dropdown toggle, if so, don't close, Bootstrap handles it
+                            if (!link.classList.contains('dropdown-toggle')) {
+                                navbarToggler.click();
+                            }
+                        }
+                    });
+                });
+
+                // Close when clicking outside
+                document.addEventListener('click', function(event) {
+                    const isClickInsideNav = navbarCollapse.contains(event.target);
+                    const isToggler = navbarToggler.contains(event.target);
+                    if (!isClickInsideNav && !isToggler && navbarCollapse.classList.contains('show')) {
+                        navbarToggler.click();
+                    }
+                });
+            }
+
+            // 3. Active Nav Link Highlighter
+            const currentPath = window.location.pathname.split("/").pop() || "index.html"; 
+            const navLinksForActiveState = document.querySelectorAll('#mainNavbar .nav-link');
+
+            navLinksForActiveState.forEach(link => {
+                const linkPath = link.getAttribute('href').split("/").pop();
+                if (linkPath === currentPath) {
+                    link.classList.add('active');
+
+                    const parentDropdown = link.closest('.nav-item.dropdown');
+                    if (parentDropdown) {
+                        const dropdownToggle = parentDropdown.querySelector('.nav-link.dropdown-toggle');
+                        if (dropdownToggle) {
+                            dropdownToggle.classList.add('active');
+                        }
+                        if(link.classList.contains('dropdown-item')){
+                            link.classList.add('active');
+                        }
+                    }
+                } else {
+                    link.classList.remove('active'); 
+                    if(link.classList.contains('dropdown-item')){
+                        link.classList.remove('active');
+                    }
+                }
+            });
+            const activeDropdownItems = document.querySelectorAll('#mainNavbar .dropdown-item');
+            activeDropdownItems.forEach(item => {
+                const itemPath = item.getAttribute('href').split("/").pop();
+                if (itemPath === currentPath) {
+                    item.classList.add('active');
+                    const parentDropdown = item.closest('.nav-item.dropdown');
+                    if (parentDropdown) {
+                        const dropdownToggle = parentDropdown.querySelector('.nav-link.dropdown-toggle');
+                        if (dropdownToggle) {
+                            dropdownToggle.classList.add('active'); 
+                        }
+                    }
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+
+        });
+
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // p5.js sketch for background animation
+        let stars = [];
+        let starCount = 70; 
+        let maxDistance = 120; 
+
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent(document.body); 
+            canvas.id('canvas-background'); 
+            for (let i = 0; i < starCount; i++) {
+                stars.push(new Star(random(width), random(height)));
+            }
+            select('#canvas-background').style('z-index', '-1');
+            select('#canvas-background').style('position', 'fixed'); 
+            select('#canvas-background').style('top', '0');
+            select('#canvas-background').style('left', '0');
+        }
+
+        function draw() {
+            clear(); 
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].move();
+                stars[i].show();
+                stars[i].connect(stars);
+            }
+        }
+
+        class Star {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = random(-0.5, 0.5); 
+                this.vy = random(-0.5, 0.5);
+                this.radius = random(1, 3); 
+            }
+
+            move() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < -this.radius) this.x = width + this.radius;
+                if (this.y < -this.radius) this.y = height + this.radius;
+                if (this.x > width + this.radius) this.x = -this.radius;
+                if (this.y > height + this.radius) this.y = -this.radius;
+            }
+
+            show() {
+                noStroke();
+                fill(255, 255, 255, 150); 
+                ellipse(this.x, this.y, this.radius * 2, this.radius * 2);
+            }
+
+            connect(others) {
+                for (let other of others) {
+                    if (other === this) continue;
+                    let d = dist(this.x, this.y, other.x, other.y);
+                    if (d < maxDistance) {
+                        let opacity = map(d, 0, maxDistance, 100, 0); 
+                        stroke(255, 255, 255, opacity);
+                        line(this.x, this.y, other.x, other.y);
+                    }
+                }
+                let dToCursor = dist(this.x, this.y, mouseX, mouseY);
+                if (dToCursor < maxDistance + 50) { 
+                    let cursorOpacity = map(dToCursor, 0, maxDistance + 50, 80, 0);
+                    stroke(255, 255, 255, cursorOpacity);
+                    line(this.x, this.y, mouseX, mouseY);
+                }
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+
+        function initializeCardExpansion(gridId) {
+            const grid = document.getElementById(gridId);
+            if (!grid) return;
+
+            const cards = grid.querySelectorAll('.value-card');
+            let currentlyExpandedCard = null;
+            let isAnimating = false;
+
+            function toggleCard(card, expand) {
+                if (isAnimating && card.classList.contains('expanded') !== expand) return; 
+                isAnimating = true;
+                void card.offsetWidth;
+
+                requestAnimationFrame(() => {
+                    if (expand) {
+                        card.classList.add('expanded');
+                        grid.classList.add('expanded-view');
+                    } else {
+                        card.classList.remove('expanded');
+                        grid.classList.remove('expanded-view');
+                    }
+                    card.addEventListener('transitionend', function onTransitionEnd() {
+                        isAnimating = false;
+                        card.removeEventListener('transitionend', onTransitionEnd);
+                    }, { once: true }); 
+                });
+            }
+
+            cards.forEach(card => {
+                card.addEventListener('click', function(event) {
+                    event.stopPropagation(); 
+                    if (isAnimating) return; 
+
+                    if (currentlyExpandedCard === this) { 
+                        toggleCard(this, false);
+                        currentlyExpandedCard = null;
+                    } else { 
+                        if (currentlyExpandedCard) { 
+                            toggleCard(currentlyExpandedCard, false);
+                        }
+                        setTimeout(() => {
+                            toggleCard(this, true);
+                            currentlyExpandedCard = this;
+                        }, currentlyExpandedCard ? 50 : 0); 
+                    }
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                if (isAnimating) return;
+                if (currentlyExpandedCard && !grid.contains(event.target) && !currentlyExpandedCard.contains(event.target)) {
+                    toggleCard(currentlyExpandedCard, false);
+                    currentlyExpandedCard = null;
+                }
+            }, { passive: true });
+        }
+
+        const greetingContainerElement = document.getElementById('greetingContainer');
+        const typewriterCursorElement = document.getElementById('typewriterCursor');
+        const statusMessageElement = document.getElementById('statusMessage');
+        const retryButton = document.getElementById('retryButton');
+        let greetingInterval;
+
+        function stopGreetingCycle() {
+            if (greetingInterval) {
+                clearInterval(greetingInterval);
+                greetingInterval = null;
+            }
+            if (typewriterCursorElement) typewriterCursorElement.style.display = 'none';
+        }
+
+        function startGreetingCycle(name) {
+            if (!greetingContainerElement || !typewriterCursorElement) {
+                console.warn("Greeting elements not found.");
+                return;
+            }
+            stopGreetingCycle();
+
+            const greetings = [`hi, ${name}!`]; 
+            let currentGreetingIndex = 0;
+            let currentCharIndex = 0;
+            const typingSpeed = 80; 
+
+            greetingContainerElement.textContent = '';
+            typewriterCursorElement.style.display = 'inline';
+
+            function type() {
+                const currentText = greetings[currentGreetingIndex];
+                greetingContainerElement.textContent = currentText.substring(0, currentCharIndex + 1);
+                currentCharIndex++;
+
+                if (currentCharIndex === currentText.length) {
+                    typewriterCursorElement.style.display = 'none'; 
+                    return;
+                }
+                greetingInterval = setTimeout(type, typingSpeed);
+            }
+            type();
+        }
+
+        function fetchUserData() {
+            if (!statusMessageElement || !retryButton || !greetingContainerElement || !typewriterCursorElement) {
+                console.error("One or more UI elements for user status are missing.");
+                return;
+            }
+
+            statusMessageElement.textContent = "Fetching your information...";
+            statusMessageElement.className = ""; 
+            statusMessageElement.style.color = "#ffdddd";
+            statusMessageElement.style.display = 'block'; 
+            retryButton.style.display = 'none';
+            greetingContainerElement.style.display = 'none'; 
+            typewriterCursorElement.style.display = 'none';
+            stopGreetingCycle();
+
+            if (typeof google === 'undefined' || typeof google.script === 'undefined') {
+                console.warn("Google Apps Script environment not found. Using mock data.");
+                window.google = {
+                    script: {
+                        run: {
+                            withSuccessHandler: function(callback) {
+                                this.successCallback = callback;
+                                return this;
+                            },
+                            withFailureHandler: function(callback) {
+                                this.failureCallback = callback;
+                                return this;
+                            },
+                            getUserEmail: function() {
+                                setTimeout(() => {
+                                    this.successCallback({
+                                        isAuthorized: true,
+                                        name: "Guest User",
+                                        email: "guest@example.com",
+                                        joblevel: "Staff" 
+                                    });
+                                }, 1000);
+                            }
+                        }
+                    }
+                };
+            }
+
+            google.script.run
+            .withSuccessHandler(function(response) {
+                statusMessageElement.style.display = 'none';
+                statusMessageElement.textContent = "";
+
+                if (response && response.isAuthorized && response.name) {
+                    greetingContainerElement.style.display = 'inline';
+                    startGreetingCycle(response.name);
+
+                    const dataHubFeatureContainer = document.getElementById('dataHubFeatureContainer');
+                    if (dataHubFeatureContainer) {
+                        if (response.joblevel && response.joblevel.toLowerCase() === 'chief') {
+                            dataHubFeatureContainer.style.display = 'flex';
+                        } else {
+                            dataHubFeatureContainer.style.display = 'none';
+                        }
+                    }
+                } else {
+                    greetingContainerElement.style.display = 'none';
+                    typewriterCursorElement.style.display = 'none';
+                    let message = "Access denied or user information not available.";
+                    if (response && response.error) {
+                        message = response.error;
+                    }
+                    statusMessageElement.textContent = message;
+                    statusMessageElement.className = "error-message";
+                    statusMessageElement.style.display = 'block';
+                    retryButton.style.display = 'inline-block';
+                }
+            })
+            .withFailureHandler(function(error) {
+                stopGreetingCycle();
+                greetingContainerElement.style.display = 'none';
+                typewriterCursorElement.style.display = 'none';
+                statusMessageElement.textContent = "Error: " + error.message + ". Please try again or authorize the script.";
+                statusMessageElement.className = "error-message";
+                statusMessageElement.style.display = 'block';
+                retryButton.style.display = 'inline-block';
+            })
+            .getUserEmail();
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCardExpansion('culture-grid');
+            initializeCardExpansion('working-character-grid');
+            fetchUserData();
+
+            if (retryButton) {
+                retryButton.addEventListener('click', fetchUserData);
+            }
+
+            const comingSoonModalEl = document.getElementById('comingSoonModal');
+            if (comingSoonModalEl) {
+                comingSoonModalEl.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const serviceName = button.getAttribute('data-service-name');
+                    const modalServiceNameElement = comingSoonModalEl.querySelector('#modalServiceName');
+                    if (serviceName) {
+                        modalServiceNameElement.textContent = serviceName;
+                    } else {
+                        modalServiceNameElement.textContent = "This feature";
+                    }
+                });
+            }
+
+            const feedbackForm = document.getElementById('feedbackForm');
+            const feedbackSubmitBtn = document.getElementById('feedbackSubmitBtn');
+            const feedbackStatus = document.getElementById('feedbackStatus');
+            const feedbackModalEl = document.getElementById('feedbackFormModal');
+            
+            const feedbackEmailInput = document.getElementById('feedbackEmail');
+            const feedbackTypeSelect = document.getElementById('feedbackType');
+            const feedbackMessageTextarea = document.getElementById('feedbackMessage');
+
+
+            if (feedbackForm && feedbackSubmitBtn && feedbackStatus && feedbackModalEl) {
+                feedbackForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); 
+                    let isValid = true;
+                    feedbackStatus.innerHTML = ''; 
+
+                    feedbackEmailInput.classList.remove('is-invalid');
+                    if (feedbackEmailInput.value.trim() === '') {
+                        feedbackEmailInput.classList.add('is-invalid');
+                        feedbackEmailInput.nextElementSibling.textContent = 'Please provide an email address.';
+                        isValid = false;
+                    } else {
+                        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailPattern.test(feedbackEmailInput.value.trim())) {
+                            feedbackEmailInput.classList.add('is-invalid');
+                            feedbackEmailInput.nextElementSibling.textContent = 'Please provide a valid email address.';
+                            isValid = false;
+                        }
+                    }
+                    
+                    feedbackTypeSelect.classList.remove('is-invalid');
+                    if (feedbackTypeSelect.value === '') { 
+                        feedbackTypeSelect.classList.add('is-invalid');
+                        isValid = false;
+                    }
+
+                    feedbackMessageTextarea.classList.remove('is-invalid');
+                    if (feedbackMessageTextarea.value.trim() === '') {
+                        feedbackMessageTextarea.classList.add('is-invalid');
+                        isValid = false;
+                    }
+
+                    if (!isValid) {
+                        feedbackStatus.innerHTML = '<div class="alert alert-danger p-2" role="alert">Please fill in all required fields correctly.</div>';
+                        return;
+                    }
+
+                    feedbackSubmitBtn.disabled = true;
+                    feedbackSubmitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+                    feedbackStatus.innerHTML = '<div class="alert alert-info p-2" role="alert">Submitting your feedback...</div>';
+
+                    const formData = {
+                        email: feedbackEmailInput.value.trim(),
+                        category: feedbackTypeSelect.value,
+                        feedbackDetails: feedbackMessageTextarea.value.trim()
+                    };
+
+                    if (typeof google !== 'undefined' && typeof google.script !== 'undefined' && typeof google.script.run !== 'undefined') {
+                        google.script.run
+                            .withSuccessHandler(function(response) {
+                                if (response.success) {
+                                    feedbackStatus.innerHTML = `<div class="alert alert-success p-2" role="alert">${response.message}</div>`;
+                                    feedbackForm.reset();
+                                    setTimeout(() => {
+                                        const modalInstance = bootstrap.Modal.getInstance(feedbackModalEl);
+                                        if (modalInstance) {
+                                            modalInstance.hide();
+                                        }
+                                    }, 2000);
+                                } else {
+                                    feedbackStatus.innerHTML = `<div class="alert alert-danger p-2" role="alert">${response.message || 'An unknown error occurred.'}</div>`;
+                                }
+                                feedbackSubmitBtn.disabled = false;
+                                feedbackSubmitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Feedback';
+                            })
+                            .withFailureHandler(function(error) {
+                                feedbackStatus.innerHTML = `<div class="alert alert-danger p-2" role="alert">Error: ${error.message}. Please try again.</div>`;
+                                feedbackSubmitBtn.disabled = false;
+                                feedbackSubmitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Feedback';
+                                console.error("Apps Script execution error:", error);
+                            })
+                            .submitFeedback(formData);
+                    } else {
+                        console.log("Google Apps Script environment not available. Simulating submission.");
+                        console.log("Feedback Submitted (Simulated):", formData);
+                        setTimeout(() => {
+                            feedbackStatus.innerHTML = '<div class="alert alert-success p-2" role="alert">Thank you! (Simulated submission)</div>';
+                            feedbackForm.reset(); 
+                            feedbackSubmitBtn.disabled = false;
+                            feedbackSubmitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Feedback';
+                            setTimeout(() => {
+                                const modalInstance = bootstrap.Modal.getInstance(feedbackModalEl);
+                                if (modalInstance) {
+                                    modalInstance.hide();
+                                }
+                            }, 2000);
+                        }, 1500);
+                    }
+                });
+
+                feedbackModalEl.addEventListener('hidden.bs.modal', function () {
+                    feedbackForm.reset();
+                    feedbackEmailInput.classList.remove('is-invalid');
+                    feedbackTypeSelect.classList.remove('is-invalid');
+                    feedbackMessageTextarea.classList.remove('is-invalid');
+                    feedbackStatus.innerHTML = '';
+                    feedbackSubmitBtn.disabled = false;
+                    feedbackSubmitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Feedback';
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>
