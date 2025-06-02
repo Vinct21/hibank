@@ -20,7 +20,7 @@
         }
 
         body {
-            font-family: 'Jost', sans-serif;
+            font-family: 'Sora', sans-serif;
             overflow-x: hidden;
             margin: 0;
             padding-top: 0;
@@ -38,7 +38,6 @@
             opacity: 0.8;
         }
 
-        /* Navbar Specific Styles */
         /* Navbar Specific Styles */
         .navbar {
             font-family: 'Sora', sans-serif; /* Font family applied directly to navbar */
@@ -515,18 +514,27 @@
         /* Ensure "Our Working Character" section uses its original/default styling */
         /* (These will override the generic .value-card styles if needed, or confirm defaults) */
         .working-character-section h2 {
-            color: #333; /* Default heading color */
+            color: #333; /* Default heading color, not Biru Tua */
         }
-        .working-character-section .value-letter-box { /* Non-expanded card letter */
-            color: var(--secondary-color); /* Original orange */
+
+        /* Odd cards: letter box uses secondary color (orange) */
+        .working-character-section .row > .col-md:nth-child(odd) .value-letter-box,
+        .working-character-section .row > .col-sm-4:nth-child(odd) .value-letter-box,
+        .working-character-section .row > .col-6:nth-child(odd) .value-letter-box {
+            color: var(--secondary-color); /* Orange */
         }
-        .working-character-section .value-card.expanded .value-letter-box { /* Expanded card letter */
-            color: var(--secondary-color); /* Original orange */
+
+        /* Even cards: letter box uses primary color (teal) */
+        .working-character-section .row > .col-md:nth-child(even) .value-letter-box,
+        .working-character-section .row > .col-sm-4:nth-child(even) .value-letter-box,
+        .working-character-section .row > .col-6:nth-child(even) .value-letter-box {
+            color: var(--primary-color); /* Teal */
         }
-        .working-character-section .value-card.expanded h4 { /* Expanded card title */
-            color: var(--primary-color); /* Original teal */
+        
+        /* Title of expanded card in Working Character section remains primary color (teal) */
+        .working-character-section .value-card.expanded h4 { 
+            color: var(--primary-color); /* Teal */
         }
-        /* END: Custom Color Sync */
 
 
         .error-message {
@@ -721,30 +729,30 @@
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html"><span>Home</span></a>
+                        <a class="nav-link" href="#"><span>Home</span></a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span>Services</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
-                            <li><a class="dropdown-item" href="loan_simulation.html">Loan Simulation</a></li>
-                            <li><a class="dropdown-item" href="internal_mobility.html">Internal Mobility Hub</a></li>
+                            <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_top">Loan Simulation</a></li>
+                            <!-- <li><a class="dropdown-item" href="#" target="_top">Internal Mobility Hub</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="all_services.html">All Services</a></li>
+                            <li><a class="dropdown-item" href="#">All Services</a></li> -->
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="hc_hiro.html"><span>Your HC</span></a>
+                        <a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec" target="_top"><span>Your HC</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="gallery.html"><span>Life@hibank</span></a>
+                        <a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx-HGsao6BRcWDTYxkfY8Xdeua8VSbhKgS0V1jNN2EOpnRInw6EOsNKMp1IiL-FRTLY_w/exec" target="_top"><span>Life@hibank</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="policy.html"><span>Policy</span></a>
+                        <a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" target="_top"><span>Policy</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="faq.html"><span>FAQ</span></a>
+                        <a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a>
                     </li>
                     </ul>
             </div>
@@ -853,8 +861,7 @@
         <div class="container">
             <h2 class="text-center mb-5">Our Working Character</h2>
             <div class="row g-4 justify-content-center" id="working-character-grid">
-                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="fast"> <div class="value-letter-box">F</div>
+                    <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="fast"> <div class="value-letter-box">F</div>
                         <div class="value-content-box">
                             <h4>Digital <strong>F</strong>irst</h4>
                             <div class="value-description">
@@ -863,8 +870,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="innovative">
+                <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="innovative">
                         <div class="value-letter-box">I</div>
                         <div class="value-content-box">
                             <h4><strong>I</strong>nnovative</h4>
@@ -874,8 +880,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="reliable"> <div class="value-letter-box">R</div>
+                <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="reliable"> <div class="value-letter-box">R</div>
                         <div class="value-content-box">
                             <h4><strong>R</strong>elationship-Building & Customer Centric</h4>
                             <div class="value-description">
@@ -884,8 +889,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="synergy"> <div class="value-letter-box">S</div>
+                <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="synergy"> <div class="value-letter-box">S</div>
                         <div class="value-content-box">
                             <h4><strong>S</strong>trategic Focus</h4>
                             <div class="value-description">
@@ -894,8 +898,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 col-6">
-                    <div class="value-card" data-value="trustworthy"> <div class="value-letter-box">T</div>
+                <div class="col-md col-sm-4 col-6"> <div class="value-card" data-value="trustworthy"> <div class="value-letter-box">T</div>
                         <div class="value-content-box">
                             <h4><strong>T</strong>rust, Respect, & Accountable</h4>
                             <div class="value-description">
@@ -977,17 +980,17 @@
                 <div class="col-lg-2 col-md-6">
                     <h6>Quick Links</h6>
                     <ul class="list-unstyled">
-                        <li><a href="hc_hiro.html">Your HC</a></li>
-                        <li><a href="gallery.html">Life@hibank</a></li>
-                        <li><a href="policy.html">Policy</a></li>
-                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec">Your HC</a></li>
+                        <li><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx-HGsao6BRcWDTYxkfY8Xdeua8VSbhKgS0V1jNN2EOpnRInw6EOsNKMp1IiL-FRTLY_w/exec">Life@hibank</a></li>
+                        <li><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec">Policy</a></li>
+                        <li><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec">FAQ</a></li>
                     </ul>
                 </div>
 
                 <div class="col-lg-2 col-md-6">
                     <h6>Our Services</h6>
                     <ul class="list-unstyled">
-                        <li><a href="loan_simulation.html">Loan Simulation</a></li>
+                        <li><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec">Loan Simulation</a></li>
                         <!-- <li><a href="internal_mobility.html">Internal Mobility</a></li>
                         <li><a href="all_services.html">More Services</a></li> -->
                     </ul>
