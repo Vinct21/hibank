@@ -333,19 +333,20 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background-color: var(--primary-color); /* MODIFIED: Use theme primary color */
+            background-color: var(--primary-color); 
             color: white;
+            width: 60px; 
             height: 60px; 
             border-radius: 30px; 
             display: flex;
             align-items: center;
-            justify-content: flex-end; 
+            justify-content: center; 
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             z-index: 1000; 
             text-decoration: none;
-            transition: all 0.4s ease-in-out; 
+            transition: all 0.35s ease-in-out, transform 0.3s ease; /* Adjusted transition */
             padding-left: 0; 
-            padding-right: calc(60px / 2); 
+            padding-right: 0; 
             overflow: hidden; 
         }
 
@@ -353,40 +354,58 @@
             width: 60px; 
             height: 60px;
             border-radius: 50%;
-            background-color: var(--primary-color); /* MODIFIED: Ensure icon part also uses theme color */
+            background-color: var(--primary-color); 
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            padding-right: 50%;
             transition: transform 0.3s ease; 
+        }
+        
+        #floating-chat-icon .chat-icon-main img {
+            /* Apply pulse animation when the main button is NOT hovered */
+            animation: pulse 2.5s infinite ease-in-out; /* Slightly slower pulse */
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); /* MODIFIED: Added subtle drop shadow to image */
+        }
+
+        #floating-chat-icon:hover .chat-icon-main img {
+            animation: none; /* Stop pulse animation on hover */
         }
         
         .chat-icon-text {
             font-size: 0.9rem; 
             font-weight: 500;
             color: white;
-            background-color: var(--primary-color); /* MODIFIED: Use theme primary color */
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 1rem; 
             border-radius: 20px; 
             white-space: nowrap; 
             opacity: 0;
             max-width: 0;
             margin-right: 0; 
-            transition: max-width 0.3s ease-in-out, opacity 0.2s ease-in-out 0.1s, margin-right 0.3s ease-in-out;
+            transform: translateX(20px); /* Start further to the right for a more noticeable slide */
+            /* Adjusted transition for smoother text reveal */
+            transition: max-width 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                        opacity 0.2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s, /* Delay opacity slightly */
+                        transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s, /* Delay transform slightly */
+                        margin-right 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
             order: -1; 
         }
 
         #floating-chat-icon:hover {
+            width: auto; 
             transform: scale(1.05); 
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-            padding-left: 15px; 
-            padding-right: 15px; 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28); /* Slightly more pronounced shadow */
+            padding-left: 5px; 
+            padding-right: 0px; 
+            justify-content: flex-start; 
         }
         
         #floating-chat-icon:hover .chat-icon-text {
             opacity: 1;
             max-width: 200px; 
-            margin-right: 10px; 
+            margin-left: 25px;
+            margin-right: 50px; /* MODIFIED: Increased margin for more gap */
+            transform: translateX(0); /* Slide in to original position */
         }
         /* --- End Floating Chat Icon --- */
 
@@ -649,7 +668,12 @@
             </div>
             </div> </div> </div> <a href="https://wa.me/6281229909659" target="_blank" id="floating-chat-icon" aria-label="Chat on WhatsApp">
         <span class="chat-icon-text">Mau bertemu dengan HIRA?</span>
-        <span class="chat-icon-main"><i class="fab fa-whatsapp"></i></span>
+        <span class="chat-icon-main">
+            <img src="https://cdn.hibank.co.id/hcih/HIRA" 
+                 alt="HIRA Chat Icon" 
+                 style="width: 35px; height: 35px; object-fit: contain; border-radius: 50%;"
+                 onerror="this.onerror=null; this.src='https://placehold.co/35x35/176980/FFFFFF?text=HIRA';">
+        </span>
     </a>
 
     <footer class="site-footer mt-auto"> <div class="container">
