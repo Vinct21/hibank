@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery - Human Capital Innovation Hub</title>
+    <title>Life@hibank - Human Capital Innovation Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Jost:wght@400;500;600;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -27,6 +27,9 @@
             --footer-background: #e0e9f0; /* This might be overridden by footer specific bg */
             --border-color-light: #d1d9e0;
             --font-primary: 'Sora', sans-serif; 
+            --text-muted-custom: #6c757d; /* For footer text */
+            --footer-bg-color: #f8f9fa; /* Light background for footer */
+            --footer-border-color: #e9ecef;
         }
 
         /* Basic Reset from new hero page */
@@ -55,32 +58,35 @@
 
         /* Custom Navbar Styling (from new hero page) */
         .navbar {
-            background-color: rgb(248, 245, 245) !important;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 1030;
-            transition: top 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            box-shadow: none;
+            font-family: 'Sora', sans-serif; /* Font family applied directly to navbar */
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding-top: 0.1rem;
+            padding-bottom: 0.1rem;
+            transition: top 0.3s ease-in-out; /* Smooth transition for hiding/showing */
+        }
+
+        .navbar-brand-logo {
+            width: 50px;
+            margin-right: 10px;
+            border-radius: 0.25rem; /* Optional: slightly rounded corners for the logo */
+        }
+
+        .navbar-brand-text {
+            color: var(--primary-color);
+            font-weight: 500; /* This already makes it bold, <strong> tag reinforces semantic meaning */
+            font-size: 1.4rem; /* Adjusted for balance */
+            /* font-family: 'Jost', sans-serif; /* Ensure font is inherited or explicitly set */
+        }
+
+        .navbar-brand-text .brand-acronym {
+            color: var(--secondary-color);
+            font-weight: 600; /* Ensure it remains bold if needed, or adjust as per strong tag */
         }
 
         .navbar.navbar-hidden {
-            top: -100px; 
-        }
-        .navbar.navbar-scrolled {
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .navbar-brand {
-            color: var(--primary-color);
-            font-weight: 600;
-            font-size: 1.5rem; 
-            display: flex; 
-            align-items: center; 
-        }
-        .navbar-brand img { /* Control logo image style via CSS */
-            width: 60px;
-            height: auto;
-            margin-right: 10px;
+            top: -120px; /* This should match the body padding-top */
         }
 
         .nav-link {
@@ -90,6 +96,8 @@
             padding-left: 0.8rem !important;
             padding-right: 0.8rem !important;
             position: relative;
+            border-radius: 0.25rem; /* Slight rounding for nav links */
+            /* font-family: 'Jost', sans-serif; /* Ensure font is inherited or explicitly set */
         }
 
         .nav-link > span {
@@ -97,18 +105,20 @@
             display: inline-block;
         }
 
-        .nav-link:not(.auth-btn) > span::after {
+        .nav-link:not(.auth-btn) > span::after { /* Assuming .auth-btn might be a button-styled link */
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
             bottom: -5px;
-            left: 0;
+            left: 0; /* Changed from 50% */
+            /* transform: translateX(-50%); */ /* Removed transform */
             background-color: var(--secondary-color);
             transition: width 0.3s ease;
         }
 
-        .nav-link:not(.auth-btn):hover > span::after {
+        .nav-link:not(.auth-btn):hover > span::after,
+        .nav-link.active:not(.auth-btn) > span::after {
             width: 100%;
         }
 
@@ -123,44 +133,61 @@
             border: 1px solid rgba(0,0,0,0.05);
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
+            /* font-family: 'Jost', sans-serif; /* Ensure font is inherited or explicitly set for dropdown items */
         }
+
         .dropdown-item {
             font-weight: 500;
             padding: 0.5rem 1.2rem;
             transition: background-color 0.2s ease, color 0.2s ease;
-        }
-        .dropdown-item:hover {
-            background-color: rgba(209, 91, 40, 0.05);
-            color: var(--secondary-color); /* Ensure text color changes on hover as well */
+            border-radius: 0.25rem; /* Slight rounding for dropdown items */
+            /* font-family: 'Jost', sans-serif; /* Ensure font is inherited or explicitly set */
         }
 
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            color: var(--secondary-color);
+            background-color: rgba(209, 91, 40, 0.05); /* Light orange tint on hover/focus */
+        }
+        .dropdown-item.active {
+             color: white;
+             background-color: var(--secondary-color);
+        }
+
+
         .nav-item.dropdown > .nav-link.dropdown-toggle::after {
-            content: '\f078'; 
-            font-family: 'Font Awesome 6 Free';
+            content: '\f078'; /* Font Awesome caret down */
+            font-family: 'Font Awesome 6 Free'; /* This should remain for the icon */
             font-weight: 900;
             display: inline-block;
             margin-left: 0.35em;
             vertical-align: 0.05em;
-            border: none; 
+            border: none; /* Remove default Bootstrap arrow */
             transition: transform 0.3s ease;
         }
+
         .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
-            transform: rotate(180deg); 
+            transform: rotate(180deg); /* Rotate arrow when dropdown is open */
         }
-        
-        .navbar-toggler {
-            border-color: rgba(0,0,0,0.1);
+
+        /* Responsive adjustments for navbar */
+        @media (max-width: 991.98px) { /* lg breakpoint */
+            .navbar-brand-text {
+                font-size: 1.2rem;
+            }
+            .navbar-nav {
+                margin-top: 1rem;
+            }
+            .nav-link {
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+            }
         }
-        .navbar-toggler-icon { /* From new hero page */
-            display: inline-block;
-            width: 1.5em;
-            height: 1.5em;
-            vertical-align: middle;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 100%;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(23, 105, 128, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
+         @media (max-width: 768px) {
+            body {
+                padding-top: 70px; /* Adjust if navbar height changes on mobile */
+            }
+         }
 
         /* Header Styles for Gallery Title (from gallery_page_fixed) */
         .header { /* This is the section for "Gallery" title and search */
@@ -396,68 +423,112 @@
             }
         }
         
-        /* Footer Styles (from new hero page) */
-        footer.bg-white {
+        /* Footer Specific Styles */
+        .site-footer {
+            font-family: 'Sora', sans-serif; /* Changed font family to Sora */
+            background-color: var(--footer-bg-color);
             padding-top: 3rem;
             padding-bottom: 3rem;
-            border-top: 1px solid #e9ecef;
-            font-family: 'Jost', sans-serif;
-            background-color: var(--card-background) !important; /* Ensure footer bg is white */
+            border-top: 1px solid var(--footer-border-color);
+            color: var(--text-muted-custom);
+            font-size: 0.9rem; /* Slightly smaller font for footer */
         }
-        footer h5, footer h6 {
+
+        .site-footer h5, .site-footer h6 {
             color: var(--primary-color);
             font-weight: 600;
+            margin-bottom: 1rem;
         }
-        footer .text-muted {
-            color: #6c757d !important;
-            font-size: 0.9rem;
+
+        .site-footer p {
+            margin-bottom: 0.5rem;
         }
-        footer .social-links a {
-            color: var(--primary-color);
+
+        .site-footer .list-unstyled a {
+            color: var(--text-muted-custom);
+            text-decoration: none;
             transition: color 0.3s ease;
-            font-size: 1.25rem; /* From gallery_page_fixed footer style */
         }
-        footer .social-links a:hover {
+
+        .site-footer .list-unstyled a:hover,
+        .site-footer .list-unstyled a:focus {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .site-footer .social-links a {
+            color: var(--primary-color);
+            font-size: 1.25rem; /* Slightly larger social icons */
+            margin-right: 0.75rem;
+            transition: color 0.3s ease;
+        }
+        .site-footer .social-links a:last-child {
+            margin-right: 0;
+        }
+
+        .site-footer .social-links a:hover,
+        .site-footer .social-links a:focus {
             color: var(--secondary-color);
         }
-        footer .list-unstyled a.text-muted:hover {
-            color: var(--secondary-color) !important;
-            text-decoration: underline !important;
+
+        .site-footer hr {
+            border-top-color: var(--footer-border-color);
+        }
+
+        .site-footer .copyright-text {
+            color: var(--text-muted-custom);
         }
     </style>
 </head>
 <body>
-
-    <nav class="navbar navbar-expand-lg fixed-top">
+ <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <img src="https://cdn.hibank.co.id/hcih/logo-HCIH.png" alt="Logo" style="width: 60px;" loading="lazy" 
-                 onerror="this.style.display='none'; if(this.parentElement.querySelector('.navbar-brand')) { this.parentElement.querySelector('.navbar-brand').insertAdjacentText('beforebegin', 'Logo Error '); }">
-            <a class="navbar-brand mb-0" href="#">Human Capital Innovation Hub</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand d-flex align-items-center" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzU2GpKE9GqagMJT_EdTNRSXhWwNg5tA-GSxry13G32QEPzFeM8IkRMa0TYvq-y_y6Hmw/exec"> <img src="https://cdn.hibank.co.id/hcih/logo-HCIH.png"
+                     alt="Human Capital Innovation Hub Logo"
+                     class="navbar-brand-logo"
+                     onerror="this.onerror=null; this.src='https://placehold.co/50x50/176980/FFFFFF?text=Logo';">
+                <span class="navbar-brand-text"><strong>Human Capital Innovation Hub <span class="brand-acronym">(HCIH)</span></strong></span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzU2GpKE9GqagMJT_EdTNRSXhWwNg5tA-GSxry13G32QEPzFeM8IkRMa0TYvq-y_y6Hmw/exec" target="_top"><span>Home</span></a></li>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzU2GpKE9GqagMJT_EdTNRSXhWwNg5tA-GSxry13G32QEPzFeM8IkRMa0TYvq-y_y6Hmw/exec"><span>Home</span></a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span>Services</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownServices">
                             <li><a class="dropdown-item" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" target="_top">Loan Simulation</a></li>
+                            <!-- <li><a class="dropdown-item" href="#" target="_top">Internal Mobility Hub</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">All Services</a></li> -->
                         </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec" target="_top"><span>HC hiro</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#" target="_top"><span>Gallery</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" target="_top"><span>Policy</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a></li>
-                </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec" target="_top"><span>Your HC</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" target="_top"><span>Life@hibank</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" target="_top"><span>Policy</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" target="_top"><span>FAQ</span></a>
+                    </li>
+                    </ul>
             </div>
         </div>
     </nav>
 
     <header class="header">
-        <h1 class="gallery-title-main">Gallery</h1>
+        <h1 class="gallery-title-main">Life@hibank</h1>
         <div class="search-bar-container">
             <input type="search" id="gallerySearchInput" placeholder="Search by name...">
         </div>
@@ -480,49 +551,50 @@
         <img src="https://cdn.hibank.co.id/hcih/hi-by-hibank-logo.png" alt="Hi by hibank Logo" loading="lazy" style="width: 50px; margin-right: 10px; display: block; margin-left: auto; margin-top: 20px; margin-bottom: 20px;" onerror="this.style.display='none'; console.error('Failed to load hi-by-hibank-logo.png');">
     </main>
 
-    <footer class="bg-white py-5">
-        <div class="container">
+    <footer class="site-footer mt-auto"> <div class="container">
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6">
-                    <h5 class="mb-3">Human Capital Innovation Hub</h5>
-                    <p class="text-muted mb-3">Pioneering digital solutions for human capital development and management.</p>
-                    <div class="social-links">
-                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" class="me-3" aria-label="LinkedIn"><i class="fab fa-linkedin fa-lg"></i></a>
-                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" class="me-3" aria-label="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
-                    </div>
+                    <h5>Human Capital Innovation Hub (HCIH)</h5>
+                    <p>Pioneering digital solutions for human capital development and management.</p>
+                    <div class="social-links mt-3">
+                        <a href="https://www.linkedin.com/company/hibank-indonesia/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/hibank.id?igsh=Y2V4eWl1OHgycDBk" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        </div>
                 </div>
+
                 <div class="col-lg-2 col-md-6">
-                    <h6 class="mb-3 fw-bold">Quick Links</h6>
+                    <h6>Quick Links</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec" class="text-muted text-decoration-none" target="">HC hiro</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none" target="_top">Gallery</a></li>
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec" class="text-muted text-decoration-none" target="_top">Policy</a></li>
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec" class="text-muted text-decoration-none" target="_top">FAQ</a></li>
+                        <li><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbx4EDLl53Ge6xvNXsKmGuX1DKPhYerqSJRvvjr8srKwSJMINkiIZ1Eo_UlIimTXz38dQQ/exec">Your HC</a></li>
+                        <li><a href="#">Life@hibank</a></li>
+                        <li><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxsLOOhxxqo_TCbRqSSevllEGje9HZDEA4c25ZuYgvNbO49A6hOubT1aHCMdaqE99hC/exec">Policy</a></li>
+                        <li><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbxJykSiXuFOa36BeDYqG4BVMH8sdiEtZNWf4y9_YYOrdAFTR5wXgGPSvq2YNZn2LeXn/exec">FAQ</a></li>
                     </ul>
                 </div>
+
                 <div class="col-lg-2 col-md-6">
-                    <h6 class="mb-3 fw-bold">Our Services</h6>
+                    <h6>Our Services</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec" class="text-muted text-decoration-none" target="_top">Loan Simulation</a></li>
-                        <li class="mb-2"><a href="#services" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#comingSoonModal" data-service-name="More Services">More Coming Soon</a></li>
+                        <li><a href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzfTw1Rb02K6DPyJiRfnBLc32RBzy3RCVePOWq2AEkjRaFGj2AL3Dc6tYRAC2X9E5j5nQ/exec">Loan Simulation</a></li>
+                        <!-- <li><a href="internal_mobility.html">Internal Mobility</a></li>
+                        <li><a href="all_services.html">More Services</a></li> -->
                     </ul>
                 </div>
+
                 <div class="col-lg-4 col-md-6">
-                     <h6 class="mb-3 fw-bold">Contact Us</h6>
-                     <p class="text-muted mb-1">PT Bank Hibank Indonesia</p>
-                     <p class="text-muted mb-1" style="line-height: 1.5;">Rajawali Place, Lantai 22-23<br>
-                                     Jl. H.R. Rasuna Said Kav. B.4<br>
-                                     Setiabudi, Jakarta Selatan - 12910</p>
-                     <p class="text-muted">Email: <a href="mailto:humancapital@hibank.co.id" class="text-muted text-decoration-none">humancapital@hibank.co.id</a></p>
+                    <h6>Contact Us</h6>
+                    <p class="mb-1">PT Bank Hibank Indonesia</p>
+                    <p class="mb-1">Rajawali Place, Lantai 22-23<br>
+                                    Jl. H.R. Rasuna Said Kav. B.4<br>
+                                    Setiabudi, Jakarta Selatan - 12910</p>
+                    <p>Email: <a href="mailto:humancapital@hibank.co.id">humancapital@hibank.co.id</a></p>
                 </div>
             </div>
-            <hr class="my-4">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0 text-muted">&copy; <span id="currentYear"></span> Human Capital Innovation Hub. All rights reserved.</p>
+            <hr class="my-1">
+            <div class="row align-items-center"> <div class="col-md text-start"> <p class="mb-0 copyright-text">&copy; <span id="currentYear"></span> Human Capital Innovation Hub. All rights reserved.</p>
                 </div>
-                <div class="col-md-6 text-center text-md-end">
-                </div>
+                <div class="text-md-end">
+                    </div>
             </div>
         </div>
     </footer>
