@@ -729,7 +729,7 @@
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><span>Home</span></a>
+                        <a class="nav-link active" href="#"><span>Home</span></a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -1160,35 +1160,7 @@
                 });
             }
 
-            // 3. Active Nav Link Highlighter
-            // This script finds the nav link that matches the current page URL and adds 'active' class.
-            const currentPath = window.location.pathname.split("/").pop() || "index.html"; // Get current page filename
-            const navLinksForActiveState = document.querySelectorAll('#mainNavbar .nav-link');
 
-            navLinksForActiveState.forEach(link => {
-                const linkPath = link.getAttribute('href').split("/").pop();
-                if (linkPath === currentPath) {
-                    link.classList.add('active');
-
-                    // If the active link is inside a dropdown, also activate the dropdown toggle
-                    const parentDropdown = link.closest('.nav-item.dropdown');
-                    if (parentDropdown) {
-                        const dropdownToggle = parentDropdown.querySelector('.nav-link.dropdown-toggle');
-                        if (dropdownToggle) {
-                            dropdownToggle.classList.add('active');
-                        }
-                        // Also add active to the dropdown item itself if it's the one matching
-                        if(link.classList.contains('dropdown-item')){
-                            link.classList.add('active');
-                        }
-                    }
-                } else {
-                    link.classList.remove('active'); // Remove active from others
-                     if(link.classList.contains('dropdown-item')){
-                        link.classList.remove('active');
-                    }
-                }
-            });
              // Special handling for dropdown items to ensure only the correct one is active
             const activeDropdownItems = document.querySelectorAll('#mainNavbar .dropdown-item');
             activeDropdownItems.forEach(item => {
