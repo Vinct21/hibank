@@ -729,6 +729,102 @@
     </footer>
 
     <script>
+
+        // Navbar related variables and functions
+        const navbar = document.querySelector('.navbar');
+        let lastScrollTop = 0;
+        const scrollThreshold = 5; // How much user needs to scroll before navbar changes style
+        const scrollElements = document.querySelectorAll(".animate-on-scroll");
+
+        // Function to adjust body padding and hero section height
+        function adjustLayout() {
+            if (navbar) {
+                const currentNavbarHeight = navbar.offsetHeight;
+                document.body.style.paddingTop = `${currentNavbarHeight}px`;
+
+                // Adjust hero section height to fill the remaining viewport
+                const heroSection = document.querySelector('.hero-section');
+                if (heroSection) {
+                    heroSection.style.height = `calc(100vh - ${currentNavbarHeight}px)`;
+                }
+            }
+        }
+
+        const elementInView = (el, dividend = 1) => {
+            if (!el) return false; // Guard clause if element is not found
+            const elementTop = el.getBoundingClientRect().top;
+            return (
+                elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
+            );
+        };
+
+        const displayScrollElement = (element) => {
+            if (element) { // Guard clause
+                 element.classList.add("is-visible");
+            }
+        };
+
+        const handleScrollAnimation = () => {
+            scrollElements.forEach((el) => {
+                if (elementInView(el, 1.15)) { // Trigger animation a bit earlier
+                    displayScrollElement(el);
+                }
+            });
+        };
+
+        // Initial setup and event listeners
+        if (navbar) {
+            adjustLayout(); // Adjust layout on initial load
+
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const currentDynamicNavbarHeight = navbar.offsetHeight; // Get current height, could change on resize/content change
+
+                // Navbar hiding/showing logic
+                if (scrollTop > lastScrollTop && scrollTop > currentDynamicNavbarHeight) {
+                    // Scrolling Down and past the navbar height
+                    if (!navbar.classList.contains('navbar-hidden')) {
+                        navbar.classList.add('navbar-hidden');
+                    }
+                    navbar.classList.remove('navbar-scrolled'); // Remove scrolled style when hiding
+                } else {
+                    // Scrolling Up or near the top
+                    if (navbar.classList.contains('navbar-hidden')) {
+                        navbar.classList.remove('navbar-hidden');
+                    }
+                    // Add/remove scrolled style based on scroll position
+                    if (scrollTop > scrollThreshold) {
+                        navbar.classList.add('navbar-scrolled');
+                    } else {
+                        navbar.classList.remove('navbar-scrolled');
+                    }
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+
+                // Scroll animations for sections
+                handleScrollAnimation();
+            }, false);
+
+            // Adjust layout on window resize
+            window.addEventListener('resize', adjustLayout);
+        }
+
+        // Initial check for scroll animations on page load
+        // Ensure this is called after DOM is ready or elements are available
+        document.addEventListener('DOMContentLoaded', () => {
+            handleScrollAnimation(); // Initial check for elements in view
+            // Call adjustLayout again after DOM content is fully loaded,
+            // especially if navbar or other elements affecting layout might take time to render fully.
+            const initialNav = document.querySelector('.navbar');
+            if(initialNav) {
+                adjustLayout();
+            } else {
+                 // Fallback if navbar isn't immediately available, try once more after a short delay
+                 // This is a bit of a failsafe, ideally DOMContentLoaded and initial call should be enough
+                 setTimeout(adjustLayout, 100);
+            }
+        });
+        
          // Set current year in footer
     if (document.getElementById('currentYear')) { // Check if element exists
         document.getElementById('currentYear').textContent = new Date().getFullYear();
