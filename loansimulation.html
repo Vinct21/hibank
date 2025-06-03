@@ -615,6 +615,16 @@ body {
       padding-left: 15px; /* Indent loan type details */
       list-style-type: disc; /* Use standard bullets */
     }
+
+      #formDownloadModal .modal-content {
+      max-width: 550px; /* Adjust as needed */
+  }
+  #formDownloadModal .modal-body p {
+      margin-bottom: 0.75rem;
+  }
+  #formDownloadModal .modal-footer .btn {
+      min-width: 120px; /* Give buttons a minimum width */
+  }
   </style>
   
   <style>
@@ -927,7 +937,8 @@ body {
         <div class="d-flex flex-wrap gap-2 mt-2"> <button type="button" class="btn btn-success flex-grow-1" onclick="validateAndSubmit()">Hitung Simulasi</button>
           <button type="button" class="btn btn-secondary flex-grow-1" onclick="resetForm()">Reset Form</button>
           <button type="button" id="downloadPdfButton" class="btn btn-primary flex-grow-1">Download PDF</button>
-         <a href="http://cdn.hibank.co.id/hcih/Form_2025_Pinjaman_Karyawan" class="btn btn-dark flex-grow-1" download="Form_2025_Pinjaman_Karyawan">Download Form Pinjaman Karyawan</a>
+          <button type="button" class="btn btn-dark flex-grow-1" onclick="openFormDownloadModal()">Download Form Pinjaman</button>
+
         </div>
       </form>
     </div> <div class="result-container">
@@ -957,6 +968,39 @@ body {
     </div>
   </div>
 </div>
+</div>
+
+<div id="formDownloadModal" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" style="width:80%">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <h5 class="modal-title">Formulir Pinjaman Karyawan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="font-weight: 400;">
+                <p>Silakan unduh formulir pinjaman karyawan melalui Button <b>"Unduh Formulir"</b> di bawah ini, lalu klik <b>"Tetap Download"</b>. Pastikan Anda telah membaca dan memahami semua syarat serta ketentuan yang berlaku sebelum mengajukan pinjaman.</p>
+                <p>Langkah Selanjutnya: 
+                  <ol>
+                    <li>Buka Form Pengajuan Pinjaman Karyawan</li>
+                    <li>Lengkapi Warna Merah dengan mengisi manual</li>
+                    <li>Lengkapi Warna Biru dengan mengklik Dropdown/pilihan yang tersedia</li>
+                    <li>Setelah semua lengkap, kemudian di print dan meminta tanda tangan Karyawan, pasangan, dan atasan langsung.</li>
+                    <li>Hardcopy tersebut diberikan kepada People Care.</li>
+                    <li>dan Soft Copy Form tersebut, dikirimkan ke email people.care@hibank.co.id</li>
+                  </ol>
+                </p>
+                <hr>
+                <p class="text-muted small">Jika Anda mengalami kesulitan dalam mengunduh atau membuka formulir, atau memiliki pertanyaan lebih lanjut, silakan hubungi tim Human Capital - People Care. Terima Kasih.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <a href="http://cdn.hibank.co.id/hcih/Form_2025_Pinjaman_Karyawan" class="btn btn-primary" download="Form_2025_Pinjaman_Karyawan_hibank.pdf">
+                    <i class="fas fa-download me-2"></i>Unduh Formulir
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <button id="toggleButton" class="btn">
@@ -1092,23 +1136,59 @@ function updateDBR() {
 
 <script>
 // Custom Modal Handling
-  let alertModalElement = null; 
+  let alertModalElementRef = null; 
+  let formDownloadModalElementRef = null;
 
   document.addEventListener('DOMContentLoaded', () => {
-      alertModalElement = document.getElementById('alertModal');
+      alertModalElementRef = document.getElementById('alertModal');
+      formDownloadModalElementRef = document.getElementById('formDownloadModal');
   });
 
   function showAlert(title, message) {
-    if (!alertModalElement) {
-        console.error("Alert modal element not found in showAlert.");
+    if (!alertModalElementRef) {
+      console.error("Alert modal element reference not found in showAlert.");
+      // Fallback to native alert if modal system fails (though instructions say no alert())
+      // window.alert(title + "\n" + message.replace(/<br\s*\/?>/gi, "\n")); 
+      return;
+    }
+    const modalTitleEl = alertModalElementRef.querySelector("#modalTitle");
+    const modalMessageEl = alertModalElementRef.querySelector("#modalMessage");
+
+    if(modalTitleEl) modalTitleEl.innerText = title;
+    if(modalMessageEl) modalMessageEl.innerHTML = message;  
+    
+    if (typeof bootstrap !== 'undefined' && typeof bootstrap.Modal !== 'undefined') {
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(alertModalElementRef);
+        modalInstance.show();
+    } else {
+        console.warn("Bootstrap Modal JS not available for showAlert. Using basic display toggle.");
+        alertModalElementRef.style.display = 'block';
+    }
+  }
+
+  function openFormDownloadModal() {
+    if (!formDownloadModalElementRef) {
+        console.error("Form download modal element reference not found.");
+        showAlert("Error Sistem", "Komponen modal untuk unduh formulir tidak dapat diinisialisasi.");
         return;
     }
-    document.getElementById("modalTitle").innerText = title;
-    document.getElementById("modalMessage").innerHTML = message; 
-    
-    const modalInstance = bootstrap.Modal.getOrCreateInstance(alertModalElement);
-    modalInstance.show();
-  }
+
+    if (typeof bootstrap !== 'undefined' && typeof bootstrap.Modal !== 'undefined') {
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(formDownloadModalElementRef);
+        modalInstance.show();
+    } else {
+        console.warn("Bootstrap Modal JS class not available for formDownloadModal. Using basic display toggle.");
+        formDownloadModalElementRef.style.display = 'block';
+        // Ensure close buttons work in fallback
+        const closeButtons = formDownloadModalElementRef.querySelectorAll('[data-bs-dismiss="modal"], .btn-close, .modal-footer .btn-secondary');
+        closeButtons.forEach(btn => {
+            if (!btn.getAttribute('data-fallback-onclick-attached')) {
+                btn.onclick = () => { formDownloadModalElementRef.style.display = 'none'; };
+                btn.setAttribute('data-fallback-onclick-attached', 'true');
+            }
+        });
+    }
+}
 </script>
 
 <script>
