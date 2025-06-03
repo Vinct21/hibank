@@ -384,10 +384,10 @@
             margin-right: 0; 
             transform: translateX(20px); /* Start further to the right for a more noticeable slide */
             /* Adjusted transition for smoother text reveal */
-            transition: max-width 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), 
-                        opacity 0.2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s, /* Delay opacity slightly */
-                        transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s, /* Delay transform slightly */
-                        margin-right 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transition: max-width 0.7s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) 0.15s, /* Slower opacity, slightly more delay */
+                transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) 0.1s,  /* Slower transform, slightly more delay */
+                margin-right 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
             order: -1; 
         }
 
