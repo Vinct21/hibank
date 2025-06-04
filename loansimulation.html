@@ -551,16 +551,16 @@ body {
   
 <style>
     .modal { /* General modal backdrop and positioning */
-      display: none; /* Hidden by default, shown by JS */
+      /* display: none; Hidden by default, shown by JS - This will be handled by Bootstrap's 'fade' and 'show' classes */
       position: fixed;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5); /* Darker, standard overlay */
-      backdrop-filter: blur(3px); /*Subtle blur */
-      -webkit-backdrop-filter: blur(3px);
-      overflow: auto; /* Enable scroll if modal content is too long
+      /* backdrop-filter: blur(3px); /* Subtle blur - Can cause performance issues on some devices, removed for now */
+      /* -webkit-backdrop-filter: blur(3px); */
+      overflow: auto; /* Enable scroll if modal content is too long */
       padding-top: 5vh; /* Push modal content down a bit */
       /* z-index: 1050; Ensure modals are above other content like floating box */
     }
@@ -649,7 +649,7 @@ body {
       border: 1px solid #e0e0e0; /* Lighter border */
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
       display: none; /* Initially hidden */
-      z-index: 1040; /* Below modals (modals are typically 1050+) */
+      z-index: 1040; /*Below modals (modals are typically 1050+) */
       transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transitions */
       transform: translateY(10px); /* Start slightly lower for entry animation */
       opacity: 0;
@@ -757,7 +757,7 @@ body {
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="https://script.google.com/a/macros/hibank.co.id/s/AKfycbzU2GpKE9GqagMJT_EdTNRSXhWwNg5tA-GSxry13G32QEPzFeM8IkRMa0TYvq-y_y6Hmw/exec"><span>Home</span></a>
+                        <a class="nav-link" href="#"><span>Home</span></a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdownServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -786,84 +786,89 @@ body {
         </div>
     </nav>
 
-<div id="initialInfoBoard" class="modal" style="display: block;"> <div class="modal-content">
-    <div class="modal-header">
-      <h4>Selamat Datang di Simulasi Pinjaman Karyawan</h4>
-      <button type="button" class="btn-close" onclick="closeInitialInfo()" aria-label="Close"></button>
-    </div>
-    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-      <h6 style="color: #176980; margin-top: 10px;">Syarat & Ketentuan Umum:</h6>
-      <ul style="list-style-type: none; padding-left: 0;">
-        <li><i class="fas fa-check-circle text-success me-2"></i>Status karyawan tetap</li>
-        <li><i class="fas fa-check-circle text-success me-2"></i>Minimal masa kerja 2 tahun</li>
-        <li><i class="fas fa-check-circle text-success me-2"></i>Usia minimal 21 tahun</li>
-        <li><i class="fas fa-check-circle text-success me-2"></i>Memiliki rekening HiBank</li>
-        <li><i class="fas fa-check-circle text-success me-2"></i>Melampirkan slip gaji terakhir</li>
-        <li><i class="fas fa-check-circle text-success me-2"></i>Kinerja baik (penilaian minimum Met/setara)</li>
-        <li><i class="fas fa-check-circle text-success me-2"></i>Tidak dalam sanksi/pembinaan (SP/PIP)</li>
-        <li><i class="fas fa-check-circle text-success me-2"></i>IDEB SLIK 12 bulan terakhir: Lancar</li>
-        <li><i class="fas fa-check-circle text-success me-2"></i>Melengkapi formulir & dokumen</li>
-        <li><i class="fas fa-check-circle text-success me-2"></i>DBR (Debt Burden Ratio) maksimal sesuai ketentuan</li>
-      </ul>
-      <div class="loan-info mt-4"> <h5 style="color: #176980;">Informasi Produk Pinjaman:</h5>
-        <div class="loan-type mt-3">
-          <h6 style="color: #D15B28; font-weight: bold;">1. Kredit Pemilikan Rumah (KPR)</h6>
-          <ul>
-            <li><strong>Penggunaan:</strong> Pembelian rumah, apartemen, atau ruko</li>
-            <li><strong>Plafon:</strong> Maksimum Rp5 miliar</li>
-            <li><strong>Tenor:</strong> Maks. 20 tahun (atau s.d. usia 55 thn saat jatuh tempo)</li>
-            <li><strong>Uang Muka:</strong> 10% (rumah), 30% (ruko)</li>
-            <li><strong>Suku Bunga:</strong> 5% (fixed rate)</li>
-          </ul>
+<!-- MODIFICATION: Removed inline style="display: block;" and added 'fade' class -->
+<div id="initialInfoBoard" class="modal fade" tabindex="-1" aria-labelledby="initialInfoBoardLabel" aria-hidden="true"> 
+  <div class="modal-dialog modal-dialog-scrollable modal-lg"> <!-- Added modal-dialog-scrollable and modal-lg for better content handling -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="initialInfoBoardLabel">Selamat Datang di Simulasi Pinjaman Karyawan</h4>
+        <button type="button" class="btn-close" onclick="closeInitialInfo()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body"> <!-- Removed inline style for max-height, rely on modal-dialog-scrollable -->
+        <h6 style="color: #176980; margin-top: 10px;">Syarat & Ketentuan Umum:</h6>
+        <ul style="list-style-type: none; padding-left: 0;">
+          <li><i class="fas fa-check-circle text-success me-2"></i>Status karyawan tetap</li>
+          <li><i class="fas fa-check-circle text-success me-2"></i>Minimal masa kerja 2 tahun</li>
+          <li><i class="fas fa-check-circle text-success me-2"></i>Usia minimal 21 tahun</li>
+          <li><i class="fas fa-check-circle text-success me-2"></i>Memiliki rekening HiBank</li>
+          <li><i class="fas fa-check-circle text-success me-2"></i>Melampirkan slip gaji terakhir</li>
+          <li><i class="fas fa-check-circle text-success me-2"></i>Kinerja baik (penilaian minimum Met/setara)</li>
+          <li><i class="fas fa-check-circle text-success me-2"></i>Tidak dalam sanksi/pembinaan (SP/PIP)</li>
+          <li><i class="fas fa-check-circle text-success me-2"></i>IDEB SLIK 12 bulan terakhir: Lancar</li>
+          <li><i class="fas fa-check-circle text-success me-2"></i>Melengkapi formulir & dokumen</li>
+          <li><i class="fas fa-check-circle text-success me-2"></i>DBR (Debt Burden Ratio) maksimal sesuai ketentuan</li>
+        </ul>
+        <div class="loan-info mt-4"> <h5 style="color: #176980;">Informasi Produk Pinjaman:</h5>
+          <div class="loan-type mt-3">
+            <h6 style="color: #D15B28; font-weight: bold;">1. Kredit Pemilikan Rumah (KPR)</h6>
+            <ul>
+              <li><strong>Penggunaan:</strong> Pembelian rumah, apartemen, atau ruko</li>
+              <li><strong>Plafon:</strong> Maksimum Rp5 miliar</li>
+              <li><strong>Tenor:</strong> Maks. 20 tahun (atau s.d. usia 55 thn saat jatuh tempo)</li>
+              <li><strong>Uang Muka:</strong> 10% (rumah), 30% (ruko)</li>
+              <li><strong>Suku Bunga:</strong> 5% (fixed rate)</li>
+            </ul>
+          </div>
+          <div class="loan-type mt-3">
+            <h6 style="color: #D15B28; font-weight: bold;">2. Kredit Multi Guna (KMG)</h6>
+            <ul>
+              <li><strong>Penggunaan:</strong> Renovasi rumah, kebutuhan konsumtif lainnya</li>
+              <li><strong>Plafon:</strong> Maksimum Rp500 juta</li>
+              <li><strong>Tenor:</strong> 5 tahun</li>
+              <li><strong>Suku Bunga:</strong> 7% (fixed rate)</li>
+              <li><strong>Jaminan Tanah/Bangunan (Hak Milik pribadi)</li>
+            </ul>
+          </div>
+          <div class="loan-type mt-3">
+            <h6 style="color: #D15B28; font-weight: bold;">3. Kredit Kendaraan Bermotor (KKB)</h6>
+            <ul>
+              <li><strong>Penggunaan:</strong> Pembelian mobil dan motor</li>
+              <li><strong>Plafon:</strong> Maksimum Rp700 juta</li>
+              <li><strong>Tenor:</strong> 5 tahun (3 tahun untuk kendaraan full listrik)</li>
+              <li><strong>Suku Bunga:</strong> 4% (umum), 3.5% (kendaraan full listrik)</li>
+            </ul>
+          </div>
+          <div class="loan-type mt-3">
+            <h6 style="color: #D15B28; font-weight: bold;">4. Emergency Loan</h6>
+            <ul>
+              <li><strong>Penggunaan:</strong> Medis, bantuan finansial, pendidikan anak kandung</li>
+              <li><strong>Plafon:</strong> Maksimum Rp100 juta</li>
+              <li><strong>Tenor:</strong> 1 tahun</li>
+              <li><strong>Suku Bunga:</strong> 0%</li>
+            </ul>
+          </div>
+          <div class="loan-type mt-3">
+            <h6 style="color: #D15B28; font-weight: bold;">5. Debt Burden Ratio (DBR) Maksimal</h6>
+            <ul>
+              <li>Penghasilan ≤ Rp10 juta: <strong>30%</strong></li>
+              <li>Penghasilan Rp10 – 50 juta: <strong>35%</strong></li>
+              <li>Penghasilan > Rp50 juta: <strong>40%</strong></li>
+            </ul>
+          </div>
+          <button onclick="closeInitialInfo()" class="btn btn-primary w-100 mt-4" style="background-color: #176980; border-color: #176980;">
+            Mulai Simulasi
+          </button>
         </div>
-        <div class="loan-type mt-3">
-          <h6 style="color: #D15B28; font-weight: bold;">2. Kredit Multi Guna (KMG)</h6>
-          <ul>
-            <li><strong>Penggunaan:</strong> Renovasi rumah, kebutuhan konsumtif lainnya</li>
-            <li><strong>Plafon:</strong> Maksimum Rp500 juta</li>
-            <li><strong>Tenor:</strong> 5 tahun</li>
-            <li><strong>Suku Bunga:</strong> 7% (fixed rate)</li>
-            <li><strong>Jaminan Tanah/Bangunan (Hak Milik pribadi)</li>
-          </ul>
-        </div>
-        <div class="loan-type mt-3">
-          <h6 style="color: #D15B28; font-weight: bold;">3. Kredit Kendaraan Bermotor (KKB)</h6>
-          <ul>
-            <li><strong>Penggunaan:</strong> Pembelian mobil dan motor</li>
-            <li><strong>Plafon:</strong> Maksimum Rp700 juta</li>
-            <li><strong>Tenor:</strong> 5 tahun (3 tahun untuk kendaraan full listrik)</li>
-            <li><strong>Suku Bunga:</strong> 4% (umum), 3.5% (kendaraan full listrik)</li>
-          </ul>
-        </div>
-        <div class="loan-type mt-3">
-          <h6 style="color: #D15B28; font-weight: bold;">4. Emergency Loan</h6>
-          <ul>
-            <li><strong>Penggunaan:</strong> Medis, bantuan finansial, pendidikan anak kandung</li>
-            <li><strong>Plafon:</strong> Maksimum Rp100 juta</li>
-            <li><strong>Tenor:</strong> 1 tahun</li>
-            <li><strong>Suku Bunga:</strong> 0%</li>
-          </ul>
-        </div>
-        <div class="loan-type mt-3">
-          <h6 style="color: #D15B28; font-weight: bold;">5. Debt Burden Ratio (DBR) Maksimal</h6>
-          <ul>
-            <li>Penghasilan ≤ Rp10 juta: <strong>30%</strong></li>
-            <li>Penghasilan Rp10 – 50 juta: <strong>35%</strong></li>
-            <li>Penghasilan > Rp50 juta: <strong>40%</strong></li>
-          </ul>
-        </div>
-        <button onclick="closeInitialInfo()" class="btn btn-primary w-100 mt-4" style="background-color: #176980; border-color: #176980;">
-          Mulai Simulasi
-        </button>
       </div>
     </div>
   </div>
 </div>
 
 <section style="padding-top: 5%;">
-  <h1>Simulasi Pinjaman Karyawan</h1>
-  
-
+  <div class="text-center"> <h1 style="display: inline-block; margin-bottom: 40px;">Simulasi Pinjaman Karyawan</h1> <button id="showTermsAgainButton" class="btn btn-link text-decoration-none p-0 ms-2" type="button" title="Lihat Syarat & Ketentuan Kembali" style="font-size: 1.5rem; vertical-align: middle;">
+      <i class="fas fa-info-circle text-secondary"></i>
+    </button>
+  </div>
 </section>
 
 <div class="container">
@@ -980,7 +985,7 @@ body {
 </div>
 
 
-<div id="formDownloadModal" class="modal" tabindex="-1" aria-labelledby="formDownloadModalLabel" aria-hidden="true">
+<div id="formDownloadModal" class="modal fade" tabindex="-1" aria-labelledby="formDownloadModalLabel" aria-hidden="true"> <!-- MODIFICATION: Added fade class -->
     <div class="modal-dialog modal-dialog-centered modal-lg"> <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="formDownloadModalLabel">Formulir Pengajuan Pinjaman Karyawan</h5>
@@ -1111,7 +1116,7 @@ function updateBunga() {
         switch(tipePinjaman) {
             case "Kredit Pemilikan Rumah (KPR)": dp = "10%"; break;
             case "Kredit Pemilikan Ruko": dp = "30%"; break;
-            default: dp = ""; break; // KMG, KKB, Emergency Loan don't have DP listed this way
+            default: dp = ""; // KMG, KKB, Emergency Loan don't have DP listed this way
         }
     
         // Set the Bunga field value
@@ -1145,17 +1150,52 @@ function updateDBR() {
 // Custom Modal Handling
   let bsAlertModalInstance = null;
   let bsFormDownloadModalInstance = null;
+  let initialModalBsInstance = null; // Bootstrap 5 modal instance for initialInfoBoard
 
   document.addEventListener('DOMContentLoaded', () => {
     const alertModalEl = document.getElementById('alertModal');
-    if (alertModalEl && typeof bootstrap !== 'undefined') {
-        bsAlertModalInstance = new bootstrap.Modal(alertModalEl);
+    if (alertModalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        bsAlertModalInstance = bootstrap.Modal.getOrCreateInstance(alertModalEl);
     }
 
     const formDownloadModalEl = document.getElementById('formDownloadModal');
-    if (formDownloadModalEl && typeof bootstrap !== 'undefined') {
-        bsFormDownloadModalInstance = new bootstrap.Modal(formDownloadModalEl);
+    if (formDownloadModalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        bsFormDownloadModalInstance = bootstrap.Modal.getOrCreateInstance(formDownloadModalEl);
     }
+
+    const initialInfoBoardEl = document.getElementById('initialInfoBoard');
+    const mulaiSimulasiBtn = initialInfoBoardEl ? initialInfoBoardEl.querySelector('.btn-primary.w-100.mt-4') : null;
+
+    if (initialInfoBoardEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        initialModalBsInstance = bootstrap.Modal.getOrCreateInstance(initialInfoBoardEl);
+        
+        // Show the modal on initial page load if it's not already shown by Bootstrap
+        // (e.g. if it was hidden and then 'show' class was added by some other script, this check prevents re-showing)
+        if (initialModalBsInstance && !initialInfoBoardEl.classList.contains('show')) {
+             initialModalBsInstance.show();
+        }
+
+        initialInfoBoardEl.addEventListener('hidden.bs.modal', function () {
+            if (mulaiSimulasiBtn) {
+                mulaiSimulasiBtn.style.display = 'block';
+            }
+        });
+    }
+    
+    const showTermsAgainButton = document.getElementById('showTermsAgainButton');
+    if (showTermsAgainButton && mulaiSimulasiBtn) { 
+        showTermsAgainButton.addEventListener('click', function() {
+            if (mulaiSimulasiBtn) { 
+                 mulaiSimulasiBtn.style.display = 'none';
+            }
+            if (initialModalBsInstance) {
+                initialModalBsInstance.show();
+            } else {
+                console.error("Initial info modal instance not found for showTermsAgainButton.");
+            }
+        });
+    }
+
   });
 
   function showAlert(title, message) {
@@ -1163,14 +1203,16 @@ function updateDBR() {
     const modalMessageEl = document.getElementById("alertModalMessage");
 
     if(modalTitleEl) modalTitleEl.innerText = title;
-    if(modalMessageEl) modalMessageEl.innerHTML = message; // Using innerHTML to support potential HTML in message
+    if(modalMessageEl) modalMessageEl.innerHTML = message; 
 
     if (bsAlertModalInstance) {
         bsAlertModalInstance.show();
     } else {
-        // Fallback for environments where Bootstrap JS might not be initialized as expected
         const fallbackModal = document.getElementById('alertModal');
-        if (fallbackModal) fallbackModal.style.display = 'block'; // Basic show
+        if (fallbackModal) {
+            fallbackModal.classList.add('show'); // Attempt to show with BS classes
+            fallbackModal.style.display = 'block'; 
+        }
         console.warn("Bootstrap Modal instance for showAlert not found. Using basic display toggle.");
     }
   }
@@ -1180,10 +1222,26 @@ function updateDBR() {
         bsFormDownloadModalInstance.show();
     } else {
         const fallbackModal = document.getElementById('formDownloadModal');
-        if (fallbackModal) fallbackModal.style.display = 'block'; // Basic show
+        if (fallbackModal) {
+            fallbackModal.classList.add('show');
+            fallbackModal.style.display = 'block';
+        }
         console.warn("Bootstrap Modal instance for formDownloadModal not found. Using basic display toggle.");
     }
 }
+
+function closeInitialInfo() {
+    if (initialModalBsInstance) {
+      initialModalBsInstance.hide(); 
+    } else {
+      const initialInfoBoardEl = document.getElementById('initialInfoBoard');
+      if (initialInfoBoardEl) {  
+          initialInfoBoardEl.style.display = 'none';
+          const btn = initialInfoBoardEl.querySelector('.btn-primary.w-100.mt-4');
+          if (btn) btn.style.display = 'block';
+      }
+    }
+  }
 </script>
 
 <script>
@@ -1334,6 +1392,7 @@ function genHitung() {
   }
 </script>
 
+
 <script>
   function getData() {
     const nikInput = document.getElementById("nik");
@@ -1406,23 +1465,6 @@ function genHitung() {
       .checkNIK(nikk);  
   }
 
-  let initialModalBsInstance = null; // Bootstrap 5 modal instance
-  function closeInitialInfo() {
-    const initialInfoBoardEl = document.getElementById('initialInfoBoard');
-    if (!initialModalBsInstance && initialInfoBoardEl && typeof bootstrap !== 'undefined') {
-        initialModalBsInstance = bootstrap.Modal.getInstance(initialInfoBoardEl);
-        if (!initialModalBsInstance) { // If not already initialized, create new
-            initialModalBsInstance = new bootstrap.Modal(initialInfoBoardEl);
-        }
-    }
-    
-    if (initialModalBsInstance) {
-      initialModalBsInstance.hide();
-    } else {  
-      // Fallback if Bootstrap JS somehow failed or modal wasn't auto-initialized
-      if(initialInfoBoardEl) initialInfoBoardEl.style.display = 'none';
-    }
-  }
 
   function validateAndSubmit() {
     const form = document.getElementById('loanForm');
@@ -1495,14 +1537,16 @@ function genHitung() {
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    var initialModalElement = document.getElementById('initialInfoBoard');
-    if (initialModalElement && typeof bootstrap !== 'undefined') {
-      // Initialize if it's set to display: block, common for initial auto-show
-      if (initialModalElement.style.display === 'block') {  
-        initialModalBsInstance = new bootstrap.Modal(initialModalElement);
-        // initialModalBsInstance.show(); // No need to call show if already display:block and BS picks it up
-      }
+    const initialInfoBoardEl = document.getElementById('initialInfoBoard');
+    // Ensure initialModalBsInstance is initialized if Bootstrap is available
+    if (initialInfoBoardEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        initialModalBsInstance = bootstrap.Modal.getOrCreateInstance(initialInfoBoardEl);
+        // Show the modal on initial page load if it's not already shown
+        if (initialModalBsInstance && !initialInfoBoardEl.classList.contains('show')) {
+            initialModalBsInstance.show();
+        }
     }
+
 
     // Apply currency formatting to relevant input fields
     ['plafond', 'gajiPokok', 'cicilanBerjalan'].forEach(id => {
@@ -1511,48 +1555,41 @@ function genHitung() {
         element.addEventListener('input', function() { formatCurrencyInput(this); });
         element.addEventListener('blur', function() {  
           formatCurrencyInput(this);  
-          // Clean up if input is just "Rp " or "Rp 0" (except for cicilanBerjalan which defaults to Rp 0)
           if ((this.value.trim() === 'Rp' || (this.value.trim() === 'Rp 0' && this.id !== 'cicilanBerjalan'))) {
-              if (this.id !== 'cicilanBerjalan') this.value = ''; // Clear if not 'cicilanBerjalan'
+              if (this.id !== 'cicilanBerjalan') this.value = ''; 
           }
-          // Trigger DBR update if gajiPokok changes
           if (this.id === 'gajiPokok') {
             updateDBR();
           }
         });
-        // Initialize formatting for cicilanBerjalan as it has a default value
         if (id === 'cicilanBerjalan') {
             formatCurrencyInput(element);  
         }
       }
     });
 
-    // Add event listeners for live validation of loan terms based on type, plafond, and tenor
     const plafondInput = document.getElementById('plafond');
     const jangkaWaktuInput = document.getElementById('jangkaWaktu');
     const tipePinjamanSelect = document.getElementById('tipePinjaman');
 
     function performLiveValidation() {
         const tipePinjaman = tipePinjamanSelect.value;
-        if (!tipePinjaman) return; // Don't validate if no type selected
+        if (!tipePinjaman) return; 
 
         const plafondValue = parseCurrency(plafondInput.value);
         const jangkaWaktuValue = parseInt(jangkaWaktuInput.value);
 
-        // Call validateLoanTerms with finalCheck = false for live feedback without blocking submission
-        // Pass 0 for the value not being currently changed to focus validation on the changed input
         if (document.activeElement === plafondInput && plafondValue > 0) {
             validateLoanTerms(tipePinjaman, plafondValue, 0, false); 
         } else if (document.activeElement === jangkaWaktuInput && jangkaWaktuValue > 0 && !isNaN(jangkaWaktuValue)) {
             validateLoanTerms(tipePinjaman, 0, jangkaWaktuValue, false);
         } else if (document.activeElement === tipePinjamanSelect) {
-            // If loan type changes, validate both plafond and tenor if they have values
             if (plafondValue > 0) validateLoanTerms(tipePinjaman, plafondValue, 0, false);
             if (jangkaWaktuValue > 0 && !isNaN(jangkaWaktuValue)) validateLoanTerms(tipePinjaman, 0, jangkaWaktuValue, false);
         }
     }
     
-    if (plafondInput) plafondInput.addEventListener('blur', performLiveValidation); // Use blur to avoid alerts on every keystroke
+    if (plafondInput) plafondInput.addEventListener('blur', performLiveValidation); 
     if (jangkaWaktuInput) jangkaWaktuInput.addEventListener('blur', performLiveValidation);
     if (tipePinjamanSelect) tipePinjamanSelect.addEventListener('change', performLiveValidation);
 
@@ -1572,10 +1609,9 @@ function genHitung() {
       const form = document.getElementById('loanForm');
       const resultsDiv = document.getElementById('result');
 
-      // Check if form is valid and simulation has been run
       if (!form.checkValidity()) {
         showAlert("Tidak Bisa Download", "Harap lengkapi semua field yang valid pada formulir sebelum mengunduh PDF simulasi.");
-        form.classList.add('was-validated'); // Highlight invalid fields
+        form.classList.add('was-validated'); 
         return;
       }
       if (!resultsDiv.querySelector('.sticky-table')) {
@@ -1583,7 +1619,6 @@ function genHitung() {
         return;
       }
 
-      // --- PDF Content Generation ---
       const now = new Date();
       const dateTimeString = now.toLocaleString('id-ID', {  
           day: '2-digit',  
@@ -1609,9 +1644,9 @@ function genHitung() {
 
       let yPos = 35;
       const addText = (label, value, isBold = false) => {
-        if (yPos > 275) {  // Check for page break
+        if (yPos > 275) {  
           doc.addPage();
-          yPos = 20;  // Reset Y position on new page
+          yPos = 20;  
         }
         const labelX = 14;      
         const colonAlignX = 75;  
@@ -1624,10 +1659,9 @@ function genHitung() {
         doc.text(":", colonAlignX, yPos);  
 
         doc.text(String(value || "N/A"), valueAlignX, yPos);  
-        yPos += 7; // Increment Y position for next line
+        yPos += 7; 
       };
 
-      // Add form data to PDF
       addText("NIK Karyawan", document.getElementById('nik').value);
       addText("Nama Karyawan", document.getElementById('name').value || "(Belum dicek/Tidak ditemukan)");
       addText("Tipe Pinjaman", document.getElementById('tipePinjaman').value);
@@ -1639,7 +1673,6 @@ function genHitung() {
       const dbrPercentageString = document.getElementById('dbr').value || "N/A";
       addText("DBR Maksimal (Persentase)", dbrPercentageString);
 
-      // Calculate and add DBR Monetary Value
       const gajiPokokStringForDBRCalc = document.getElementById('gajiPokok').value;
       let dbrMonetaryDisplayValueInPdf = "N/A";  
 
@@ -1657,20 +1690,18 @@ function genHitung() {
       
       addText("Cicilan Pinjaman Lain", document.getElementById('cicilanBerjalan').value);
       
-      // Add Angsuran Bulanan from simulation results
-      const angsuranElement = resultsDiv.querySelector('.sticky-table tbody tr:nth-child(2) td:last-child'); // Second row, last cell
+      const angsuranElement = resultsDiv.querySelector('.sticky-table tbody tr:nth-child(2) td:last-child'); 
       if (angsuranElement) {
           addText("Perkiraan Angsuran Bulanan", angsuranElement.innerText, true);
       }
 
 
-      yPos += 3;  // Add a little space before the line
+      yPos += 3;  
       doc.setLineWidth(0.2);
-      doc.line(14, yPos, 196, yPos);  // Draw a separator line
+      doc.line(14, yPos, 196, yPos);  
       yPos += 7;
 
 
-      // Add results table to PDF
       const tableElement = resultsDiv.querySelector('.sticky-table');
       if (tableElement) {
         doc.setFontSize(11);
@@ -1683,7 +1714,6 @@ function genHitung() {
         tableElement.querySelectorAll('tbody tr').forEach((tr) => {
           const rowData = [];
           tr.querySelectorAll('td').forEach(td => {
-            // Remove "Rp " prefix and trim for cleaner data in PDF, especially for numbers
             rowData.push(td.innerText.replace(/Rp\s?/g, '').replace(/\./g, '').replace(/,/g, '.').trim());  
           });
           body.push(rowData);
@@ -1704,14 +1734,13 @@ function genHitung() {
                   3: { cellWidth: 40 },  
                   4: { cellWidth: 40 },  
               },
-              didDrawPage: function (data) {  // Update yPos if table spans multiple pages
+              didDrawPage: function (data) {  
                   yPos = data.cursor.y;
               }
           });
-          yPos = doc.lastAutoTable.finalY || yPos;  // Ensure yPos is updated after table
+          yPos = doc.lastAutoTable.finalY || yPos;  
         } else {
           showAlert("Info PDF", "Plugin jsPDF-AutoTable tidak termuat. Tabel akan ditampilkan secara sederhana. Untuk tampilan tabel yang lebih baik di PDF, pastikan plugin jsPDF-AutoTable termuat dengan benar.");
-          // Basic table rendering if autoTable is not available
           doc.setFontSize(8);
           let currentX = 14;
           head[0].forEach((headerText, headerIdx) => {
@@ -1720,7 +1749,7 @@ function genHitung() {
           });
           yPos += 5;
           body.forEach(row => {
-              if (yPos > 275) { doc.addPage(); yPos = 20; } // Page break for basic table
+              if (yPos > 275) { doc.addPage(); yPos = 20; } 
               currentX = 14;
               row.forEach((cell, cellIdx) => {
                   doc.text(cell, currentX, yPos);
@@ -1731,36 +1760,22 @@ function genHitung() {
         }
       }
       
-      // Add disclaimer
       let finalY = yPos + 10;  
-      if (finalY > 270) {  // Check for page break before disclaimer
+      if (finalY > 270) {  
           doc.addPage();
           finalY = 20;  
       }
       doc.setFontSize(8);
-      doc.setTextColor(150);  // Set text color to grey
+      doc.setTextColor(150);  
       doc.text("Disclaimer: Simulasi ini bersifat perkiraan dan dapat berbeda dengan perhitungan akhir bank.", 14, finalY);
       doc.text("Syarat dan ketentuan berlaku. Hubungi pihak bank untuk informasi lebih lanjut.", 14, finalY + 4);
 
-      // Save the PDF
       const nikForFilename = document.getElementById('nik').value || 'Karyawan';
       const loanTypeForFilename = document.getElementById('tipePinjaman').value.replace(/[^a-zA-Z0-9]/g, '') || 'Pinjaman';
       doc.save(`Simulasi_${loanTypeForFilename}_${nikForFilename}.pdf`);
     });
   });
 
-  function closeInitialInfo() {
-      const initialInfoBoardEl = document.getElementById('initialInfoBoard');
-      if (initialInfoBoardEl) {
-          const modalInstance = bootstrap.Modal.getInstance(initialInfoBoardEl);
-          if (modalInstance) {
-              modalInstance.hide();
-          } else {
-              // Fallback if not initialized by Bootstrap (e.g. if display:block was removed before BS init)
-              initialInfoBoardEl.style.display = 'none';
-          }
-      }
-  }
 </script>
 
 <footer class="site-footer mt-auto"> <div class="container">
@@ -1815,10 +1830,8 @@ function genHitung() {
     if (document.getElementById('currentYear')) { // Check if element exists
         document.getElementById('currentYear').textContent = new Date().getFullYear();
     }
-
-    function closeInitialInfo() {
-        document.getElementById('initialInfoBoard').style.display = 'none';
-    }
+    // MODIFICATION: Removed the duplicate/simplified closeInitialInfo() function from here.
+    // The one within the main script block that uses initialModalBsInstance.hide() is the correct one.
 </script>
     </body>
 
