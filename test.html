@@ -3,401 +3,538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Org Chart Snippet with President Director</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <title>Company Org Chart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Basic styles for context - In a full app, these would be more comprehensive */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-            color: #334155;
-            margin: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Center chart content */
+            background-color: #f3f4f6; /* Light gray background */
         }
-        .page-section-title { /* Title for each level */
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .top-level-container { /* For President Director and CEO */
-            display: inline-flex; 
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px; /* Space below PD and CEO before next level */
-        }
-        .group-belt {
-            width: 100%;
-            max-width: 1400px;
-            padding: 20px;
-            box-sizing: border-box;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            border-width: 2px;
-            border-style: solid;
-            margin-top: 20px; /* Space above belts */
-        }
-        .group-belt-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            padding: 6px 12px;
-            background-color: rgba(255,255,255,0.4);
-            border-radius: 6px;
-        }
-        .belt-items-container {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start; /* Changed to flex-start for typical belt layout */
-            align-items: flex-start;
-            gap: 20px;
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-        .org-node {
-            background-color: white;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            padding: 12px 15px;
-            text-align: center;
-            min-width: 180px;
-            max-width: 250px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            position: relative;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        .org-node img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin: 0 auto 8px auto;
-            object-fit: cover;
-            border: 2px solid #e2e8f0;
-            background-color: #e2e8f0;
-        }
-        .org-node .title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 5px;
-        }
-        .org-node .department {
-            font-size: 0.7rem;
-            color: #4b5563;
-            background-color: rgba(240, 240, 240, 0.7);
-            padding: 2px 5px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-        .node-wrapper { /* Wraps each node and its potential children container */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-        .children-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0px; /* Lines will connect */
-            margin-top: 20px; /* Space below parent before children */
-            position: relative;
-            overflow: hidden;
-            max-height: 2000px; /* For animation */
-            opacity: 1;
-            width: 100%;
-            transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.4s ease-in-out, margin-top 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-        .children-container.collapsed {
-            max-height: 0;
-            opacity: 0;
-            margin-top: 0;
-        }
-        .toggle-button {
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4f46e5;
+        .hibank-orange {
+            background-color: #D15B28;
             color: white;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            font-size: 12px;
+        }
+        .hibank-tile {
+            background-color: #176980;
+            color: white;
+        }
+        .chart-container {
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            gap: 40px; /* Increased spacing for lines */
+            position: relative; /* For absolute positioning of lines */
+        }
+        .chart-level {
+            display: flex;
+            justify-content: center;
+            gap: 30px; /* Spacing between nodes */
+            flex-wrap: wrap;
+            position: relative; /* For lines */
+            width: 100%;
+        }
+        .chart-node {
+            width: 220px; /* Slightly wider */
+            min-height: 100px; /* Ensure consistent height */
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            position: relative; /* For connector points */
+            z-index: 10; /* Nodes above lines */
+        }
+        .chart-node img.profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+        .chart-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        .chart-node h3 {
+            font-size: 1.1rem; /* ~17.5px */
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .chart-node p {
+            font-size: 0.85rem; /* ~13.5px */
+            opacity: 0.9;
+        }
+
+        /* SVG Lines container */
+        #linesContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Lines behind nodes */
+            overflow: visible; /* Allow lines to draw outside bounds if needed */
+        }
+
+        /* Loading indicator */
+        #loadingIndicator {
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 40px;
+            text-align: center;
+            color: #176980;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #D15B28; /* Hibank Orange for spinner */
+            animation: spin 1s ease infinite;
+            margin-bottom: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error Message */
+        #errorMessage {
+            color: #D15B28;
+            background-color: #ffebee;
+            border: 1px solid #D15B28;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px;
+        }
+
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            margin: auto;
+            padding: 24px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: fadeInModal 0.3s ease-out;
+        }
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #176980;
+        }
+        .modal-body p {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            color: #374151;
+        }
+        .modal-body strong {
+            color: #176980;
+        }
+        .modal-body img.profile-pic-modal {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            display: block;
+            object-fit: cover;
+            border: 3px solid #176980;
+        }
+        .close-button {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 10;
+            background: none;
+            border: none;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #D15B28;
+            text-decoration: none;
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100">
 
-    <h1 class="page-section-title">President Director</h1>
-    <div id="president-director-container" class="top-level-container">
-        <!-- President Director node will be rendered here -->
+    <header class="hibank-orange p-4 shadow-md">
+        <h1 class="text-2xl font-bold text-center">Our Company Structure</h1>
+    </header>
+
+    <div id="loadingIndicator">
+        <div class="spinner"></div>
+        <p>Loading Organizational Chart...</p>
+    </div>
+    <div id="errorMessage" class="hidden"></div>
+
+    <div class="chart-container" id="orgChartContainer">
+        <!-- Chart will be dynamically generated here -->
+        <svg id="linesContainer"></svg> <!-- SVG container for lines -->
     </div>
 
-    <h1 class="page-section-title">CEO Level</h1>
-    <div id="ceo-level-container" class="top-level-container">
-        <!-- CEO node and their direct reports (excluding directors) will be rendered here -->
-    </div>
-
-    <!-- HTML Structure for the Directorate Level Belt -->
-    <div id="directorate-belt" class="group-belt"> 
-        <h2 id="directorate-belt-title" class="group-belt-title">Directorate Level</h2>
-        <div id="director-nodes-container" class="belt-items-container">
-            <!-- Director job nodes (reporting to CEO) and their children hierarchies will be rendered here by JS -->
+    <!-- Modal for Position Details -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Position Details</h2>
+                <button class="close-button" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="modalProfilePic" src="https://placehold.co/100x100/cccccc/969696?text=Photo" alt="Profile Picture" class="profile-pic-modal">
+                <p><strong>Name:</strong> <span id="modalName"></span></p>
+                <p><strong>Title:</strong> <span id="modalPositionTitle"></span></p>
+                <p><strong>Team:</strong> <span id="modalTeam"></span></p>
+                <p><strong>Reports To:</strong> <span id="modalReportsToName"></span></p>
+                <p><strong>Details:</strong> <span id="modalDetails"></span></p>
+            </div>
+            <div class="modal-footer mt-6 text-right">
+                <button id="closeModalFooterBtn" class="hibank-orange hover:opacity-90 text-white font-semibold py-2 px-4 rounded-lg shadow">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- DATA (Updated Hierarchy) ---
-        const flatOrgData = [
-            // President Director (New Top Level)
-            { directorateGroup: 'PRESIDENT_DIRECTOR_LEVEL', division: 'Corporate', department: 'Executive Leadership', jobPosition: 'President Director', parentJobPosition: null, email: 'pres.dir@example.com', phone: '555-1000', bio: 'Guides the overall vision and strategy of the entire enterprise.', jobDescriptionLink: 'https://example.com/jd/pres-dir', isCollapsed: false },
+        // Configuration: Replace with your Google Apps Script Web App URL
+        const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'; // IMPORTANT: Replace this!
+        const PLACEHOLDER_PHOTO = 'https://placehold.co/60x60/176980/FFFFFF?text=:-) ';
+        const PLACEHOLDER_PHOTO_MODAL = 'https://placehold.co/100x100/176980/FFFFFF?text=:-) ';
 
-            // CEO (Reports to President Director)
-            { directorateGroup: 'CEO_LEVEL', division: 'Corporate', department: 'Executive Office', jobPosition: 'Chief Executive Officer', parentJobPosition: 'President Director', email: 'ceo@example.com', phone: '555-0001', bio: 'Overall strategic direction under the President Director.', jobDescriptionLink: 'https://example.com/jd/ceo', isCollapsed: false },
+        let allEmployeesData = []; // To store fetched data globally for modal use
 
-            // Director Level Jobs (reporting to CEO)
-            { directorateGroup: 'Legal & Compliance', division: 'Legal Services', department: 'Corporate Law', jobPosition: 'Legal & Compliance Director', parentJobPosition: 'Chief Executive Officer', email: 'legal.dir@example.com', phone: '555-0012', bio: 'Oversees legal and compliance matters.', jobDescriptionLink: 'https://example.com/jd/legal-dir', isCollapsed: false },
-            { directorateGroup: 'IT & Operations', division: 'Technology Operations', department: 'Technology Management', jobPosition: 'IT & Operation Director', parentJobPosition: 'Chief Executive Officer', email: 'it.ops.dir@example.com', phone: '555-0002', bio: 'Leads IT and Operations strategy.', jobDescriptionLink: 'https://example.com/jd/it-ops-dir', isCollapsed: false },
-            { directorateGroup: 'Risk Management', division: 'Enterprise Risk', department: 'Risk Assessment', jobPosition: 'Risk Management Director', parentJobPosition: 'Chief Executive Officer', email: 'risk.dir@example.com', phone: '555-0013', bio: 'Manages enterprise risk.', jobDescriptionLink: 'https://example.com/jd/risk-dir', isCollapsed: false },
-            { directorateGroup: 'Enabling Services & Finance', division: 'Finance', department: 'Accounting', jobPosition: 'Enabling Services & Finance Director', parentJobPosition: 'Chief Executive Officer', email: 'esf.dir@example.com', phone: '555-0007', bio: 'Leads enabling services and finance.', jobDescriptionLink: 'https://example.com/jd/esf-dir', isCollapsed: false },
-            
-            // Example child of a Director (reports to IT & Operation Director)
-            { directorateGroup: 'IT & Operations', division: 'Core Tech', department: 'Engineering', jobPosition: 'VP of Engineering', parentJobPosition: 'IT & Operation Director', email: 'vp.eng@example.com', phone: '555-0003', bio: 'Manages engineering teams.', jobDescriptionLink: 'https://example.com/jd/vp-eng', isJobCollapsed: true },
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
+            const orgChartContainer = document.getElementById('orgChartContainer');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const errorMessageDiv = document.getElementById('errorMessage');
+            const svgLinesContainer = document.getElementById('linesContainer');
 
-        // --- DOM ELEMENTS ---
-        const presidentDirectorContainerEl = document.getElementById('president-director-container');
-        const ceoLevelContainerEl = document.getElementById('ceo-level-container');
-        const directorateBeltEl = document.getElementById('directorate-belt');
-        const directorateBeltTitleEl = document.getElementById('directorate-belt-title');
-        const directorNodesContainerEl = document.getElementById('director-nodes-container'); 
-        
-        // --- STATE VARIABLES ---
-        let presidentDirectorNode = null;
-        let ceoNode = null;
-        let directorNodes = []; 
-        let fullHierarchy = null; 
+            // Modal elements
+            const modal = document.getElementById('detailsModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const closeModalFooterBtn = document.getElementById('closeModalFooterBtn');
+            const modalProfilePic = document.getElementById('modalProfilePic');
+            const modalName = document.getElementById('modalName');
+            const modalPositionTitle = document.getElementById('modalPositionTitle');
+            const modalTeam = document.getElementById('modalTeam');
+            const modalReportsToName = document.getElementById('modalReportsToName'); // For displaying name
+            const modalDetails = document.getElementById('modalDetails');
+            const modalTitleHeader = document.getElementById('modalTitle');
 
-        // --- CONFIGURATION ---
-        const beltColors = {
-            directorate: { background: "#E0E7FF", border: "#C7D2FE", titleColor: "#3730A3" },
-        };
-
-        // --- UTILITY FUNCTIONS ---
-        function getInitials(title) {
-            if (!title) return 'N/A';
-            const commonWords = ['of', 'the', 'and', 'for', 'in', 'on', 'at', 'to', 'with', 'a', '-'];
-            const words = title.split(/[\s-]+/) 
-                               .filter(word => word && !commonWords.includes(word.toLowerCase()));
-            let initials = '';
-            if (words.length === 1) initials = words[0].substring(0, Math.min(words[0].length, 2)).toUpperCase();
-            else if (words.length >= 2) initials = (words[0][0] + words[1][0]).toUpperCase();
-            else if (words.length > 0) initials = words.map(w => w[0]).join('').substring(0,2).toUpperCase();
-            else initials = title.substring(0, Math.min(title.length, 2)).toUpperCase();
-            return initials.substring(0,2);
-        }
-        
-        function buildOrgStructure(flatData) {
-            let pdNode = null;
-            let cNode = null;
-            const dirJobEntries = [];
-            const allJobEntries = [];
-
-            flatData.forEach(job => {
-                const jobEntry = { 
-                    id: job.jobPosition, title: job.jobPosition, directorateGroup: job.directorateGroup,
-                    division: job.division, department: job.department, email: job.email,
-                    phone: job.phone, bio: job.bio, jobDescriptionLink: job.jobDescriptionLink,
-                    isCollapsed: job.hasOwnProperty('isJobCollapsed') ? job.isJobCollapsed : (job.isCollapsed !== undefined ? job.isCollapsed : false), 
-                    type: 'job', children: [] 
-                };
-                allJobEntries.push(jobEntry);
-
-                if (job.directorateGroup === 'PRESIDENT_DIRECTOR_LEVEL') {
-                    pdNode = jobEntry;
-                } else if (job.directorateGroup === 'CEO_LEVEL' && job.parentJobPosition === 'President Director') {
-                    cNode = jobEntry;
-                } else if (job.parentJobPosition === 'Chief Executive Officer') { // Directors reporting to CEO
-                    dirJobEntries.push(jobEntry);
-                }
-            });
-            
-            const jobMap = {};
-            allJobEntries.forEach(j => jobMap[j.id] = j);
-            let hierarchyRoot = null; // This will be the President Director
-            allJobEntries.forEach(j => {
-                const flatJob = flatData.find(fd => fd.jobPosition === j.id);
-                if (flatJob.parentJobPosition && jobMap[flatJob.parentJobPosition]) {
-                    jobMap[flatJob.parentJobPosition].children.push(j);
-                } else if (!flatJob.parentJobPosition) { 
-                    hierarchyRoot = j; // Should be President Director now
-                }
-            });
-            fullHierarchy = hierarchyRoot; 
-
-            return {
-                presidentDirectorNode: pdNode,
-                ceoNode: cNode,
-                directorNodes: dirJobEntries
-            };
-        }
-
-        function findNodeByIdInFlatData(id) { 
-            return flatOrgData.find(job => job.jobPosition === id);
-        }
-        
-        function findNodeInFullHierarchy(node, id) {
-             if (!node) return null;
-            if (node.id === id) return node;
-            if (node.children) {
-                for (const child of node.children) {
-                    const found = findNodeInFullHierarchy(child, id);
-                    if (found) return found;
-                }
+            // Function to show error message
+            function showError(message) {
+                errorMessageDiv.textContent = message;
+                errorMessageDiv.classList.remove('hidden');
+                loadingIndicator.style.display = 'none';
+                orgChartContainer.innerHTML = ''; // Clear any partial content
             }
-            return null;
-        }
-        function findNodeById(id) { 
-            return findNodeInFullHierarchy(fullHierarchy, id);
-        }
-        
-        function toggleCollapse(nodeId, nodeType) {
-            if (nodeType === 'job') {
-                const flatDataNode = findNodeByIdInFlatData(nodeId);
-                if (flatDataNode) {
-                    const collapseField = flatDataNode.hasOwnProperty('isJobCollapsed') ? 'isJobCollapsed' : 'isCollapsed';
-                    if (flatDataNode[collapseField] === undefined) {
-                        const currentHierarchicalNode = findNodeById(nodeId);
-                        flatDataNode[collapseField] = currentHierarchicalNode ? currentHierarchicalNode.isCollapsed : false;
+
+            // Function to fetch data from Google Apps Script
+            async function fetchOrgData() {
+                if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                    showError('Configuration Error: Google Apps Script URL is not set. Please update SCRIPT_URL in the HTML.');
+                    // For demonstration with fallback, we can use the Apps Script's fallback data structure.
+                    // In a real scenario, you'd want the URL to be correctly set.
+                    console.warn("Using fallback data as SCRIPT_URL is not configured.");
+                    return [
+                      { id: "fb1", name: "Default CEO", title: "Chief Executive Officer", reportsTo: null, details: "This is fallback data. Please set your SCRIPT_URL.", team: "Placeholder", photoUrl: "" },
+                      { id: "fb2", name: "Default Manager", title: "Team Lead", reportsTo: "fb1", details: "Manages a default team.", team: "Placeholder", photoUrl: "" }
+                    ];
+                }
+
+                try {
+                    loadingIndicator.style.display = 'flex';
+                    errorMessageDiv.classList.add('hidden');
+                    const response = await fetch(SCRIPT_URL);
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
                     }
-                    flatDataNode[collapseField] = !flatDataNode[collapseField];
+                    const data = await response.json();
+                    if (data.error) { // Check if Apps Script returned an error object
+                        throw new Error(`Error from Apps Script: ${data.error}`);
+                    }
+                    return data;
+                } catch (error) {
+                    console.error('Error fetching org data:', error);
+                    showError(`Failed to load organization data: ${error.message}. Check the SCRIPT_URL and ensure the Apps Script is deployed correctly with 'Anyone' access.`);
+                    return []; // Return empty array on error to prevent further processing
+                } finally {
+                    loadingIndicator.style.display = 'none';
                 }
             }
-            renderOrgChart(); 
-        }
 
-        function createNodeElement(nodeData) { 
-            const nodeEl = document.createElement('div');
-            nodeEl.setAttribute('data-id', nodeData.id);
-            nodeEl.setAttribute('data-type', nodeData.type); 
-            nodeEl.classList.add('org-node');
+            // Function to build the chart structure (recursive)
+            function buildChart(employees, parentId = null) {
+                const children = employees.filter(emp => emp.reportsTo === parentId);
+                if (children.length === 0) {
+                    return null; // No children for this parent
+                }
 
-            const initials = getInitials(nodeData.title);
-            const randomHexColorForImage = Math.floor(Math.random()*12555215 + 4220000).toString(16).padStart(6, '0');
-            const imageUrl = `https://placehold.co/100x100/${randomHexColorForImage}/FFFFFF?text=${initials}&font=Inter`;
+                const levelDiv = document.createElement('div');
+                levelDiv.className = 'chart-level';
 
-            nodeEl.innerHTML = `
-                <img src="${imageUrl}" alt="${nodeData.title} - ${initials}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/CBD5E1/FFFFFF?text=Err&font=Inter';">
-                <div class="title">${nodeData.title}</div> 
-                ${nodeData.department ? `<div class="department">${nodeData.department}</div>` : ''}
-            `;
-            
-            const hierarchicalNode = findNodeById(nodeData.id);
-            if (nodeData.type === 'job' && hierarchicalNode && hierarchicalNode.children && hierarchicalNode.children.length > 0) {
-                const toggleBtn = document.createElement('button');
-                toggleBtn.classList.add('toggle-button');
-                const flatEquivalent = findNodeByIdInFlatData(nodeData.id);
-                const collapseField = flatEquivalent.hasOwnProperty('isJobCollapsed') ? 'isJobCollapsed' : 'isCollapsed';
-                const isNodeCollapsed = flatEquivalent ? flatEquivalent[collapseField] : true;
-                toggleBtn.innerHTML = isNodeCollapsed ? '<i class="fas fa-plus"></i>' : '<i class="fas fa-minus"></i>';
-                toggleBtn.addEventListener('click', (e) => {
-                    e.stopPropagation(); 
-                    toggleCollapse(nodeData.id, nodeData.type);
+                children.forEach(employee => {
+                    const nodeDiv = document.createElement('div');
+                    nodeDiv.className = 'chart-node hibank-tile';
+                    nodeDiv.dataset.id = employee.id; // Store ID for modal
+
+                    // Add profile picture if URL exists
+                    if (employee.photoUrl) {
+                        const img = document.createElement('img');
+                        img.src = employee.photoUrl;
+                        img.alt = `${employee.name}'s photo`;
+                        img.className = 'profile-pic';
+                        img.onerror = function() { this.src = PLACEHOLDER_PHOTO; }; // Fallback image
+                        nodeDiv.appendChild(img);
+                    } else {
+                         const img = document.createElement('img');
+                         img.src = PLACEHOLDER_PHOTO;
+                         img.alt = `Placeholder photo`;
+                         img.className = 'profile-pic';
+                         nodeDiv.appendChild(img);
+                    }
+
+
+                    const nameH3 = document.createElement('h3');
+                    nameH3.textContent = employee.name;
+                    nodeDiv.appendChild(nameH3);
+
+                    const titleP = document.createElement('p');
+                    titleP.textContent = employee.title;
+                    nodeDiv.appendChild(titleP);
+
+                    nodeDiv.addEventListener('click', () => showModal(employee.id));
+                    levelDiv.appendChild(nodeDiv);
+
+                    // Recursively build for the children of this employee
+                    const subordinateLevelDiv = buildChart(employees, employee.id);
+                    if (subordinateLevelDiv) {
+                        // This simple append might not create perfect tree layout.
+                        // For complex layouts, a more sophisticated rendering or library is needed.
+                        // For now, we'll append levels sequentially.
+                        // A better approach involves creating nested structures or calculating positions.
+                        // Let's refine how levels are appended later if needed for visual hierarchy.
+                    }
                 });
-                nodeEl.appendChild(toggleBtn);
+                return levelDiv;
             }
-            return nodeEl;
-        }
-
-        function renderRecursiveForJobs(nodeData, parentElementInDOM) { 
-            if (!nodeData || nodeData.type !== 'job') return; 
             
-            const nodeEl = createNodeElement(nodeData);
-            const nodeWrapper = document.createElement('div');
-            nodeWrapper.classList.add('node-wrapper');
-            nodeWrapper.appendChild(nodeEl); 
+            // Improved function to render the chart level by level
+            function renderChartByLevels(employees) {
+                orgChartContainer.innerHTML = ''; // Clear previous chart
+                orgChartContainer.appendChild(svgLinesContainer); // Re-add SVG container
 
-            const hierarchicalNode = findNodeById(nodeData.id); 
-            if (hierarchicalNode && hierarchicalNode.children && hierarchicalNode.children.length > 0) {
-                const childrenContainerEl = document.createElement('div');
-                childrenContainerEl.classList.add('children-container');
-                const flatEquivalent = findNodeByIdInFlatData(nodeData.id);
-                const collapseField = flatEquivalent.hasOwnProperty('isJobCollapsed') ? 'isJobCollapsed' : 'isCollapsed';
-                const isNodeCollapsed = flatEquivalent ? flatEquivalent[collapseField] : true;
+                if (!employees || employees.length === 0) {
+                    if (!errorMessageDiv.classList.contains('hidden')) {
+                        // Error already shown
+                    } else if (SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                         showError("No employee data found. The Google Sheet might be empty or incorrectly formatted.");
+                    }
+                    return;
+                }
 
-                if (isNodeCollapsed) {
-                    childrenContainerEl.classList.add('collapsed');
-                } else {
-                    hierarchicalNode.children.forEach(childData => {
-                        if(childData.type === 'job') {
-                             renderRecursiveForJobs(childData, childrenContainerEl); 
-                        }
+                allEmployeesData = employees; // Store for global access
+
+                const employeesById = {};
+                employees.forEach(emp => {
+                    employeesById[emp.id] = { ...emp, children: [] };
+                });
+
+                const rootEmployees = [];
+                employees.forEach(emp => {
+                    if (emp.reportsTo && employeesById[emp.reportsTo]) {
+                        employeesById[emp.reportsTo].children.push(employeesById[emp.id]);
+                    } else {
+                        rootEmployees.push(employeesById[emp.id]);
+                    }
+                });
+                
+                let currentLevelNodes = rootEmployees;
+                while(currentLevelNodes.length > 0) {
+                    const levelDiv = document.createElement('div');
+                    levelDiv.className = 'chart-level';
+                    let nextLevelNodes = [];
+
+                    currentLevelNodes.forEach(employee => {
+                        const nodeDiv = createNodeElement(employee);
+                        levelDiv.appendChild(nodeDiv);
+                        nextLevelNodes.push(...employee.children);
                     });
+                    orgChartContainer.appendChild(levelDiv);
+                    currentLevelNodes = nextLevelNodes;
                 }
-                nodeWrapper.appendChild(childrenContainerEl);
-            }
-            parentElementInDOM.appendChild(nodeWrapper); 
-        }
-        
-        function renderOrgChart() {
-            const orgData = buildOrgStructure(flatOrgData);
-            presidentDirectorNode = orgData.presidentDirectorNode;
-            ceoNode = orgData.ceoNode;
-            directorNodes = orgData.directorNodes;
-
-            // Clear previous content
-            presidentDirectorContainerEl.innerHTML = '';
-            ceoLevelContainerEl.innerHTML = '';
-            directorNodesContainerEl.innerHTML = '';
-            
-            // Render President Director
-            if (presidentDirectorNode) {
-                renderRecursiveForJobs(findNodeById(presidentDirectorNode.id), presidentDirectorContainerEl);
+                // Delay line drawing until after DOM elements are rendered and positioned
+                setTimeout(drawLines, 100);
             }
 
-            // Render CEO (and their direct non-director reports, if any)
-            if (ceoNode) {
-                renderRecursiveForJobs(findNodeById(ceoNode.id), ceoLevelContainerEl);
-            }
-            
-            // Style and render Directorate belt
-            directorateBeltEl.style.backgroundColor = beltColors.directorate.background;
-            directorateBeltEl.style.borderColor = beltColors.directorate.border;
-            directorateBeltTitleEl.style.color = beltColors.directorate.titleColor;
-            directorateBeltTitleEl.textContent = "Directorate Level";
+            function createNodeElement(employee) {
+                const nodeDiv = document.createElement('div');
+                nodeDiv.className = 'chart-node hibank-tile';
+                nodeDiv.dataset.id = employee.id;
+                nodeDiv.id = `node-${employee.id}`; // Assign ID for line drawing
 
-            if (directorNodes && directorNodes.length > 0) {
-                directorNodes.forEach(dirNodeDataFromList => {
-                    const fullDirNode = findNodeById(dirNodeDataFromList.id); 
-                    if (fullDirNode) {
-                        renderRecursiveForJobs(fullDirNode, directorNodesContainerEl);
+                if (employee.photoUrl && employee.photoUrl.trim() !== "") {
+                    const img = document.createElement('img');
+                    img.src = employee.photoUrl;
+                    img.alt = `${employee.name}'s photo`;
+                    img.className = 'profile-pic';
+                    img.onerror = function() { this.src = PLACEHOLDER_PHOTO; nodeDiv.insertBefore(img, nodeDiv.firstChild);};
+                    nodeDiv.appendChild(img);
+                } else {
+                    const img = document.createElement('img');
+                    img.src = PLACEHOLDER_PHOTO;
+                    img.alt = `Placeholder photo for ${employee.name}`;
+                    img.className = 'profile-pic';
+                    nodeDiv.appendChild(img);
+                }
+
+                const nameH3 = document.createElement('h3');
+                nameH3.textContent = employee.name;
+                nodeDiv.appendChild(nameH3);
+
+                const titleP = document.createElement('p');
+                titleP.textContent = employee.title;
+                nodeDiv.appendChild(titleP);
+
+                nodeDiv.addEventListener('click', () => showModal(employee.id));
+                return nodeDiv;
+            }
+
+            // Function to draw lines between nodes
+            function drawLines() {
+                svgLinesContainer.innerHTML = ''; // Clear existing lines
+                const chartRect = orgChartContainer.getBoundingClientRect();
+
+                allEmployeesData.forEach(employee => {
+                    if (employee.reportsTo) {
+                        const childNode = document.getElementById(`node-${employee.id}`);
+                        const parentNode = document.getElementById(`node-${employee.reportsTo}`);
+
+                        if (childNode && parentNode) {
+                            const childRect = childNode.getBoundingClientRect();
+                            const parentRect = parentNode.getBoundingClientRect();
+
+                            // Calculate start and end points relative to the orgChartContainer
+                            // Start from bottom-center of parent
+                            const x1 = parentRect.left + parentRect.width / 2 - chartRect.left;
+                            const y1 = parentRect.bottom - chartRect.top;
+                            // End at top-center of child
+                            const x2 = childRect.left + childRect.width / 2 - chartRect.left;
+                            const y2 = childRect.top - chartRect.top;
+                            
+                            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                            line.setAttribute('x1', x1);
+                            line.setAttribute('y1', y1);
+                            line.setAttribute('x2', x2);
+                            line.setAttribute('y2', y2);
+                            line.setAttribute('stroke', '#176980'); // Hibank Tile color
+                            line.setAttribute('stroke-width', '2');
+                            svgLinesContainer.appendChild(line);
+                        }
                     }
                 });
-            } else {
-                directorNodesContainerEl.innerHTML = '<p>No directors to display under CEO.</p>';
             }
-            // In a full app, drawLines() would be called here.
-        }
-        
-        renderOrgChart();
+             // Debounce resize function
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(drawLines, 250); // Redraw lines after resize settles
+            });
 
+
+            // Function to display modal with employee details
+            function showModal(employeeId) {
+                const employee = allEmployeesData.find(emp => emp.id === employeeId);
+                if (!employee) return;
+
+                modalTitleHeader.textContent = employee.title || "Position Details";
+                modalName.textContent = employee.name;
+                modalPositionTitle.textContent = employee.title;
+                modalTeam.textContent = employee.team || "N/A";
+                modalDetails.textContent = employee.details || "No additional details provided.";
+
+                if (employee.photoUrl && employee.photoUrl.trim() !== "") {
+                    modalProfilePic.src = employee.photoUrl;
+                    modalProfilePic.onerror = function() { this.src = PLACEHOLDER_PHOTO_MODAL; };
+                } else {
+                    modalProfilePic.src = PLACEHOLDER_PHOTO_MODAL;
+                }
+                
+                // Find manager's name
+                if (employee.reportsTo) {
+                    const manager = allEmployeesData.find(emp => emp.id === employee.reportsTo);
+                    modalReportsToName.textContent = manager ? manager.name : "N/A";
+                } else {
+                    modalReportsToName.textContent = "N/A";
+                }
+
+                modal.style.display = 'flex';
+            }
+
+            // Modal close actions
+            const closeTheModal = () => {
+                modal.style.display = 'none';
+            };
+            closeModalBtn.addEventListener('click', closeTheModal);
+            closeModalFooterBtn.addEventListener('click', closeTheModal);
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) closeTheModal();
+            });
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal.style.display === 'flex') closeTheModal();
+            });
+
+            // Initial load
+            async function initializeChart() {
+                const data = await fetchOrgData();
+                if (data && data.length > 0) {
+                     renderChartByLevels(data);
+                } else if (!errorMessageDiv.textContent && SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                     // If fetchOrgData returned empty but didn't set an error (e.g. empty valid sheet)
+                     showError("No data received from the source. The sheet might be empty or the script returned no employees.");
+                }
+            }
+
+            initializeChart();
+        });
     </script>
+
 </body>
 </html>
