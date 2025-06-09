@@ -3,538 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company Org Chart</title>
+    <title>Interactive Organizational Chart</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        /* Custom styles for the org chart */
+        html, body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
+            background-color: #f8fafc; /* Tailwind gray-50 */
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevent body scroll, pannable div will handle it */
         }
-        .hibank-orange {
-            background-color: #D15B28;
-            color: white;
+
+        /* Styles for the pan-to-move functionality */
+        .pannable {
+            cursor: grab;
+            overflow: auto; /* Allow this container to scroll */
+            height: 100%;
+            width: 100%;
         }
-        .hibank-tile {
-            background-color: #176980;
-            color: white;
+        .pannable.is-panning {
+            cursor: grabbing;
         }
+
+        /* Container for the entire chart to allow for zooming */
         .chart-container {
+            transform-origin: top center;
+            transition: transform 0.3s ease-in-out;
+            padding: 2rem 4rem; /* Increased horizontal padding */
+            display: inline-block; /* Helps with sizing for zoom */
+            min-width: 100%;
+        }
+
+        /* General styling for the tree structure */
+        .tree ul {
+            position: relative;
+            padding-top: 40px;
+            display: flex;
+            justify-content: center;
+            transition: all 0.5s;
+        }
+
+        .tree li {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            gap: 40px; /* Increased spacing for lines */
-            position: relative; /* For absolute positioning of lines */
-        }
-        .chart-level {
-            display: flex;
-            justify-content: center;
-            gap: 30px; /* Spacing between nodes */
-            flex-wrap: wrap;
-            position: relative; /* For lines */
-            width: 100%;
-        }
-        .chart-node {
-            width: 220px; /* Slightly wider */
-            min-height: 100px; /* Ensure consistent height */
-            padding: 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Center content vertically */
-            position: relative; /* For connector points */
-            z-index: 10; /* Nodes above lines */
-        }
-        .chart-node img.profile-pic {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 0 auto 10px auto;
-            object-fit: cover;
-            border: 2px solid white;
-        }
-        .chart-node:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
-        }
-        .chart-node h3 {
-            font-size: 1.1rem; /* ~17.5px */
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .chart-node p {
-            font-size: 0.85rem; /* ~13.5px */
-            opacity: 0.9;
+            position: relative;
+            padding: 20px 20px 0 20px; 
+            transition: all 0.5s;
         }
 
-        /* SVG Lines container */
-        #linesContainer {
+        /* Connector lines */
+        .tree li::before, .tree li::after {
+            content: '';
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* Lines behind nodes */
-            overflow: visible; /* Allow lines to draw outside bounds if needed */
+            right: 50%;
+            border-top: 2px solid #cbd5e1;
+            width: 50%;
+            height: 40px;
+        }
+        .tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 2px solid #cbd5e1;
         }
 
-        /* Loading indicator */
-        #loadingIndicator {
-            display: flex;
+        .tree li:only-child::after, .tree li:only-child::before { display: none; }
+        .tree li:first-child::before { border: 0 none; }
+        .tree li:last-child::after { border: 0 none; }
+        .tree li:last-child::before { border-right: 2px solid #cbd5e1; border-radius: 0 5px 0 0; }
+        .tree li:first-child::after { border-radius: 5px 0 0 0; }
+        .tree ul ul::before { content: ''; position: absolute; top: 0; left: 50%; border-left: 2px solid #cbd5e1; width: 0; height: 40px; }
+
+        /* Node card styling */
+        .node {
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            display: inline-flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 40px;
-            text-align: center;
-            color: #176980;
-        }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border-left-color: #D15B28; /* Hibank Orange for spinner */
-            animation: spin 1s ease infinite;
-            margin-bottom: 10px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Error Message */
-        #errorMessage {
-            color: #D15B28;
-            background-color: #ffebee;
-            border: 1px solid #D15B28;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 20px;
-        }
-
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.6);
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background-color: #ffffff;
-            margin: auto;
-            padding: 24px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: fadeInModal 0.3s ease-out;
-        }
-        @keyframes fadeInModal {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 12px;
-            margin-bottom: 16px;
-        }
-        .modal-header h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #176980;
-        }
-        .modal-body p {
-            margin-bottom: 8px;
-            line-height: 1.6;
-            color: #374151;
-        }
-        .modal-body strong {
-            color: #176980;
-        }
-        .modal-body img.profile-pic-modal {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin: 0 auto 15px auto;
-            display: block;
-            object-fit: cover;
-            border: 3px solid #176980;
-        }
-        .close-button {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
+            gap: 0.5rem;
+            min-width: 220px;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             cursor: pointer;
-            background: none;
-            border: none;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .close-button:hover,
-        .close-button:focus {
-            color: #D15B28;
-            text-decoration: none;
-        }
+        .node:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .node.highlight { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.7); background-color: #eff6ff; }
+        .node.dimmed { opacity: 0.4; }
+        .node.vacant { background-color: #f8fafc; border-style: dashed; }
+        .child-count { position: absolute; bottom: -15px; background-color: #3b82f6; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600; border: 3px solid white; }
+        .tree li.collapsed > ul { display: none; }
+
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="flex flex-col">
 
-    <header class="hibank-orange p-4 shadow-md">
-        <h1 class="text-2xl font-bold text-center">Our Company Structure</h1>
-    </header>
-
-    <div id="loadingIndicator">
-        <div class="spinner"></div>
-        <p>Loading Organizational Chart...</p>
-    </div>
-    <div id="errorMessage" class="hidden"></div>
-
-    <div class="chart-container" id="orgChartContainer">
-        <!-- Chart will be dynamically generated here -->
-        <svg id="linesContainer"></svg> <!-- SVG container for lines -->
-    </div>
-
-    <!-- Modal for Position Details -->
-    <div id="detailsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Position Details</h2>
-                <button class="close-button" id="closeModalBtn">&times;</button>
+    <!-- Header Controls -->
+    <header class="bg-white p-4 shadow-sm z-10 flex-shrink-0 flex flex-wrap items-center justify-between gap-4 w-full">
+        <h1 class="text-xl font-bold text-gray-800">Organizational Chart</h1>
+        <div class="flex items-center gap-2 md:gap-4 flex-wrap">
+            <div class="relative">
+                <input type="text" id="searchInput" placeholder="Search..." class="pl-10 pr-4 py-2 border rounded-lg w-48 md:w-64 focus:ring-blue-500 focus:border-blue-500">
+                <svg class="w-5 h-5 text-gray-400 absolute top-1/2 left-3 transform -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             </div>
-            <div class="modal-body">
-                <img id="modalProfilePic" src="https://placehold.co/100x100/cccccc/969696?text=Photo" alt="Profile Picture" class="profile-pic-modal">
-                <p><strong>Name:</strong> <span id="modalName"></span></p>
-                <p><strong>Title:</strong> <span id="modalPositionTitle"></span></p>
-                <p><strong>Team:</strong> <span id="modalTeam"></span></p>
-                <p><strong>Reports To:</strong> <span id="modalReportsToName"></span></p>
-                <p><strong>Details:</strong> <span id="modalDetails"></span></p>
-            </div>
-            <div class="modal-footer mt-6 text-right">
-                <button id="closeModalFooterBtn" class="hibank-orange hover:opacity-90 text-white font-semibold py-2 px-4 rounded-lg shadow">
-                    Close
-                </button>
+            <button id="expandAllBtn" class="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 font-medium">Expand All</button>
+            <button id="collapseAllBtn" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium">Collapse All</button>
+             <div class="flex items-center gap-1">
+                <button id="zoomOutBtn" class="p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">-</button>
+                <span id="zoomLevel" class="w-12 text-center text-sm font-semibold text-gray-600">100%</span>
+                <button id="zoomInBtn" class="p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">+</button>
             </div>
         </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div id="pan-wrapper" class="flex-grow pannable">
+        <main id="chartContainer" class="chart-container">
+            <div id="orgChart" class="tree">
+                <!-- Chart will be generated here -->
+            </div>
+        </main>
     </div>
 
     <script>
-        // Configuration: Replace with your Google Apps Script Web App URL
-        const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'; // IMPORTANT: Replace this!
-        const PLACEHOLDER_PHOTO = 'https://placehold.co/60x60/176980/FFFFFF?text=:-) ';
-        const PLACEHOLDER_PHOTO_MODAL = 'https://placehold.co/100x100/176980/FFFFFF?text=:-) ';
+        const orgData = {
+            isRoot: true,
+            children: [
+                { id: 799018, name: 'Jenny Wiriyanto', title: 'President Director', department: 'Board of Directors', imageUrl: 'https://placehold.co/80x80/d1d5db/374151?text=JW', children: [ { id: 232234, name: 'Alexandra Andrea...', title: 'CEO Office', department: 'Board of Management', imageUrl: 'https://placehold.co/80x80/fbcfe8/9d2463?text=AA', children: [] }, { id: 799019, name: 'Andi Muhamad A...', title: 'Risk Management', department: 'Board of Directors', imageUrl: 'https://placehold.co/80x80/d1fae5/065f46?text=AM', children: [ { id: 101, name: 'Risk Analyst 1', title: 'Analyst', department: 'Risk Management', imageUrl: 'https://placehold.co/80x80/e0e7ff/3730a3?text=RA1' }, { id: 102, name: 'Risk Analyst 2', title: 'Analyst', department: 'Risk Management', imageUrl: 'https://placehold.co/80x80/e0e7ff/3730a3?text=RA2' }] }, { id: 292725, name: 'Ditto Prabowo Wi...', title: 'Chief Digital Officer', department: 'Digital', imageUrl: 'https://placehold.co/80x80/fef3c7/92400e?text=DP', children: [ { id: 201, name: 'UI/UX Lead', title: 'Lead Designer', department: 'Digital', imageUrl: 'https://placehold.co/80x80/ccfbf1/0f766e?text=UL' }, { id: 202, name: 'Frontend Lead', title: 'Lead Developer', department: 'Digital', imageUrl: 'https://placehold.co/80x80/ccfbf1/0f766e?text=FL' }, { id: 203, name: 'Backend Lead', title: 'Lead Developer', department: 'Digital', imageUrl: 'https://placehold.co/80x80/ccfbf1/0f766e?text=BL' } ] }, { id: 799023, name: 'Ida Bagus Rian M...', title: 'Head Internal Audit', department: 'Internal Audit', imageUrl: 'https://placehold.co/80x80/fee2e2/991b1b?text=IB', children: [] }, { id: 799020, name: 'IR. Prihadiyanto', title: 'IT & Operation Dir...', department: 'Board of Directors', imageUrl: 'https://placehold.co/80x80/dbeafe/1e40af?text=IP', children: [] }, { id: 232302, name: 'Yasmina M.M. Su...', title: 'Brand & Business ...', department: 'Marketing & Brand ...', imageUrl: 'https://placehold.co/80x80/fce7f3/9d2463?text=YM', children: [] }, { id: 799024, name: 'Adi Syaf Putra', title: 'Legal & Complian ...', department: 'Board of Directors', imageUrl: 'https://placehold.co/80x80/e0e7ff/3730a3?text=AS', children: [] }, { id: 243385, name: 'Ricky Budiono', title: 'Enabling Services ...', department: 'Board of Directors', imageUrl: 'https://placehold.co/80x80/fae8ff/701a75?text=RB', children: [] }, { id: null, name: 'Annisa', title: 'CEO', department: 'Board', imageUrl: 'https://placehold.co/80x80/ecfccb/4d7c0f?text=A', children: [] }, ] },
+                { id: 'vacant', name: 'Vacant position', isVacant: true, children: [] }
+            ]
+        };
 
-        let allEmployeesData = []; // To store fetched data globally for modal use
+        const chartElement = document.getElementById('orgChart');
+        let currentZoom = 1.0;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const orgChartContainer = document.getElementById('orgChartContainer');
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            const errorMessageDiv = document.getElementById('errorMessage');
-            const svgLinesContainer = document.getElementById('linesContainer');
+        function createNodeHTML(nodeData) {
+            if (!nodeData) return ''; if (nodeData.isVacant) { return `<li><div class="node vacant flex-col items-center justify-center p-6 h-full"><div class="flex items-center justify-center w-20 h-20 bg-gray-200 rounded-full mb-3"><svg class="w-8 h-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg></div><p class="font-semibold text-gray-700">${nodeData.name}</p></div></li>`; }
+            const childrenCount = nodeData.children ? nodeData.children.length : 0; let childrenHTML = ''; if (childrenCount > 0) { childrenHTML = `<ul>${nodeData.children.map(createNodeHTML).join('')}</ul>`; }
+            return `<li data-id="${nodeData.id}" class="${childrenCount > 0 ? '' : 'is-leaf'}"><div class="node" tabindex="0"><span class="text-xs font-semibold text-gray-500 self-start">${nodeData.id}</span><img src="${nodeData.imageUrl}" alt="${nodeData.name}" class="w-20 h-20 rounded-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/80x80/fecaca/7f1d1d?text=Error';"><div class="text-center"><p class="font-bold text-gray-800">${nodeData.name}</p><p class="text-sm text-gray-600">${nodeData.title}</p><p class="text-xs text-gray-500 mt-1">${nodeData.department}</p></div>${childrenCount > 0 ? `<div class="child-count">${childrenCount}</div>` : ''}</div>${childrenHTML}</li>`;
+        }
 
-            // Modal elements
-            const modal = document.getElementById('detailsModal');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const closeModalFooterBtn = document.getElementById('closeModalFooterBtn');
-            const modalProfilePic = document.getElementById('modalProfilePic');
-            const modalName = document.getElementById('modalName');
-            const modalPositionTitle = document.getElementById('modalPositionTitle');
-            const modalTeam = document.getElementById('modalTeam');
-            const modalReportsToName = document.getElementById('modalReportsToName'); // For displaying name
-            const modalDetails = document.getElementById('modalDetails');
-            const modalTitleHeader = document.getElementById('modalTitle');
+        function renderChart() {
+            const topLevelNodesHTML = orgData.children.map(createNodeHTML).join('');
+            chartElement.innerHTML = `<ul>${topLevelNodesHTML}</ul>`;
+            addEventListeners();
+        }
 
-            // Function to show error message
-            function showError(message) {
-                errorMessageDiv.textContent = message;
-                errorMessageDiv.classList.remove('hidden');
-                loadingIndicator.style.display = 'none';
-                orgChartContainer.innerHTML = ''; // Clear any partial content
-            }
-
-            // Function to fetch data from Google Apps Script
-            async function fetchOrgData() {
-                if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                    showError('Configuration Error: Google Apps Script URL is not set. Please update SCRIPT_URL in the HTML.');
-                    // For demonstration with fallback, we can use the Apps Script's fallback data structure.
-                    // In a real scenario, you'd want the URL to be correctly set.
-                    console.warn("Using fallback data as SCRIPT_URL is not configured.");
-                    return [
-                      { id: "fb1", name: "Default CEO", title: "Chief Executive Officer", reportsTo: null, details: "This is fallback data. Please set your SCRIPT_URL.", team: "Placeholder", photoUrl: "" },
-                      { id: "fb2", name: "Default Manager", title: "Team Lead", reportsTo: "fb1", details: "Manages a default team.", team: "Placeholder", photoUrl: "" }
-                    ];
-                }
-
-                try {
-                    loadingIndicator.style.display = 'flex';
-                    errorMessageDiv.classList.add('hidden');
-                    const response = await fetch(SCRIPT_URL);
-                    if (!response.ok) {
-                        throw new Error(`Network response was not ok: ${response.statusText}`);
-                    }
-                    const data = await response.json();
-                    if (data.error) { // Check if Apps Script returned an error object
-                        throw new Error(`Error from Apps Script: ${data.error}`);
-                    }
-                    return data;
-                } catch (error) {
-                    console.error('Error fetching org data:', error);
-                    showError(`Failed to load organization data: ${error.message}. Check the SCRIPT_URL and ensure the Apps Script is deployed correctly with 'Anyone' access.`);
-                    return []; // Return empty array on error to prevent further processing
-                } finally {
-                    loadingIndicator.style.display = 'none';
-                }
-            }
-
-            // Function to build the chart structure (recursive)
-            function buildChart(employees, parentId = null) {
-                const children = employees.filter(emp => emp.reportsTo === parentId);
-                if (children.length === 0) {
-                    return null; // No children for this parent
-                }
-
-                const levelDiv = document.createElement('div');
-                levelDiv.className = 'chart-level';
-
-                children.forEach(employee => {
-                    const nodeDiv = document.createElement('div');
-                    nodeDiv.className = 'chart-node hibank-tile';
-                    nodeDiv.dataset.id = employee.id; // Store ID for modal
-
-                    // Add profile picture if URL exists
-                    if (employee.photoUrl) {
-                        const img = document.createElement('img');
-                        img.src = employee.photoUrl;
-                        img.alt = `${employee.name}'s photo`;
-                        img.className = 'profile-pic';
-                        img.onerror = function() { this.src = PLACEHOLDER_PHOTO; }; // Fallback image
-                        nodeDiv.appendChild(img);
-                    } else {
-                         const img = document.createElement('img');
-                         img.src = PLACEHOLDER_PHOTO;
-                         img.alt = `Placeholder photo`;
-                         img.className = 'profile-pic';
-                         nodeDiv.appendChild(img);
-                    }
-
-
-                    const nameH3 = document.createElement('h3');
-                    nameH3.textContent = employee.name;
-                    nodeDiv.appendChild(nameH3);
-
-                    const titleP = document.createElement('p');
-                    titleP.textContent = employee.title;
-                    nodeDiv.appendChild(titleP);
-
-                    nodeDiv.addEventListener('click', () => showModal(employee.id));
-                    levelDiv.appendChild(nodeDiv);
-
-                    // Recursively build for the children of this employee
-                    const subordinateLevelDiv = buildChart(employees, employee.id);
-                    if (subordinateLevelDiv) {
-                        // This simple append might not create perfect tree layout.
-                        // For complex layouts, a more sophisticated rendering or library is needed.
-                        // For now, we'll append levels sequentially.
-                        // A better approach involves creating nested structures or calculating positions.
-                        // Let's refine how levels are appended later if needed for visual hierarchy.
-                    }
-                });
-                return levelDiv;
-            }
-            
-            // Improved function to render the chart level by level
-            function renderChartByLevels(employees) {
-                orgChartContainer.innerHTML = ''; // Clear previous chart
-                orgChartContainer.appendChild(svgLinesContainer); // Re-add SVG container
-
-                if (!employees || employees.length === 0) {
-                    if (!errorMessageDiv.classList.contains('hidden')) {
-                        // Error already shown
-                    } else if (SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                         showError("No employee data found. The Google Sheet might be empty or incorrectly formatted.");
-                    }
-                    return;
-                }
-
-                allEmployeesData = employees; // Store for global access
-
-                const employeesById = {};
-                employees.forEach(emp => {
-                    employeesById[emp.id] = { ...emp, children: [] };
-                });
-
-                const rootEmployees = [];
-                employees.forEach(emp => {
-                    if (emp.reportsTo && employeesById[emp.reportsTo]) {
-                        employeesById[emp.reportsTo].children.push(employeesById[emp.id]);
-                    } else {
-                        rootEmployees.push(employeesById[emp.id]);
-                    }
-                });
-                
-                let currentLevelNodes = rootEmployees;
-                while(currentLevelNodes.length > 0) {
-                    const levelDiv = document.createElement('div');
-                    levelDiv.className = 'chart-level';
-                    let nextLevelNodes = [];
-
-                    currentLevelNodes.forEach(employee => {
-                        const nodeDiv = createNodeElement(employee);
-                        levelDiv.appendChild(nodeDiv);
-                        nextLevelNodes.push(...employee.children);
+        function addEventListeners() {
+            chartElement.querySelectorAll('.node').forEach(nodeEl => {
+                const li = nodeEl.parentElement;
+                if (!li.classList.contains('is-leaf') && li.dataset.id && li.dataset.id !== 'null') {
+                    nodeEl.addEventListener('click', () => {
+                        li.classList.toggle('collapsed');
                     });
-                    orgChartContainer.appendChild(levelDiv);
-                    currentLevelNodes = nextLevelNodes;
                 }
-                // Delay line drawing until after DOM elements are rendered and positioned
-                setTimeout(drawLines, 100);
-            }
-
-            function createNodeElement(employee) {
-                const nodeDiv = document.createElement('div');
-                nodeDiv.className = 'chart-node hibank-tile';
-                nodeDiv.dataset.id = employee.id;
-                nodeDiv.id = `node-${employee.id}`; // Assign ID for line drawing
-
-                if (employee.photoUrl && employee.photoUrl.trim() !== "") {
-                    const img = document.createElement('img');
-                    img.src = employee.photoUrl;
-                    img.alt = `${employee.name}'s photo`;
-                    img.className = 'profile-pic';
-                    img.onerror = function() { this.src = PLACEHOLDER_PHOTO; nodeDiv.insertBefore(img, nodeDiv.firstChild);};
-                    nodeDiv.appendChild(img);
-                } else {
-                    const img = document.createElement('img');
-                    img.src = PLACEHOLDER_PHOTO;
-                    img.alt = `Placeholder photo for ${employee.name}`;
-                    img.className = 'profile-pic';
-                    nodeDiv.appendChild(img);
-                }
-
-                const nameH3 = document.createElement('h3');
-                nameH3.textContent = employee.name;
-                nodeDiv.appendChild(nameH3);
-
-                const titleP = document.createElement('p');
-                titleP.textContent = employee.title;
-                nodeDiv.appendChild(titleP);
-
-                nodeDiv.addEventListener('click', () => showModal(employee.id));
-                return nodeDiv;
-            }
-
-            // Function to draw lines between nodes
-            function drawLines() {
-                svgLinesContainer.innerHTML = ''; // Clear existing lines
-                const chartRect = orgChartContainer.getBoundingClientRect();
-
-                allEmployeesData.forEach(employee => {
-                    if (employee.reportsTo) {
-                        const childNode = document.getElementById(`node-${employee.id}`);
-                        const parentNode = document.getElementById(`node-${employee.reportsTo}`);
-
-                        if (childNode && parentNode) {
-                            const childRect = childNode.getBoundingClientRect();
-                            const parentRect = parentNode.getBoundingClientRect();
-
-                            // Calculate start and end points relative to the orgChartContainer
-                            // Start from bottom-center of parent
-                            const x1 = parentRect.left + parentRect.width / 2 - chartRect.left;
-                            const y1 = parentRect.bottom - chartRect.top;
-                            // End at top-center of child
-                            const x2 = childRect.left + childRect.width / 2 - chartRect.left;
-                            const y2 = childRect.top - chartRect.top;
-                            
-                            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                            line.setAttribute('x1', x1);
-                            line.setAttribute('y1', y1);
-                            line.setAttribute('x2', x2);
-                            line.setAttribute('y2', y2);
-                            line.setAttribute('stroke', '#176980'); // Hibank Tile color
-                            line.setAttribute('stroke-width', '2');
-                            svgLinesContainer.appendChild(line);
-                        }
-                    }
-                });
-            }
-             // Debounce resize function
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(drawLines, 250); // Redraw lines after resize settles
             });
-
-
-            // Function to display modal with employee details
-            function showModal(employeeId) {
-                const employee = allEmployeesData.find(emp => emp.id === employeeId);
-                if (!employee) return;
-
-                modalTitleHeader.textContent = employee.title || "Position Details";
-                modalName.textContent = employee.name;
-                modalPositionTitle.textContent = employee.title;
-                modalTeam.textContent = employee.team || "N/A";
-                modalDetails.textContent = employee.details || "No additional details provided.";
-
-                if (employee.photoUrl && employee.photoUrl.trim() !== "") {
-                    modalProfilePic.src = employee.photoUrl;
-                    modalProfilePic.onerror = function() { this.src = PLACEHOLDER_PHOTO_MODAL; };
-                } else {
-                    modalProfilePic.src = PLACEHOLDER_PHOTO_MODAL;
-                }
-                
-                // Find manager's name
-                if (employee.reportsTo) {
-                    const manager = allEmployeesData.find(emp => emp.id === employee.reportsTo);
-                    modalReportsToName.textContent = manager ? manager.name : "N/A";
-                } else {
-                    modalReportsToName.textContent = "N/A";
-                }
-
-                modal.style.display = 'flex';
-            }
-
-            // Modal close actions
-            const closeTheModal = () => {
-                modal.style.display = 'none';
-            };
-            closeModalBtn.addEventListener('click', closeTheModal);
-            closeModalFooterBtn.addEventListener('click', closeTheModal);
-            window.addEventListener('click', (event) => {
-                if (event.target === modal) closeTheModal();
-            });
-            window.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && modal.style.display === 'flex') closeTheModal();
-            });
-
-            // Initial load
-            async function initializeChart() {
-                const data = await fetchOrgData();
-                if (data && data.length > 0) {
-                     renderChartByLevels(data);
-                } else if (!errorMessageDiv.textContent && SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                     // If fetchOrgData returned empty but didn't set an error (e.g. empty valid sheet)
-                     showError("No data received from the source. The sheet might be empty or the script returned no employees.");
-                }
-            }
-
-            initializeChart();
+        }
+        
+        document.getElementById('expandAllBtn').addEventListener('click', () => chartElement.querySelectorAll('.collapsed').forEach(el => el.classList.remove('collapsed')));
+        document.getElementById('collapseAllBtn').addEventListener('click', () => {
+            chartElement.querySelectorAll('li:not(.is-leaf)').forEach(li => li.classList.add('collapsed'));
+            const topLevelNodes = chartElement.firstElementChild.children;
+            for(const topLi of topLevelNodes) { topLi.classList.remove('collapsed'); }
         });
-    </script>
 
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+
+            document.querySelectorAll('#orgChart .node').forEach(node => {
+                const nodeText = node.innerText.toLowerCase();
+                if (searchTerm && nodeText.includes(searchTerm)) {
+                    node.classList.add('highlight');
+                    node.classList.remove('dimmed');
+                } else if (searchTerm) {
+                    node.classList.remove('highlight');
+                    node.classList.add('dimmed');
+                } else {
+                    node.classList.remove('highlight', 'dimmed');
+                }
+            });
+        });
+
+        const zoomLevelDisplay = document.getElementById('zoomLevel');
+        const chartMainContainer = document.getElementById('chartContainer');
+        document.getElementById('zoomInBtn').addEventListener('click', () => {
+             if (currentZoom < 2.0) { currentZoom = Math.round((currentZoom + 0.1) * 10) / 10; chartMainContainer.style.transform = `scale(${currentZoom})`; zoomLevelDisplay.textContent = `${Math.round(currentZoom * 100)}%`; }
+        });
+        document.getElementById('zoomOutBtn').addEventListener('click', () => {
+             if (currentZoom > 0.5) { currentZoom = Math.round((currentZoom - 0.1) * 10) / 10; chartMainContainer.style.transform = `scale(${currentZoom})`; zoomLevelDisplay.textContent = `${Math.round(currentZoom * 100)}%`; }
+        });
+        
+        const panWrapper = document.getElementById('pan-wrapper');
+        let isPanning = false; let startX, startY, scrollLeft, scrollTop;
+        panWrapper.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.node, button, input')) return;
+            isPanning = true; panWrapper.classList.add('is-panning'); 
+            startX = e.pageX - panWrapper.offsetLeft; 
+            startY = e.pageY - panWrapper.offsetTop;
+            scrollLeft = panWrapper.scrollLeft; 
+            scrollTop = panWrapper.scrollTop;
+        });
+        panWrapper.addEventListener('mouseleave', () => { isPanning = false; panWrapper.classList.remove('is-panning'); });
+        panWrapper.addEventListener('mouseup', () => { isPanning = false; panWrapper.classList.remove('is-panning'); });
+        panWrapper.addEventListener('mousemove', (e) => {
+            if (!isPanning) return; e.preventDefault(); 
+            const x = e.pageX - panWrapper.offsetLeft;
+            const y = e.pageY - panWrapper.offsetTop;
+            const walkX = x - startX;
+            const walkY = y - startY;
+            panWrapper.scrollLeft = scrollLeft - walkX; 
+            panWrapper.scrollTop = scrollTop - walkY;
+        });
+
+        // Initial render
+        renderChart();
+    </script>
 </body>
 </html>
