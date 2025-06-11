@@ -1,202 +1,279 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Using Tailwind CSS for a modern look -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Using Google Fonts for better typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Applying the Inter font to the entire page */
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: #1F2937; 
         }
-        /* Simple transition for better UX on interactive elements */
+        
+        /* Layout Container */
+        .container {
+            max-width: 48rem; 
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1F2937; 
+        }
+        header p {
+            color: #4B5563; 
+            margin-top: 0.5rem;
+        }
+
+        /* Main Form Area */
+        main {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); 
+        }
+
+        /* Adds space between each major section of the form */
+        #trainingRequestForm > div:not(:last-child) {
+             margin-bottom: 2rem; 
+        }
+        
+        /* Adds space between form fields within a section */
+        .form-field-group > div:not(:first-child) {
+            margin-top: 1.5rem;
+        }
+
+
+        /* Section Headings */
+        .section-heading {
+            font-size: 1.25rem; 
+            font-weight: 600;
+            color: #374151; 
+            border-bottom: 1px solid #E5E7EB; 
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Form Elements */
+        label {
+            display: block;
+            font-size: 0.875rem; 
+            font-weight: 500; 
+            color: #374151; 
+            margin-bottom: 0.25rem; 
+        }
+        
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 1rem;
+            font-weight: 400;
+        }
+        
+        .radio-group input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            background-color: #ffffff;
+            border: 1px solid #D1D5DB; 
+            border-radius: 0.375rem; 
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4F46E5; 
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3); 
+        }
+
+        textarea {
+            height: auto; 
+            min-height: 80px;
+        }
+
+        /* Button and Spinner */
+        .submit-container {
+            padding-top: 1.25rem;
+            text-align: right;
+        }
+
         .btn-primary {
+            display: inline-flex;
+            justify-content: center;
+            padding: 0.5rem 1.5rem;
+            border: 1px solid transparent;
+            border-radius: 0.375rem;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #ffffff;
+            background-color: #4F46E5;
+            cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .btn-primary:hover {
+            background-color: #4338CA; 
             transform: translateY(-2px);
         }
-        /* Custom styles for the loading spinner */
-        .loader {
-            border-top-color: #3498db;
-            animation: spin 1s linear infinite;
+        .btn-primary:disabled {
+            background-color: #A5B4FC;
+            cursor: not-allowed;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        
+        /* Signature Section */
+        .signature-section {
+            display: block; /* Ensures it stacks vertically */
         }
+        .signature-section > div:not(:first-child) {
+            margin-top: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: #6B7280; 
+        }
+        
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
 
-    <div class="container mx-auto p-4 sm:p-8 max-w-2xl">
+    <div class="container">
 
-        <!-- Header Section -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Training Program Registration</h1>
-            <p class="text-gray-600 mt-2">Fill out the form below to secure your spot in our upcoming training.</p>
+        <header>
+            <h1>Form Permohonan Training</h1>
         </header>
 
-        <!-- The Registration Form -->
-        <main class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
-            <form id="registrationForm" class="space-y-6">
-                <!-- Personal Information Section -->
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Personal Information</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
-                            <input type="text" id="fullName" name="fullName" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                        </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                            <input type="email" id="email" name="email" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                        </div>
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700">Contact Number</label>
-                            <input type="tel" id="phone" name="phone" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                        </div>
+        <main>
+            <form id="trainingRequestForm">
+                <!-- Section Detail Permohonan -->
+                <div class="form-field-group">
+                    <div>
+                        <label for="division">Divisi Pengusul</label>
+                        <input type="text" id="division" name="division" required>
                     </div>
-                </div>
-
-                <!-- Professional Information Section -->
-                <div>
-                     <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Professional Information</h2>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="company" class="block text-sm font-medium text-gray-700">Company (Optional)</label>
-                            <input type="text" id="company" name="company" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                        </div>
-                        <div>
-                            <label for="jobTitle" class="block text-sm font-medium text-gray-700">Job Title (Optional)</label>
-                            <input type="text" id="jobTitle" name="jobTitle" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                        </div>
+                    <div>
+                        <label for="topic">Topik Training/Workshop/Sosialisasi</label>
+                        <input type="text" id="topic" name="topic" required>
                     </div>
-                </div>
-
-                <!-- Course Selection Section -->
-                <div>
-                     <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Course Details</h2>
                      <div>
-                        <label for="course" class="block text-sm font-medium text-gray-700">Select a Course</label>
-                        <select id="course" name="course" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                            <option>Advanced JavaScript</option>
-                            <option>Data Science with Python</option>
-                            <option>UI/UX Design Fundamentals</option>
-                            <option>Project Management Pro</option>
-                        </select>
-                     </div>
-                     <div class="mt-6">
-                        <label for="dietary" class="block text-sm font-medium text-gray-700">Dietary Restrictions (Optional)</label>
-                        <input type="text" id="dietary" name="dietary" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                     </div>
-                     <div class="mt-6">
-                        <label for="comments" class="block text-sm font-medium text-gray-700">Questions or Comments</label>
-                        <textarea id="comments" name="comments" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                         <label>Kategori</label>
+                         <div class="radio-group">
+                             <label for="softSkills"><input type="radio" id="softSkills" name="category" value="Soft Skills"> Soft Skills</label>
+                             <label for="technical"><input type="radio" id="technical" name="category" value="Technical Skill Non Digital"> Technical Skill Non Digital</label>
+                             <label for="digital"><input type="radio" id="digital" name="category" value="Digital Skills"> Digital Skills</label>
+                         </div>
+                    </div>
+                     <div>
+                         <label>Penyelenggaraan</label>
+                         <div class="radio-group">
+                            <label for="inhouse"><input type="radio" id="inhouse" name="organizer" value="Inhouse Training"> Inhouse Training</label>
+                            <label for="public"><input type="radio" id="public" name="organizer" value="Public Training"> Public Training</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Detail Training -->
+                <div class="form-field-group">
+                    <div>
+                        <label for="vendor">Vendor Training</label>
+                        <input type="text" id="vendor" name="vendor">
+                    </div>
+                    <div>
+                        <label for="objective">Objektif yang dicapai</label>
+                        <textarea id="objective" name="objective" rows="3"></textarea>
+                    </div>
+                    <div>
+                        <label>Return on Investment</label>
+                         <div>
+                            <label for="investment">Investment (Biaya Training)</label>
+                            <input type="number" id="investment" name="investment" placeholder="Contoh: 5000000">
+                        </div>
+                         <div style="margin-top: 1.5rem;">
+                            <label for="profit">Potensi Profit yang dicapai</label>
+                            <input type="number" id="profit" name="profit" placeholder="Contoh: 15000000">
+                        </div>
                     </div>
                 </div>
 
-                <!-- Submission Button and Loading Spinner -->
-                <div class="pt-5 text-right">
-                    <div id="loadingSpinner" class="hidden inline-block mr-4">
-                       <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8"></div>
+                <!-- Section Peserta & Jadwal -->
+                <div class="form-field-group">
+                    <div>
+                       <label for="participants">NIK & Nama Peserta</label>
+                       <textarea id="participants" name="participants" rows="4" placeholder="Contoh:&#10;12345 - Budi Santoso&#10;67890 - Ani Wijaya"></textarea>
                     </div>
-                    <button id="submitButton" type="submit" class="btn-primary inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Register Now
+                    <div>
+                       <label for="date">Hari, Tanggal</label>
+                       <input type="date" id="date" name="date">
+                    </div>
+                    <div>
+                       <label for="time">Pukul</label>
+                       <input type="time" id="time" name="time">
+                    </div>
+                </div>
+                
+                 <!-- Signature Section -->
+                 <div style="border-top: 1px solid #E5E7EB; padding-top: 2rem; margin-top: 2rem;">
+                    <div class="signature-section">
+                        <div>
+                            <label for="pengaju">Mengajukan</label>
+                            <input type="text" id="pengaju" name="pengaju" placeholder="Nama & Jabatan">
+                        </div>
+                        <div>
+                            <label for="mengetahui">Mengetahui</label>
+                            <input type="text" id="mengetahui" name="mengetahui" placeholder="Nama & Jabatan">
+                        </div>
+                        <div>
+                            <label for="menyetujui">Menyetujui</label>
+                            <input type="text" id="menyetujui" name="menyetujui" placeholder="Nama & Jabatan">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Submit Button -->
+                <div class="submit-container">
+                    <button id="submitButton" type="submit" class="btn-primary">
+                        Kirim Permohonan
                     </button>
                 </div>
             </form>
         </main>
         
-        <!-- Success/Error Message Popup -->
-        <div id="messagePopup" class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div id="messageContent" class="bg-white rounded-lg shadow-xl p-8 max-w-sm text-center">
-                <h3 id="messageTitle" class="text-2xl font-bold mb-4"></h3>
-                <p id="messageText" class="text-gray-600 mb-6"></p>
-                <button onclick="document.getElementById('messagePopup').classList.add('hidden')" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition">Close</button>
-            </div>
-        </div>
-
-
-        <footer class="text-center mt-8 text-sm text-gray-500">
-            <p>&copy; 2025 Your Training Company. All Rights Reserved.</p>
+        <footer>
+            <p>&copy; 2025 Perusahaan Anda. Hak Cipta Dilindungi.</p>
         </footer>
     </div>
     
-    <!-- Include the client-side JavaScript logic -->
-    <?!= include('JavaScript'); ?>
 </body>
 </html>
-*/
-
-// --- JavaScript.html (Client-Side Logic) ---
-/*
-<script>
-    // Listen for the form submission event
-    document.getElementById('registrationForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission behavior
-
-        // Show loading spinner and disable the button to prevent multiple submissions
-        document.getElementById('submitButton').disabled = true;
-        document.getElementById('loadingSpinner').classList.remove('hidden');
-
-        // Collect all form data into an object
-        const formData = {
-            fullName: this.fullName.value,
-            email: this.email.value,
-            phone: this.phone.value,
-            company: this.company.value,
-            jobTitle: this.jobTitle.value,
-            course: this.course.value,
-            dietary: this.dietary.value,
-            comments: this.comments.value
-        };
-
-        // Call the server-side Google Apps Script function
-        google.script.run
-            .withSuccessHandler(showSuccess)
-            .withFailureHandler(showError)
-            .processForm(formData);
-    });
-
-    /**
-     * Callback function to handle a successful form submission.
-     * @param {string} message - The success message returned from the server.
-     */
-    function showSuccess(message) {
-        // Reset the form for the next entry
-        document.getElementById('registrationForm').reset();
-        
-        // Hide the loading spinner
-        document.getElementById('loadingSpinner').classList.add('hidden');
-        document.getElementById('submitButton').disabled = false;
-        
-        // Show the success popup
-        const popup = document.getElementById('messagePopup');
-        document.getElementById('messageTitle').innerText = 'Thank You!';
-        document.getElementById('messageTitle').style.color = '#10B981'; // Green color for success
-        document.getElementById('messageText').innerText = message;
-        popup.classList.remove('hidden');
-    }
-
-    /**
-     * Callback function to handle a failed form submission.
-     * @param {Error} error - The error object returned from the server.
-     */
-    function showError(error) {
-         // Hide the loading spinner and re-enable the button
-        document.getElementById('loadingSpinner').classList.add('hidden');
-        document.getElementById('submitButton').disabled = false;
-        
-        // Show the error popup
-        const popup = document.getElementById('messagePopup');
-        document.getElementById('messageTitle').innerText = 'Oops!';
-        document.getElementById('messageTitle').style.color = '#EF4444'; // Red color for error
-        document.getElementById('messageText').innerText = error.message;
-        popup.classList.remove('hidden');
-    }
-</script>
