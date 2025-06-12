@@ -1,279 +1,447 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
+<html>
+  <head>
+    <base target="_top">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Using Google Fonts for better typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F9FAFB;
-            color: #1F2937; 
-        }
-        
-        /* Layout Container */
-        .container {
-            max-width: 48rem; 
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
-        /* Header Styles */
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        header h1 {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: #1F2937; 
-        }
-        header p {
-            color: #4B5563; 
-            margin-top: 0.5rem;
-        }
-
-        /* Main Form Area */
-        main {
-            background-color: #ffffff;
-            padding: 1.5rem;
-            border-radius: 0.75rem; 
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); 
-        }
-
-        /* Adds space between each major section of the form */
-        #trainingRequestForm > div:not(:last-child) {
-             margin-bottom: 2rem; 
-        }
-        
-        /* Adds space between form fields within a section */
-        .form-field-group > div:not(:first-child) {
-            margin-top: 1.5rem;
-        }
-
-
-        /* Section Headings */
-        .section-heading {
-            font-size: 1.25rem; 
-            font-weight: 600;
-            color: #374151; 
-            border-bottom: 1px solid #E5E7EB; 
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        /* Form Elements */
-        label {
-            display: block;
-            font-size: 0.875rem; 
-            font-weight: 500; 
-            color: #374151; 
-            margin-bottom: 0.25rem; 
-        }
-        
-        .radio-group label {
-            display: inline-flex;
-            align-items: center;
-            margin-right: 1rem;
-            font-weight: 400;
-        }
-        
-        .radio-group input[type="radio"] {
-            margin-right: 0.5rem;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="date"],
-        input[type="time"],
-        input[type="number"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 0.5rem 0.75rem;
-            background-color: #ffffff;
-            border: 1px solid #D1D5DB; 
-            border-radius: 0.375rem; 
-            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #4F46E5; 
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3); 
-        }
-
-        textarea {
-            height: auto; 
-            min-height: 80px;
-        }
-
-        /* Button and Spinner */
-        .submit-container {
-            padding-top: 1.25rem;
-            text-align: right;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            justify-content: center;
-            padding: 0.5rem 1.5rem;
-            border: 1px solid transparent;
-            border-radius: 0.375rem;
-            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #ffffff;
-            background-color: #4F46E5;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .btn-primary:hover {
-            background-color: #4338CA; 
-            transform: translateY(-2px);
-        }
-        .btn-primary:disabled {
-            background-color: #A5B4FC;
-            cursor: not-allowed;
-        }
-        
-        /* Signature Section */
-        .signature-section {
-            display: block; /* Ensures it stacks vertically */
-        }
-        .signature-section > div:not(:first-child) {
-            margin-top: 1.5rem;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            font-size: 0.875rem;
-            color: #6B7280; 
-        }
-        
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f2f5;
+      }
+      .form-container {
+        background: #ffffff;
+        padding: 2rem 3rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px;
+      }
+      .field-group {
+        margin-bottom: 1.25rem;
+        text-align: left;
+      }
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+      }
+      input[type="text"], input[type="email"] {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 1rem;
+      }
+      .description {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+      }
+      button {
+        width: 100%;
+        padding: 0.8rem;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 1rem;
+      }
+      button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      #status-message {
+        margin-top: 1rem;
+        font-weight: bold;
+        text-align: center;
+      }
+      .success { color: #28a745; }
+      .error { color: #dc3545; }
+      h2, p {
+        text-align: center;
+      }
     </style>
-</head>
-<body>
-
-    <div class="container">
-
-        <header>
-            <h1>Form Permohonan Training</h1>
-        </header>
-
-        <main>
-            <form id="trainingRequestForm">
-                <!-- Section Detail Permohonan -->
-                <div class="form-field-group">
-                    <div>
-                        <label for="division">Divisi Pengusul</label>
-                        <input type="text" id="division" name="division" required>
-                    </div>
-                    <div>
-                        <label for="topic">Topik Training/Workshop/Sosialisasi</label>
-                        <input type="text" id="topic" name="topic" required>
-                    </div>
-                     <div>
-                         <label>Kategori</label>
-                         <div class="radio-group">
-                             <label for="softSkills"><input type="radio" id="softSkills" name="category" value="Soft Skills"> Soft Skills</label>
-                             <label for="technical"><input type="radio" id="technical" name="category" value="Technical Skill Non Digital"> Technical Skill Non Digital</label>
-                             <label for="digital"><input type="radio" id="digital" name="category" value="Digital Skills"> Digital Skills</label>
-                         </div>
-                    </div>
-                     <div>
-                         <label>Penyelenggaraan</label>
-                         <div class="radio-group">
-                            <label for="inhouse"><input type="radio" id="inhouse" name="organizer" value="Inhouse Training"> Inhouse Training</label>
-                            <label for="public"><input type="radio" id="public" name="organizer" value="Public Training"> Public Training</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Section Detail Training -->
-                <div class="form-field-group">
-                    <div>
-                        <label for="vendor">Vendor Training</label>
-                        <input type="text" id="vendor" name="vendor">
-                    </div>
-                    <div>
-                        <label for="objective">Objektif yang dicapai</label>
-                        <textarea id="objective" name="objective" rows="3"></textarea>
-                    </div>
-                    <div>
-                        <label>Return on Investment</label>
-                         <div>
-                            <label for="investment">Investment (Biaya Training)</label>
-                            <input type="number" id="investment" name="investment" placeholder="Contoh: 5000000">
-                        </div>
-                         <div style="margin-top: 1.5rem;">
-                            <label for="profit">Potensi Profit yang dicapai</label>
-                            <input type="number" id="profit" name="profit" placeholder="Contoh: 15000000">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section Peserta & Jadwal -->
-                <div class="form-field-group">
-                    <div>
-                       <label for="participants">NIK & Nama Peserta</label>
-                       <textarea id="participants" name="participants" rows="4" placeholder="Contoh:&#10;12345 - Budi Santoso&#10;67890 - Ani Wijaya"></textarea>
-                    </div>
-                    <div>
-                       <label for="date">Hari, Tanggal</label>
-                       <input type="date" id="date" name="date">
-                    </div>
-                    <div>
-                       <label for="time">Pukul</label>
-                       <input type="time" id="time" name="time">
-                    </div>
-                </div>
-                
-                 <!-- Signature Section -->
-                 <div style="border-top: 1px solid #E5E7EB; padding-top: 2rem; margin-top: 2rem;">
-                    <div class="signature-section">
-                        <div>
-                            <label for="pengaju">Mengajukan</label>
-                            <input type="text" id="pengaju" name="pengaju" placeholder="Nama & Jabatan">
-                        </div>
-                        <div>
-                            <label for="mengetahui">Mengetahui</label>
-                            <input type="text" id="mengetahui" name="mengetahui" placeholder="Nama & Jabatan">
-                        </div>
-                        <div>
-                            <label for="menyetujui">Menyetujui</label>
-                            <input type="text" id="menyetujui" name="menyetujui" placeholder="Nama & Jabatan">
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Submit Button -->
-                <div class="submit-container">
-                    <button id="submitButton" type="submit" class="btn-primary">
-                        Kirim Permohonan
-                    </button>
-                </div>
-            </form>
-        </main>
-        
-        <footer>
-            <p>&copy; 2025 Perusahaan Anda. Hak Cipta Dilindungi.</p>
-        </footer>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>Submit Request</h2>
+      <p>Enter your details and the approver's email address(es).</p>
+      <form id="requestForm">
+        <div class="field-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+        </div>
+        <div class="field-group">
+          <label for="email">Your Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field-group">
+          <label for="approverEmails">Approver's Email(s)</label>
+          <input type="text" id="approverEmails" name="approverEmails" placeholder="approver1@example.com, approver2@example.com" required>
+          <p class="description">For multiple approvers, separate email addresses with a comma.</p>
+        </div>
+        <button type="submit" id="submitButton">Send for Approval</button>
+      </form>
+      <div id="status-message"></div>
     </div>
-    
-</body>
+
+    <script>
+      document.getElementById('requestForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const button = document.getElementById('submitButton');
+        button.disabled = true;
+        button.textContent = 'Submitting...';
+
+        const statusDiv = document.getElementById('status-message');
+        statusDiv.textContent = '';
+
+        // Collect the comma-separated string of emails
+        const formData = {
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          approverEmails: document.getElementById('approverEmails').value
+        };
+
+        google.script.run
+          .withSuccessHandler(function(response) {
+            statusDiv.className = response.success ? 'success' : 'error';
+            statusDiv.textContent = response.message;
+            if (response.success) {
+              document.getElementById('requestForm').reset();
+            }
+            button.disabled = false;
+            button.textContent = 'Send for Approval';
+          })
+          .withFailureHandler(function(error) {
+            statusDiv.className = 'error';
+            statusDiv.textContent = 'Submission failed: ' + error.message;
+            button.disabled = false;
+            button.textContent = 'Send for Approval';
+          })
+          .processForm(formData);
+      });
+    </script>
+  </body>
 </html>
+
+
+<!-- Code.gs -->
+<!-- // --- CONFIGURATION ---
+const SHEET_ID = "1KWY_Fgw1zaDBhaOIS5KwYfGTscTGrw-axc7sY3EEvcQ"; // ★★★ CHANGE THIS to your Sheet ID
+const SHEET_NAME = "Submissions";                                // The name of the tab in your sheet.
+
+// Column names must match the headers in your Google Sheet
+const COLUMN_HEADERS = {
+  TIMESTAMP: "Timestamp",
+  TOKEN: "Token",
+  NAME: "Name",
+  EMAIL: "Email",
+  STATUS: "Status",
+  APPROVER_EMAIL: "Approver Email", // This column will now store comma-separated emails
+  NOTES: "Notes",
+  APPROVAL_HISTORY: "Approval History" // ADDED: New column for a full audit trail
+};
+
+
+/**
+ * Main function that runs when the web app is accessed.
+ */
+function doGet(e) {
+  // If the URL has an action and token, show the comment page for an approver.
+  if (e.parameter.action && e.parameter.token) {
+    return handleApprovalAction(e);
+  } 
+  // NEW: If the URL has a view_token, show the status page to the original submitter.
+  else if (e.parameter.view_token) {
+    return showStatusToSubmitter(e);
+  }
+  // Otherwise, show the initial form.
+  else {
+    return HtmlService.createHtmlOutputFromFile('formTraining.html')
+      .setTitle("Request for Approval")
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
+  }
+}
+
+/**
+ * Processes the initial form submission from the user.
+ */
+function processForm(formData) {
+  try {
+    if (!formData.name || !formData.email || !formData.approverEmails) {
+      throw new Error("Missing required form data. Please fill out all fields.");
+    }
+
+    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+    const webAppUrl = ScriptApp.getService().getUrl();
+    const token = Utilities.getUuid();
+
+    sheet.appendRow([ new Date(), token, formData.name, formData.email, 'Pending', formData.approverEmails, '', '' ]);
+
+    const approveLink = `${webAppUrl}?action=approve&token=${token}`;
+    const rejectLink = `${webAppUrl}?action=reject&token=${token}`;
+    const subject = `Approval Needed for: ${formData.name}`;
+    const approverEmailBody = `
+      <html><body>
+        <h2>New Request for Approval</h2>
+        <p>A new request has been submitted by <strong>${formData.name}</strong> (${formData.email}) that requires your attention.</p>
+        <p><strong>This request requires all approvers to 'Approve'. If any approver 'Rejects', the request will be rejected. A comment will be required.</strong></p>
+        <p>Please click an option below to respond:</p>
+        <a href="${approveLink}" style="padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">Approve Request</a>
+        <a href="${rejectLink}" style="padding: 10px 15px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 5px; margin-left: 10px;">Reject Request</a>
+      </body></html>
+    `;
+    MailApp.sendEmail({ to: formData.approverEmails, subject: subject, htmlBody: approverEmailBody, name: 'Approval System', noReply: true });
+
+    // --- NEW: Send confirmation and tracking link to the submitter ---
+    const viewLink = `${webAppUrl}?view_token=${token}`;
+    const submitterSubject = `Your Request has been Submitted`;
+    const submitterEmailBody = `
+      <html><body>
+        <h2>Request Submitted Successfully</h2>
+        <p>Hello ${formData.name},</p>
+        <p>Thank you for your submission. Your request has been sent to the designated approver(s).</p>
+        <p>You can track the status of your request at any time by clicking the link below:</p>
+        <p><a href="${viewLink}" style="padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">View Request Status</a></p>
+        <p>You will receive another email once a final decision has been made.</p>
+      </body></html>
+    `;
+    MailApp.sendEmail({ to: formData.email, subject: submitterSubject, htmlBody: submitterEmailBody, name: 'Approval System', noReply: true });
+    // --- End of new feature ---
+
+    return { success: true, message: "Request submitted successfully! It has been sent for approval." };
+  } catch (error) {
+    Logger.log(error.toString());
+    return { success: false, message: "An error occurred: " + error.message };
+  }
+}
+
+/**
+ * Shows the comment page to an approver.
+ */
+function handleApprovalAction(e) {
+  const token = e.parameter.token;
+  const action = e.parameter.action;
+
+  const rowInfo = findRowByToken(token);
+  if (!rowInfo || rowInfo.rowData[rowInfo.colIndexes[COLUMN_HEADERS.STATUS]] !== 'Pending') {
+      const requiredApprovers = rowInfo ? rowInfo.rowData[rowInfo.colIndexes[COLUMN_HEADERS.APPROVER_EMAIL]].split(',').map(em => em.trim().toLowerCase()) : [];
+      const history = rowInfo ? rowInfo.rowData[rowInfo.colIndexes[COLUMN_HEADERS.APPROVAL_HISTORY]] : "Request not found.";
+      const approverStatus = getApproverStatus(requiredApprovers, history);
+      return HtmlService.createHtmlOutput(generateStatusHtml("Request Not Pending", "This request has already been processed or could not be found.", approverStatus));
+  }
+  
+  const commentPageHtml = `
+    <!DOCTYPE html><html><head><base target="_top"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Add Comment</title>
+        <style>body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f7f7f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; } .container { max-width: 600px; width: 100%; margin: 20px; background-color: #ffffff; padding: 20px 40px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } h2 { text-align: center; } textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; margin-top: 5px; box-sizing: border-box; } button { width: 100%; padding: 12px; border: none; background-color: #007bff; color: white; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: 600; margin-top: 1rem; } button:disabled { background-color: #cccccc; } #status-message { margin-top: 1rem; font-weight: bold; text-align: center; } .error { color: #dc3545; }</style>
+      </head><body><div class="container"><h2>You are about to ${action.charAt(0).toUpperCase() + action.slice(1)} this Request</h2><p>Please provide a mandatory comment below before submitting your response.</p><form id="commentForm"><input type="hidden" id="token" value="${token}"><input type="hidden" id="action" value="${action}"><div><label for="comment">Comment</label><textarea id="comment" name="comment" rows="4" required></textarea></div><button type="submit" id="submitButton">Submit Response</button></form><div id="status-message"></div></div>
+        <script>document.getElementById('commentForm').addEventListener('submit', function(e) { e.preventDefault(); const button = document.getElementById('submitButton'); button.disabled = true; button.textContent = 'Submitting...'; const formData = { token: document.getElementById('token').value, action: document.getElementById('action').value, comment: document.getElementById('comment').value }; google.script.run.withSuccessHandler(function(finalHtml) { document.body.innerHTML = finalHtml; }).withFailureHandler(function(error) { document.getElementById('status-message').className = 'error'; document.getElementById('status-message').textContent = 'Error: ' + error.message; button.disabled = false; button.textContent = 'Submit Response'; }).processApprovalWithComment(formData); });</script>
+      </body></html>`;
+  return HtmlService.createHtmlOutput(commentPageHtml).setTitle('Add Comment').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
+}
+
+
+/**
+ * Processes the approval/rejection along with the mandatory comment.
+ */
+function processApprovalWithComment(formData) {
+  const { token, action, comment } = formData;
+  if (!comment || comment.trim() === '') throw new Error("Comment is required.");
+  
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(15000)) throw new Error("Server is busy, please try again.");
+
+  try {
+    const approverEmail = Session.getActiveUser().getEmail().toLowerCase();
+    const rowInfo = findRowByToken(token);
+    if (!rowInfo) throw new Error("This request could not be found. It may have been deleted.");
+
+    const { sheet, rowIndex, colIndexes, rowData } = rowInfo;
+    const name = rowData[colIndexes[COLUMN_HEADERS.NAME]];
+    const email = rowData[colIndexes[COLUMN_HEADERS.EMAIL]];
+    const requiredApprovers = rowData[colIndexes[COLUMN_HEADERS.APPROVER_EMAIL]].split(',').map(em => em.trim().toLowerCase());
+    const historyColIndex = colIndexes[COLUMN_HEADERS.APPROVAL_HISTORY];
+    let currentHistory = (historyColIndex !== undefined) ? sheet.getRange(rowIndex, historyColIndex + 1).getValue() : "";
+    let currentStatus = rowData[colIndexes[COLUMN_HEADERS.STATUS]];
+
+    let title, message;
+    
+    const alreadyResponded = getApproverStatus(requiredApprovers, currentHistory).some(s => s.email === approverEmail && s.status !== 'Pending');
+
+    if (alreadyResponded) {
+        title = "Action Already Logged";
+        message = "Your response for this request has already been recorded.";
+    } else {
+      let actionPastTense = action === 'approve' ? 'Approved' : 'Rejected';
+      const newHistoryEntry = `${actionPastTense} by ${approverEmail} on ${new Date().toLocaleString()}: ${comment.trim()}`;
+      currentHistory = currentHistory ? `${currentHistory}\n${newHistoryEntry}` : newHistoryEntry;
+      if(historyColIndex !== undefined) sheet.getRange(rowIndex, historyColIndex + 1).setValue(currentHistory);
+      
+      if (currentStatus !== 'Pending') {
+        title = "Action Already Completed";
+        message = `This request for <strong>${name}</strong> was already marked as <strong>${currentStatus}</strong>. Your response has been noted in the history.`;
+      } else if (action === 'reject') {
+        sheet.getRange(rowIndex, colIndexes[COLUMN_HEADERS.STATUS] + 1).setValue('Rejected');
+        if (colIndexes[COLUMN_HEADERS.NOTES] !== undefined) sheet.getRange(rowIndex, colIndexes[COLUMN_HEADERS.NOTES] + 1).setValue(`Rejected by ${approverEmail} on ${new Date().toLocaleString()}`);
+        notifySubmitter(email, name, 'Rejected', token);
+        title = "Request Rejected";
+        message = `You have rejected the request for <strong>${name}</strong>. The original submitter has been notified.`;
+      } else if (action === 'approve') {
+        const approverStatusCheck = getApproverStatus(requiredApprovers, currentHistory);
+        const allHaveApproved = approverStatusCheck.every(s => s.status === 'Approved');
+
+        if (allHaveApproved) {
+          sheet.getRange(rowIndex, colIndexes[COLUMN_HEADERS.STATUS] + 1).setValue('Approved');
+           if (colIndexes[COLUMN_HEADERS.NOTES] !== undefined) sheet.getRange(rowIndex, colIndexes[COLUMN_HEADERS.NOTES] + 1).setValue(`Final approval by ${approverEmail} on ${new Date().toLocaleString()}`);
+          notifySubmitter(email, name, 'Approved', token);
+          title = "Request Approved";
+          message = `You have cast the final vote to approve the request for <strong>${name}</strong>. The original submitter has been notified.`;
+        } else {
+          title = "Approval Recorded";
+          message = `Your approval for <strong>${name}</strong> has been recorded. Waiting for responses from other approvers.`;
+        }
+      }
+    }
+    
+    const approverStatus = getApproverStatus(requiredApprovers, currentHistory);
+    return generateStatusHtml(title, message, approverStatus);
+
+  } catch (error) {
+    Logger.log(`Error in processApprovalWithComment: ${error.toString()}`);
+    throw error;
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * NEW FUNCTION: Shows the current status of a request to the original submitter.
+ */
+function showStatusToSubmitter(e) {
+  const token = e.parameter.view_token;
+  const rowInfo = findRowByToken(token);
+
+  if (!rowInfo) {
+    return HtmlService.createHtmlOutput("<h3>Request Not Found</h3><p>The link you used is invalid or the request has been deleted.</p>");
+  }
+
+  const { rowData, colIndexes } = rowInfo;
+  const requiredApprovers = rowData[colIndexes[COLUMN_HEADERS.APPROVER_EMAIL]].split(',').map(em => em.trim().toLowerCase());
+  const history = rowData[colIndexes[COLUMN_HEADERS.APPROVAL_HISTORY]];
+  const approverStatus = getApproverStatus(requiredApprovers, history);
+
+  const title = "Your Request Status";
+  const message = "This page shows the current approval status for your request. The page will update automatically as approvers respond.";
+
+  return HtmlService.createHtmlOutput(generateStatusHtml(title, message, approverStatus));
+}
+
+/**
+ * Creates a styled HTML page to show the status of all approvers with comments.
+ */
+function generateStatusHtml(title, message, approverStatusList) {
+    let mainStatusText = 'Pending', mainStatusIcon = '&#x23F3;', mainStatusColor = '#6c757d;';
+    const hasRejection = approverStatusList.some(s => s.status === 'Rejected');
+    const allApproved = approverStatusList.every(s => s.status === 'Approved');
+    if (hasRejection) { mainStatusText = 'Rejected'; mainStatusIcon = '&#x274C;'; mainStatusColor = '#dc3545'; } 
+    else if (allApproved) { mainStatusText = 'Completed'; mainStatusIcon = '&#x2714;&#xFE0F;'; mainStatusColor = '#28a745'; }
+    
+    let recipientsHtml = approverStatusList.map(s => {
+        let statusColor = '#6c757d', timestampText = s.timestamp || '-';
+        if (s.status === 'Approved') statusColor = '#28a745';
+        if (s.status === 'Rejected') statusColor = '#dc3545';
+        const commentHtml = s.comment ? `<div style="font-size: 0.9em; color: #4b5563; padding: 5px 0 5px 10px; margin-top: 5px; border-left: 2px solid #e5e7eb;"><em>"${s.comment}"</em></div>` : '';
+        return `<div style="padding: 12px 0; border-bottom: 1px solid #e5e7eb;"><div style="display: flex; justify-content: space-between; align-items: flex-start;"><div><div style="font-weight: 500;">${s.email}</div>${s.status !== 'Pending' ? `<div style="font-size: 0.85em; color: #6b7280;">${s.status} on ${timestampText}</div>` : ''}</div><div style="font-weight: bold; color: ${statusColor}; text-align: right;">${s.status}</div></div>${commentHtml}</div>`;
+    }).join('');
+
+    return `<html><head><title>Approval Status</title></head><body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f7f7f7; padding: 20px;"><div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px 40px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><h2>${title}</h2><p>${message}</p><div style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #e5e7eb;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;"><h3 style="margin:0; color: #333;">Overall Status</h3><div style="font-weight: bold; color: ${mainStatusColor}; font-size: 1.2em;">${mainStatusIcon} ${mainStatusText}</div></div><h3 style="margin: 20px 0 10px; color: #333;">Recipients</h3>${recipientsHtml}</div></div></body></html>`;
+}
+
+/**
+ * Helper function to get the status, timestamp, and comment of each required approver.
+ */
+function getApproverStatus(requiredApprovers, history) {
+  const historyLines = history.split(/\r?\n/).filter(line => line.trim() !== '');
+  const statusMap = {};
+  requiredApprovers.forEach(email => { statusMap[email.toLowerCase()] = { status: 'Pending', timestamp: null, comment: null }; });
+  historyLines.forEach(line => {
+      const byIndex = line.toLowerCase().indexOf(' by '), onIndex = line.toLowerCase().lastIndexOf(' on '), commentIndex = line.indexOf(': ');
+      if (byIndex > -1 && onIndex > -1 && onIndex > byIndex) {
+          const action = line.substring(0, byIndex).trim(), email = line.substring(byIndex + 4, onIndex).trim().toLowerCase();
+          let timestamp = '', comment = '';
+          if(commentIndex > onIndex) { timestamp = line.substring(onIndex + 4, commentIndex).trim(); comment = line.substring(commentIndex + 2).trim(); } 
+          else { timestamp = line.substring(onIndex + 4).trim(); }
+          if (statusMap[email] !== undefined) statusMap[email] = { status: action, timestamp: timestamp, comment: comment };
+      }
+  });
+  return requiredApprovers.map(email => ({ email: email, status: statusMap[email].status, timestamp: statusMap[email].timestamp, comment: statusMap[email].comment }));
+}
+
+
+/**
+ * Sends a notification email to the original submitter.
+ */
+function notifySubmitter(submitterEmail, submitterName, status, token) {
+  try {
+    // NEW: Add the view link to the final notification email
+    const webAppUrl = ScriptApp.getService().getUrl();
+    const viewLink = `${webAppUrl}?view_token=${token}`;
+    
+    const subject = `Update on your recent request: ${status}`;
+    const emailBody = `
+      <html><body>
+        <p>Hello ${submitterName},</p>
+        <p>This is an update regarding your recent submission. A final decision has been made.</p>
+        <p>The final status is: <strong>${status}</strong>.</p>
+        <p>You can view the final approval details and comments here:</p>
+        <p><a href="${viewLink}" style="padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">View Final Details</a></p>
+        <p><em>This is an automated notification. Please do not reply to this email.</em></p>
+      </body></html>
+    `;
+    MailApp.sendEmail({ to: submitterEmail, subject: subject, htmlBody: emailBody, name: 'Approval System', noReply: true });
+  } catch (error) {
+    Logger.log(`Failed to send notification to ${submitterEmail}. Error: ${error.toString()}`);
+  }
+}
+
+/**
+ * Helper function to find a row by token.
+ */
+function findRowByToken(token) {
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+  const data = sheet.getDataRange().getValues();
+  const sheetHeaders = data[0];
+  const colIndexes = {};
+  for (const key in COLUMN_HEADERS) {
+    const headerName = COLUMN_HEADERS[key];
+    const index = sheetHeaders.findIndex(h => h.trim().toLowerCase() === headerName.toLowerCase());
+    if (index !== -1) colIndexes[headerName] = index;
+  }
+  const tokenColIndex = colIndexes[COLUMN_HEADERS.TOKEN], statusColIndex = colIndexes[COLUMN_HEADERS.STATUS];
+  if (tokenColIndex === undefined || statusColIndex === undefined) {
+    Logger.log(`Critical column missing. Token found at index: ${tokenColIndex}, Status found at index: ${statusColIndex}. Please check sheet headers.`);
+    return null;
+  }
+  for (let i = 1; i < data.length; i++) {
+    const sheetToken = data[i][tokenColIndex];
+    if (sheetToken && String(sheetToken).trim() === String(token).trim()) {
+      Logger.log(`SUCCESS: Found token '${token}' at row ${i + 1}.`);
+      return { sheet: sheet, rowIndex: i + 1, colIndexes: colIndexes, rowData: data[i] };
+    }
+  }
+  Logger.log(`FAILURE: Could not find a matching row for token '${token}'.`);
+  return null;
+}
+ -->
