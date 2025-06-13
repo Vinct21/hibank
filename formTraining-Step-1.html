@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 3. Load PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
     <script>
       // Add custom colors to Tailwind's configuration
       tailwind.config = {
@@ -51,8 +54,12 @@
     <div class="min-h-screen flex flex-col items-center justify-center p-4">
 
       <!-- Form Card -->
-      <div id="formCard" class="w-full max-w-4xl bg-white rounded-2xl shadow-xl border border-gray-300 p-8 md:p-12 lg:p-16">
+      <div id="formCard" class="w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-gray-300 p-8 md:p-12 lg:p-16">
         
+        <div class="flex justify-center mb-8">
+            <img src="https://cdn.hibank.co.id/hcih/logo-hibank" alt="Hibank Logo" class="h-12">
+        </div>
+
         <!-- Step 1: Training Application Form -->
         <div id="step1" data-step="1">
           <header class="text-center mb-12">
@@ -67,7 +74,7 @@
                 <div>
                   <label for="nik" class="block text-sm font-medium text-gray-700 mb-1">Nomor Induk Karyawan (NIK)</label>
                   <div class="flex items-center space-x-2">
-                    <input type="text" id="nik" name="nik" placeholder="Enter NIK..." required class="block w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hibank-tile transition-all">
+                    <input type="text" id="nik" name="nik" placeholder="Enter NIK..." required maxlength="6" pattern="\d{6}" title="NIK must be 6 digits." class="block w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hibank-tile transition-all">
                     <button type="button" id="fetchButton" class="p-2.5 text-white bg-hibank-tile rounded-lg hover:bg-[#13576b] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-hibank-tile transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg>
                     </button>
@@ -114,14 +121,18 @@
                   <label for="objective" class="block text-sm font-medium text-gray-700 mb-1">Objektif yang dicapai</label>
                   <input type="text" id="objective" name="objective" required class="mt-1 block w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hibank-tile transition-all">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
+                 <div>
                     <label for="day" class="block text-sm font-medium text-gray-700 mb-1">Hari</label>
                     <input type="date" id="day" name="day" required class="mt-1 block w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hibank-tile">
                   </div>
+                <div class="grid grid-cols-2 gap-4">
                   <div>
-                    <label for="time" class="block text-sm font-medium text-gray-700 mb-1">Jam</label>
-                    <input type="time" id="time" name="time" required class="mt-1 block w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hibank-tile">
+                    <label for="startTime" class="block text-sm font-medium text-gray-700 mb-1">Jam Mulai</label>
+                    <input type="time" id="startTime" name="startTime" required class="mt-1 block w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hibank-tile">
+                  </div>
+                  <div>
+                    <label for="endTime" class="block text-sm font-medium text-gray-700 mb-1">Jam Selesai</label>
+                    <input type="time" id="endTime" name="endTime" required class="mt-1 block w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hibank-tile">
                   </div>
                 </div>
                 <div>
@@ -264,27 +275,18 @@
                 </button>
               </div>
               
-              <!-- "Or" Separator -->
-              <div class="my-8 flex items-center">
-                  <div class="flex-grow border-t border-gray-300"></div>
-                  <span class="flex-shrink mx-4 text-gray-500">atau</span>
-                  <div class="flex-grow border-t border-gray-300"></div>
-              </div>
-
-              <!-- Upload Section -->
-              <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Upload Rundown:</label>
-                  <label for="rundownFile" class="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
-                      <span class="flex items-center space-x-2">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              <!-- Info Note -->
+              <div class="mt-8 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-800">
+                  <div class="flex">
+                      <div class="flex-shrink-0">
+                          <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                           </svg>
-                          <span id="file-upload-text" class="font-medium text-gray-600">
-                              Drop files to Attach, or <span class="text-hibank-tile underline">browse</span>
-                          </span>
-                      </span>
-                  </label>
-                  <input type="file" name="rundownFile" id="rundownFile" class="hidden-file-input" onchange="updateFileName(this, 'file-upload-text')">
+                      </div>
+                      <div class="ml-3">
+                          <p class="text-sm">Jika Anda memiliki file rundown, Anda dapat mengunggahnya pada langkah berikutnya di bagian Lampiran.</p>
+                      </div>
+                  </div>
               </div>
           </form>
         </div>
@@ -395,6 +397,9 @@
       let currentStep = 1;
       const totalSteps = 6;
       const employeeDataCache = {};
+      
+      // Set PDF.js worker
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;
 
       // --- DOMContentLoaded ---
       document.addEventListener('DOMContentLoaded', function() {
@@ -432,8 +437,53 @@
         currentStep = step;
         updateNavigation();
       }
+      
+      function validateStep(step) {
+          if (step === 2) {
+              const inhouseValid = Array.from(document.querySelectorAll('#inhouse-rows .dynamic-row')).some(row => row.querySelector('select').value !== '');
+              const publicValid = Array.from(document.querySelectorAll('#public-rows .dynamic-row')).some(row => row.querySelector('select').value !== '');
+              if (!inhouseValid && !publicValid) {
+                  showResponse('Please add at least one item to the Investment section (A).', 'error');
+                  return false;
+              }
+               const roiValid = Array.from(document.querySelectorAll('#roi-rows .dynamic-row')).some(row => row.querySelector('select').value !== '');
+              if (!roiValid) {
+                  showResponse('Please add at least one item to the Return on Investment section (B).', 'error');
+                  return false;
+              }
+          }
+          if (step === 3) {
+              const participants = Array.from(document.querySelectorAll('#participant-rows .dynamic-participant-row')).filter(row => row.querySelector('.participant-nik').value);
+              if (participants.length < 1) {
+                  showResponse('Please add at least one participant.', 'error');
+                  return false;
+              }
+          }
+           if (step === 5) {
+              const attachmentRows = document.querySelectorAll('#attachment-rows .dynamic-attachment-row');
+              for (const row of attachmentRows) {
+                  const fileInput = row.querySelector('.hidden-file-input');
+                  const nameInput = row.querySelector('input[type="text"]');
+                  if (fileInput.files.length > 0 && !nameInput.value.trim()) {
+                      showResponse('Please provide a name for each uploaded attachment.', 'error');
+                      nameInput.focus();
+                      return false;
+                  }
+              }
+
+              const submittedBy = document.querySelector('#submitted-by-rows input').value;
+              const checkedBy = Array.from(document.querySelectorAll('#checked-by-rows .dynamic-approval-row')).some(row => row.querySelector('input').value);
+              const approvedBy = Array.from(document.querySelectorAll('#approved-by-rows .dynamic-approval-row')).some(row => row.querySelector('input').value);
+              if (!submittedBy || !checkedBy || !approvedBy) {
+                  showResponse('Please provide at least one email for each approval role.', 'error');
+                  return false;
+              }
+          }
+          return true;
+      }
 
       function handleNextClick() {
+        hideResponse();
         if (currentStep === totalSteps) {
             handleFinalSubmit();
             return;
@@ -447,6 +497,9 @@
               return;
             }
           }
+          if (!validateStep(currentStep)) {
+              return;
+          }
            if (currentStep === 5) {
              populateSummary();
            }
@@ -455,6 +508,7 @@
       }
 
       function handlePrevClick() {
+        hideResponse();
         if (currentStep > 1) {
           showStep(currentStep - 1);
         }
@@ -580,6 +634,7 @@
         };
         
         const createTableSection = (title, headers, rows) => {
+             if (rows.length === 0 || rows.every(r => !Object.values(r).some(val => val))) return '';
              let content = `<div class="mb-6"><h2 class="text-xl font-bold text-hibank-tile border-b border-gray-300 pb-2 mb-3">${title}</h2><div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200">
              <thead class="bg-gray-50"><tr>`;
              headers.forEach(header => content += `<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${header}</th>`);
@@ -592,28 +647,108 @@
              content += `</tbody></table></div></div>`;
              return content;
         }
-
-        // 1. Training Info
-        const step1Data = Object.fromEntries(new FormData(document.getElementById('trainingForm')).entries());
         
-        // 2. Investment Info
-        const totalInvestment = document.getElementById('totalInvestment').value;
+        const createAttachmentSummary = (title, rows) => {
+            if (rows.length === 0 || rows.every(r => !r.name)) return '';
+            let content = `<div class="mb-6"><h2 class="text-xl font-bold text-hibank-tile border-b border-gray-300 pb-2 mb-3">${title}</h2><div class="space-y-4">`;
+            rows.forEach(row => {
+                if (!row.name) return; // Skip empty rows
+                content += `<div class="p-4 border rounded-lg">`;
+                content += `<p class="font-semibold text-gray-800">${row.name}</p>`;
+                if (row.previewSrc) {
+                     const urls = JSON.parse(row.previewSrc);
+                     urls.forEach(url => {
+                        content += `<img src="${url}" class="w-full h-auto object-contain rounded-lg mt-4 border shadow-sm">`;
+                     });
+                } else {
+                    content += `<p class="text-sm text-gray-500">${row.fileName === 'Upload Here' ? 'No file uploaded' : 'File: ' + row.fileName}</p>`;
+                }
+                content += `</div>`;
+            });
+            content += `</div></div>`;
+            return content;
+        }
 
+        const createInvestmentSummary = () => {
+             const inhouseRows = Array.from(document.querySelectorAll('#inhouse-rows .dynamic-row')).map(row => ({
+                detail: row.querySelector('select').value,
+                nominal: row.querySelector('.cost-nominal').value,
+                pax: row.querySelector('.cost-pax').value,
+                biaya: row.querySelector('.cost-biaya').value,
+            })).filter(r => r.detail);
+
+            const publicRows = Array.from(document.querySelectorAll('#public-rows .dynamic-row')).map(row => ({
+                detail: row.querySelector('select').value,
+                nominal: row.querySelector('.cost-nominal').value,
+                pax: row.querySelector('.cost-pax').value,
+                biaya: row.querySelector('.cost-biaya').value,
+            })).filter(r => r.detail);
+            
+            let content = `<div class="mb-6"><h2 class="text-xl font-bold text-hibank-tile border-b border-gray-300 pb-2 mb-3">Investment Details</h2>`;
+
+            if (inhouseRows.length > 0) {
+                 content += createTableSection('Inhouse Training', ['Detail', 'Nominal', 'Pax', 'Biaya'], inhouseRows);
+            }
+            if (publicRows.length > 0) {
+                 content += createTableSection('Public Training', ['Detail', 'Nominal', 'Pax', 'Biaya'], publicRows);
+            }
+
+            content += `<div class="flex justify-end mt-4"><div class="text-right"><dt class="text-sm font-medium text-gray-500">Total Investment</dt><dd class="text-lg font-bold text-hibank-tile">${document.getElementById('totalInvestment').value || '-'}</dd></div></div></div>`;
+            return content;
+        }
+
+        const roiRows = Array.from(document.querySelectorAll('#roi-rows .dynamic-row')).map(row => ({
+            detail: row.querySelector('select').value,
+            keterangan: row.querySelector('input[placeholder="Keterangan"]').value,
+            totalBiaya: row.querySelector('input[placeholder="Total Biaya"]').value,
+        })).filter(r => r.detail);
+
+
+        // 1. Employee and Training Info from Step 1
+        const trainingFormData = new FormData(document.getElementById('trainingForm'));
+        const employeeInfo = {
+            nik: trainingFormData.get('nik'),
+            email: trainingFormData.get('email'),
+            division: trainingFormData.get('division'),
+        };
+        const trainingInfo = {
+            topic: trainingFormData.get('topic'),
+            category: trainingFormData.get('category'),
+            organizer: trainingFormData.get('organizer'),
+            vendorName: trainingFormData.get('vendorName'),
+            objective: trainingFormData.get('objective'),
+            day: trainingFormData.get('day'),
+            startTime: trainingFormData.get('startTime'),
+            endTime: trainingFormData.get('endTime'),
+            location: trainingFormData.get('location'),
+        };
+        
         // 3. Participants
         const participants = Array.from(document.querySelectorAll('#participant-rows .dynamic-participant-row')).map(row => ({
             nik: row.querySelector('.participant-nik').value,
             name: row.querySelector('.participant-name').value,
-        }));
+            placement: row.querySelector('.participant-placement').value,
+            position: row.querySelector('.participant-position').value,
+            workUnit: row.querySelector('.participant-workUnit').value,
+        })).filter(p => p.nik && p.name);
 
         // 4. Rundown
         const rundown = Array.from(document.querySelectorAll('#rundown-rows .dynamic-rundown-row')).map(row => ({
             start: row.querySelector('.rundown-start').value,
             end: row.querySelector('.rundown-end').value,
             agenda: row.querySelector('input[placeholder="Agenda..."]').value,
+            instructor: row.querySelector('input[placeholder="Instructor..."]').value,
             duration: row.querySelector('.rundown-duration').value,
-        }));
+        })).filter(r => r.start && r.end);
         
-        // 5. Approvals
+        // 5. Attachments
+        const attachments = Array.from(document.querySelectorAll('#attachment-rows .dynamic-attachment-row')).map(row => ({
+            name: row.querySelector('input[placeholder="Nama Lampiran"]').value,
+            previewSrc: row.getAttribute('data-image-preview-src'), // Get the stored data URL
+            fileName: row.querySelector('.upload-text').textContent // Get the file name
+        }));
+
+        // 6. Approvals
          const approvals = {
             diajukan: document.querySelector('#submitted-by-rows input').value,
             diperiksa: Array.from(document.querySelectorAll('#checked-by-rows input')).map(input => input.value).join(', '),
@@ -621,10 +756,13 @@
         };
 
         summaryContent.innerHTML = 
-            createSummarySection('Training Information', step1Data) + 
-            createSummarySection('Total Investment', {totalInvestment}) +
-            createTableSection('Participants', ['NIK', 'Name'], participants) +
-            createTableSection('Rundown', ['Start', 'End', 'Agenda', 'Duration (Mins)'], rundown) +
+            createSummarySection('Employee Information', employeeInfo) + 
+            createSummarySection('Training Information', trainingInfo) + 
+            createInvestmentSummary() +
+            createTableSection('Return on Investment', ['Detail', 'Keterangan', 'Total Biaya'], roiRows) +
+            createTableSection('Participants', ['NIK', 'Nama', 'Penempatan', 'Jabatan', 'Unit Kerja'], participants) +
+            createTableSection('Rundown', ['Start', 'End', 'Agenda', 'Instructor', 'Duration (Mins)'], rundown) +
+            createAttachmentSummary('Attachments', attachments) +
             createSummarySection('Approvals', approvals);
       }
       
@@ -636,15 +774,26 @@
         let content = '';
         if (hasCost) {
             newRow.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center dynamic-row';
-            content = `<div class="md:col-span-3"><select class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile">${detailOptions}</select></div><div class="md:col-span-2"><input type="number" placeholder="Nominal" oninput="calculateTotals()" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile cost-nominal"></div><div class="md:col-span-2"><input type="number" placeholder="Pax" oninput="calculateTotals()" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile cost-pax"></div><div class="md:col-span-4"><input type="text" placeholder="Biaya" readonly class="w-full px-4 py-2.5 border border-gray-300 rounded-lg cost-biaya"></div><div class="md:col-span-1 flex justify-center"><button type="button" class="p-2.5 text-red-500 hover:text-red-700 delete-row-btn hidden"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button></div>`;
+            content = `<div class="md:col-span-3"><select class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile detail-select">${detailOptions}</select></div><div class="md:col-span-2"><input type="number" placeholder="Nominal" oninput="calculateTotals()" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile cost-nominal" disabled></div><div class="md:col-span-2"><input type="number" placeholder="Pax" oninput="calculateTotals()" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile cost-pax" disabled></div><div class="md:col-span-4"><input type="text" placeholder="Biaya" readonly class="w-full px-4 py-2.5 border border-gray-300 rounded-lg cost-biaya"></div><div class="md:col-span-1 flex justify-center"><button type="button" class="p-2.5 text-red-500 hover:text-red-700 delete-row-btn hidden"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button></div>`;
         } else {
             newRow.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center dynamic-row';
-            content = `<div class="md:col-span-3"><select class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile">${detailOptions}</select></div><div class="md:col-span-5"><input type="text" placeholder="Keterangan" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile"></div><div class="md:col-span-3"><input type="number" placeholder="Total Biaya" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile"></div><div class="md:col-span-1 flex justify-center"><button type="button" class="p-2.5 text-red-500 hover:text-red-700 delete-row-btn hidden"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button></div>`;
+            content = `<div class="md:col-span-3"><select class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile detail-select">${detailOptions}</select></div><div class="md:col-span-5"><input type="text" placeholder="Keterangan" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile" disabled></div><div class="md:col-span-3"><input type="number" placeholder="Total Biaya" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-hibank-tile" disabled></div><div class="md:col-span-1 flex justify-center"><button type="button" class="p-2.5 text-red-500 hover:text-red-700 delete-row-btn hidden"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button></div>`;
         }
         newRow.innerHTML = content;
         newRow.querySelector('.delete-row-btn').addEventListener('click', () => removeRow(newRow, hasCost));
+        newRow.querySelector('.detail-select').addEventListener('change', (e) => handleDetailChange(e.target));
         container.appendChild(newRow);
         updateDeleteButtons(container);
+      }
+      function handleDetailChange(selectElement) {
+          const row = selectElement.closest('.dynamic-row');
+          const inputs = row.querySelectorAll('input:not([readonly])');
+          const shouldDisable = !selectElement.value;
+          inputs.forEach(input => {
+              input.disabled = shouldDisable;
+              if (shouldDisable) input.value = '';
+          });
+          if(row.querySelector('.cost-nominal')) calculateTotals();
       }
       function addInhouseRow() { createRow('inhouse-rows', true); }
       function addPublicRow() { createRow('public-rows', true); }
@@ -711,7 +860,7 @@
                   <svg xmlns="http://www.w3.org/2000/svg" class="upload-icon h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
                   <span class="upload-text">Upload Here</span>
               </label>
-              <input type="file" id="${uniqueId}" class="hidden-file-input" onchange="handleAttachmentChange(this)">
+              <input type="file" id="${uniqueId}" class="hidden-file-input" onchange="handleAttachmentChange(this)" accept="application/pdf,image/png,image/jpeg,image/gif">
               <span class="upload-success-icon hidden">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -731,13 +880,63 @@
         const uploadText = label.querySelector('.upload-text');
         const uploadIcon = label.querySelector('.upload-icon');
         const successIcon = row.querySelector('.upload-success-icon');
+        const file = fileInput.files[0];
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
 
-        if (fileInput.files && fileInput.files.length > 0) {
-            uploadText.textContent = fileInput.files[0].name.length > 15 ? fileInput.files[0].name.substring(0, 12) + '...' : fileInput.files[0].name;
+        row.removeAttribute('data-image-preview-src');
+        row.removeAttribute('data-is-pdf');
+
+        if (file) {
+            if (!allowedTypes.includes(file.type)) {
+                showResponse('Invalid file type. Please upload only PDF or image files (JPG, PNG, GIF).', 'error');
+                fileInput.value = ''; // Reset the file input
+                return;
+            }
+
+            uploadText.textContent = file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name;
             label.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'text-gray-800');
             label.classList.add('bg-green-100', 'text-green-800');
             if (uploadIcon) uploadIcon.classList.add('hidden');
             if (successIcon) successIcon.classList.remove('hidden');
+
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    row.setAttribute('data-image-preview-src', JSON.stringify([e.target.result]));
+                };
+                reader.readAsDataURL(file);
+            } else if (file.type === 'application/pdf') {
+                row.setAttribute('data-is-pdf', 'true');
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const typedarray = new Uint8Array(e.target.result);
+                    pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+                        const numPages = pdf.numPages;
+                        const pagePromises = [];
+
+                        for (let i = 1; i <= numPages; i++) {
+                            pagePromises.push(
+                                pdf.getPage(i).then(function(page) {
+                                    const canvas = document.createElement('canvas');
+                                    const context = canvas.getContext('2d');
+                                    const viewport = page.getViewport({ scale: 1.5 });
+                                    canvas.height = viewport.height;
+                                    canvas.width = viewport.width;
+
+                                    return page.render({canvasContext: context, viewport: viewport}).promise.then(function() {
+                                        return canvas.toDataURL();
+                                    });
+                                })
+                            );
+                        }
+
+                        Promise.all(pagePromises).then(function(pageDataUrls) {
+                            row.setAttribute('data-image-preview-src', JSON.stringify(pageDataUrls)); 
+                        });
+                    });
+                };
+                reader.readAsArrayBuffer(file);
+            }
         }
       }
 
@@ -794,7 +993,12 @@
 
       // --- Step 1 Specific Functions ---
       function handleFetchClick() {
+        hideResponse();
         const nik = document.getElementById('nik').value;
+        if (!/^\d{6}$/.test(nik)) {
+          showResponse('NIK must be a 6-digit number.', 'error');
+          return;
+        }
         if (!nik) { showResponse('Please enter a NIK first.', 'error'); return; }
         setButtonLoading(document.getElementById('fetchButton'), true);
         google.script.run.withSuccessHandler(updateEmployeeInfo).withFailureHandler(handleFetchError).getEmployeeInfoByNIK(nik);
@@ -835,7 +1039,14 @@
           const responseText = document.getElementById('responseText');
           responseText.textContent = message;
           responseArea.className = type === 'success' ? 'my-6 p-4 rounded-lg bg-green-100 text-green-800 fade-in' : 'my-6 p-4 rounded-lg bg-red-100 text-red-800 fade-in';
+          responseArea.classList.remove('hidden');
       }
+       function hideResponse() {
+        const responseArea = document.getElementById('responseArea');
+        if (!responseArea.classList.contains('hidden')) {
+            responseArea.classList.add('hidden');
+        }
+    }
     </script>
   </body>
 </html>
